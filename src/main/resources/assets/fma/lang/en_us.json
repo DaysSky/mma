@@ -189,6 +189,9 @@
     "hud.fma.sidebar.reflexes_inactive": "Reflexes: %s",
     "hud.fma.sidebar.cloaked_active": "Cloaked: %s%% Agility",
     "hud.fma.sidebar.cloaked_inactive": "Cloaked: %s",
+    "hud.fma.sidebar.guard_active": "Guard: %s%% Armor",
+    "hud.fma.sidebar.guard_inactive": "Guard: %s",
+    "hud.fma.sidebar.steadfast_active": "Steadfast: %s%% Armor",
     // update checker & misc
     "text.fma.version.1_6_2.situationals": "Situational HUD: displays active situationals (that can be evaluated client-side).",
     "text.fma.version.1_6_0.update_checker": "Update checker is now available! Enable this feature via /fma config.",
@@ -202,6 +205,5 @@
     "text.fma.version.common.new_version": "A new version is available: %s",
     "text.fma.timer_start": "Started timer!",
     "text.fma.timer_end": "Timer: %s",
-    "hud.fma.sidebar.steadfast_active": "Steadfast: %s%% Armor",
     "text.fma.contract_warning": "Switch your contract :3"
 }

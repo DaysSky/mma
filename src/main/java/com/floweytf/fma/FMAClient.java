@@ -1,6 +1,7 @@
 package com.floweytf.fma;
 
 import com.floweytf.fma.debug.Debug;
+import com.floweytf.fma.events.EntityShieldDisabledEvent;
 import com.floweytf.fma.features.Commands;
 import com.floweytf.fma.features.Keybinds;
 import com.floweytf.fma.features.LeaderboardUtils;
@@ -12,7 +13,6 @@ import com.floweytf.fma.util.TickScheduler;
 import com.google.gson.Gson;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 import me.shedaniel.autoconfig.ConfigHolder;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
@@ -50,13 +50,6 @@ public class FMAClient implements ClientModInitializer {
 
     public static Player player() {
         return Objects.requireNonNull(Minecraft.getInstance().player);
-    }
-
-    public static void withPlayer(Consumer<Player> consumer) {
-        final var player = Minecraft.getInstance().player;
-        if (player != null) {
-            consumer.accept(player);
-        }
     }
 
     public static ClientLevel level() {
@@ -103,6 +96,12 @@ public class FMAClient implements ClientModInitializer {
         Commands.init();
         CharmItemManager.init();
         WAYPOINT.init();
+
+        EntityShieldDisabledEvent.EVENT.register(entity -> {
+            if(SIDEBAR != null) {
+                SideBarManager.updateGuardTimer(entity);
+            }
+        });
 
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
             final var stack = context.matrixStack();

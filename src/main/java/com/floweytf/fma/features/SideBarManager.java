@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -17,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,6 +62,15 @@ public class SideBarManager {
     private final int errorColor;
     private final List<Component> situationalText = new ArrayList<>();
     private List<Component> builtinText = List.of();
+    private static int lastBlockedTicks;
+
+    public static void updateGuardTimer(Player player) {
+        if (player.getMainHandItem().getItem().equals(Items.SHIELD)) {
+            lastBlockedTicks = 6 * 20;
+        } else if (player.getOffhandItem().getItem().equals(Items.SHIELD)) {
+            lastBlockedTicks = 4 * 20;
+        }
+    }
 
     public SideBarManager(FMAConfig config) {
         title = join(
@@ -80,8 +91,10 @@ public class SideBarManager {
     private void updateHitTimer(@Nullable Player player) {
         if (player == null) {
             lastHitTicks = 0;
+            lastBlockedTicks = 0;
         } else {
             lastHitTicks++;
+            lastBlockedTicks--;
 
             if (lastTickAbsorb > player.getAbsorptionAmount() || lastTickHp > player.getHealth()) {
                 lastHitTicks = 0;
@@ -115,6 +128,7 @@ public class SideBarManager {
         final var steadFastLevel = enchants.getOrDefault("Steadfast", 0);
         final var secondWindLevel = enchants.getOrDefault("Second Wind", 0);
         final var cloakedLevel = enchants.getOrDefault("Cloaked", 0);
+        final var guardLevel = enchants.getOrDefault("Guard", 0);
 
         final var playerHpPerc = player.getHealth() / player.getMaxHealth();
 
@@ -209,6 +223,20 @@ public class SideBarManager {
             } else {
                 situationalText.add(translatable(
                     "hud.fma.sidebar.cloaked_inactive",
+                    withColor("Inactive", errorColor)
+                ));
+            }
+        }
+
+        if (guardLevel > 0) {
+            if (lastBlockedTicks > 0) {
+                situationalText.add(translatable(
+                    "hud.fma.sidebar.guard_active",
+                    numeric(guardLevel * 20)
+                ));
+            } else {
+                situationalText.add(translatable(
+                    "hud.fma.sidebar.guard_inactive",
                     withColor("Inactive", errorColor)
                 ));
             }
