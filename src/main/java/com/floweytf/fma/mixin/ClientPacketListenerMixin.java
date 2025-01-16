@@ -14,8 +14,7 @@ public class ClientPacketListenerMixin {
     @Inject(
         method = "handleRespawn",
         at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/network/protocol/game/ClientboundRespawnPacket;getDimension()Lnet/minecraft/resources/ResourceKey;"
+            value = "HEAD"
         )
     )
     private void onRecvRespawn(ClientboundRespawnPacket packet, CallbackInfo ci) {

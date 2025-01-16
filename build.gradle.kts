@@ -43,7 +43,7 @@ dependencies {
     minecraft("com.mojang:minecraft:${minecraft_version_target}")
     mappings(loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.19.4:2023.06.26@zip")
+        parchment("org.parchmentmc.data:parchment-1.20.4:2024.04.14@zip")
     })
 
     modImplementation("net.fabricmc:fabric-loader:${loader_version}")
@@ -56,12 +56,14 @@ dependencies {
     }
 
     // Optional dependency, take care to never classload
-    modApi("maven.modrinth:unofficial-monumenta-mod:1.9.9.2-fabric,1.20.1")
-    // Janky, obtained from UMM jar
+    modApi("maven.modrinth:unofficial-monumenta-mod:1.10-fabric,1.20.4")
 
-    modApi(files("libs/MCUIFramework-mc1.19.4-SNAPSHOT.jar"))
+    //modApi(files("libs/Njols-UI-framework-mc1_20_4-1.1.1.jar"))
+    modApi("com.github.Ascynx:MCUIFramework:mc1.20.4-SNAPSHOT")
 
-    modApi("curse.maven:xaeros-minimap-fair-play-edition-263466:5548203")
+    modApi("com.github.Ascynx:MCConfigFramework:mc1.20.4-SNAPSHOT")
+
+    modApi("maven.modrinth:xaeros-minimap-fair:FP24.2.0_Fabric_1.20.4-fabric,1.20.4")
 }
 
 tasks {
