@@ -83,10 +83,16 @@ public class FMAClient implements ClientModInitializer {
     public void onInitializeClient() {
         CONFIG = FMAConfig.register();
 
+        // Insurance
+        Keybinds.init();
         // stupid ass hack
         ClientLifecycleEvents.CLIENT_STARTED.register(this::initializeAfterMC);
-        ClientTickEvents.END_CLIENT_TICK.register(mc -> SIDEBAR.onTick(mc));
-        Keybinds.init();
+        // what the fuck
+        
+        ClientTickEvents.END_CLIENT_TICK.register(mc -> {
+            SIDEBAR.onTick(mc);
+            Keybinds.tick();
+        });
         Debug.init();
         Commands.init();
         CharmItemManager.init();

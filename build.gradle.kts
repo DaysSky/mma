@@ -48,7 +48,6 @@ dependencies {
 
     modImplementation("net.fabricmc:fabric-loader:${loader_version}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
-    modApi("de.siphalor:amecsapi-1.20:1.3.9+mc1.20-pre1")
 
     modApi("com.terraformersmc:modmenu:7.2.2")
     modApi("me.shedaniel.cloth:cloth-config-fabric:11.1.118") {
