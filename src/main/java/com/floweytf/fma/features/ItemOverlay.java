@@ -162,6 +162,10 @@ public class ItemOverlay {
     }
 
     public static void renderVanityDurability0(GuiGraphics graphics, ItemStack stack, int x, int y) {
+        if(!FMAClient.features().enableVanityDurability) {
+            return;
+        }
+
         final var lore = NBTUtil.access(stack).getPlainLore();
 
         if (lore.isEmpty()) {

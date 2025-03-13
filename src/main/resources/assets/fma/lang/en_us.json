@@ -41,8 +41,10 @@
     "text.autoconfig.fma.option.features.suppressDebugWarning": "Silence debugging warnings",
     "text.autoconfig.fma.option.features.recordChestBreak": "Record chest breaks",
     "text.autoconfig.fma.option.features.versionCheck": "Version checks",
+    "text.autoconfig.fma.option.features.performance": "Micro-optimizations/performance",
     "text.autoconfig.fma.option.features.performance.obfTextCharCap": "Obfuscated text glyph cap",
     "text.autoconfig.fma.option.features.performance.obfTextCharCap.@Tooltip": "Vanilla minecraft's obfuscated text rendering is slow because it attempts to load all glphys, which are baked lazily. This how many distinct glyphs obfuscated text will use, thus improving performance. Any value <= 64 will disable this feature.",
+    "text.autoconfig.fma.option.features.performance.fastPathMemoryStack": "Skip ThreadLocal#get() calls when rending on main thread, which performs poorly.",
     // Chat appearance
     "text.autoconfig.fma.option.appearance.bracketColor": "Tag bracket color",
     "text.autoconfig.fma.option.appearance.tagColor": "Tag text color",
