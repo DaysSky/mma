@@ -9,3 +9,4 @@ accessible field net/minecraft/world/item/ItemCooldowns$CooldownInstance endTime
 accessible field net/minecraft/world/item/ItemCooldowns tickCount I
 accessible field com/mojang/blaze3d/platform/NativeImage pixels J
 accessible method net/minecraft/nbt/CompoundTag entries ()Ljava/util/Map;
+accessible field net/minecraft/client/Minecraft fontManager Lnet/minecraft/client/gui/font/FontManager;

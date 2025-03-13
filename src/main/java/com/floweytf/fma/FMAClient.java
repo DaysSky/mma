@@ -1,6 +1,5 @@
 package com.floweytf.fma;
 
-import com.floweytf.fma.compat.WaypointHandler;
 import com.floweytf.fma.debug.Debug;
 import com.floweytf.fma.features.Commands;
 import com.floweytf.fma.features.Keybinds;
@@ -42,6 +41,7 @@ public class FMAClient implements ClientModInitializer {
     public final static ModContainer MOD = FabricLoader.getInstance().getModContainer("fma").orElseThrow();
     public static SideBarManager SIDEBAR;
     public static ConfigHolder<FMAConfig> CONFIG;
+    public static VersionChecker VERSION_CHECK;
 
     public static Player player() {
         return Objects.requireNonNull(Minecraft.getInstance().player);
@@ -65,6 +65,7 @@ public class FMAClient implements ClientModInitializer {
     public static void reload() {
         final var config = CONFIG.get();
         SIDEBAR = new SideBarManager(config);
+        FMAMixinConfigPlugin.shouldFastPathMemoryStack = CONFIG.get().features.performance.fastPathMemoryStack;
     }
 
     public static FMAConfig config() {
@@ -96,9 +97,9 @@ public class FMAClient implements ClientModInitializer {
         Debug.init();
         Commands.init();
         CharmItemManager.init();
-        WaypointHandler.loadImpl();
 
-        new VersionChecker(CONFIG.get()).registerEvent();
+        VERSION_CHECK = new VersionChecker(CONFIG.get());
+        VERSION_CHECK.registerEvent();
     }
 
     private void initializeAfterMC(Minecraft minecraft) {

@@ -2,7 +2,6 @@ package com.floweytf.fma.features;
 
 import com.floweytf.fma.FMAClient;
 import com.floweytf.fma.FMAConfig;
-import com.floweytf.fma.compat.WaypointHandler;
 import com.floweytf.fma.debug.Debug;
 import com.floweytf.fma.util.ChatUtil;
 import com.floweytf.fma.util.CommandUtil;
@@ -142,11 +141,8 @@ public class Commands {
             ));
 
             dispatcher.register(lit("compass", context -> {
-                WaypointHandler.withInstance(waypointHandler -> {
-                    final var pos = FMAClient.player().level().getSharedSpawnPos();
-                    waypointHandler.addWaypoint(new WaypointHandler.Waypoint(pos, "Compass", "C", 8, true));
-                });
-
+                final var pos = FMAClient.player().level().getSharedSpawnPos();
+                ChatUtil.send("Position: %s, %s, %s".formatted(pos.getX(), pos.getY(), pos.getZ()));
                 return 0;
             }));
 

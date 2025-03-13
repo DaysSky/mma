@@ -88,7 +88,7 @@ public abstract class GuiGraphicsMixin {
                 pose.popPose();
             }
 
-            final var itemName = stack.getDisplayName().getString();
+            final var itemName = NBTUtil.getPlainName(stack);
 
             if (config.enablePICount && (itemName.contains("Potion Injector") || itemName.contains("Iridium Injector"))) {
                 final var countOpt = NBTUtil.getLore(stack).flatMap(lore -> {
@@ -107,7 +107,7 @@ public abstract class GuiGraphicsMixin {
                     return Optional.empty();
                 }).flatMap(potionName -> NBTUtil.getInventory(stack)
                     .map(inventory -> inventory.stream()
-                        .filter(item -> NBTUtil.getName(item).map(NBTUtil::jsonToRaw).map(potionName::equals).orElse(false))
+                        .filter(item -> NBTUtil.getPlainName(item).equals(potionName))
                         .map(ItemStack::getCount)
                         .reduce(0, Integer::sum)
                     )

@@ -41,6 +41,8 @@
     "text.autoconfig.fma.option.features.suppressDebugWarning": "Silence debugging warnings",
     "text.autoconfig.fma.option.features.recordChestBreak": "Record chest breaks",
     "text.autoconfig.fma.option.features.versionCheck": "Version checks",
+    "text.autoconfig.fma.option.features.performance.obfTextCharCap": "Obfuscated text glyph cap",
+    "text.autoconfig.fma.option.features.performance.obfTextCharCap.@Tooltip": "Vanilla minecraft's obfuscated text rendering is slow because it attempts to load all glphys, which are baked lazily. This how many distinct glyphs obfuscated text will use, thus improving performance. Any value <= 64 will disable this feature.",
     // Chat appearance
     "text.autoconfig.fma.option.appearance.bracketColor": "Tag bracket color",
     "text.autoconfig.fma.option.appearance.tagColor": "Tag text color",
@@ -135,7 +137,6 @@
     "stat.fma.ruin.dpsSplit": "Boss DPS took %s",
     "hud.fma.sidebar.ruin.souls": "Masked killed %s/450",
     "hud.fma.sidebar.ruin.chests": "Chests %s/118",
-
     // CZ
     "text.autoconfig.fma.option.zenith.enableCustomCharmInfo.@PrefixText": "WARNING: features may be buggy, please report all warnings!",
     "text.autoconfig.fma.option.zenith.enableCustomCharmInfo": "Enable enhanced charm stat",
@@ -187,7 +188,7 @@
     "text.fma.version.common.header.0": "Hint: suppression for this message can be enabled in config",
     "text.fma.version.common.header.1": "Changelog notes:",
     "text.fma.version.common.update_check_timeout": "Update check timed out",
-    "text.fma.version.common.update_check_fail": "Update check failed: %s",
+    "text.fma.version.common.update_check_fail": "Update check failed!",
     "text.fma.version.common.new_version": "A new version is available: %s",
     "text.fma.timer_start": "Started timer!",
     "text.fma.timer_end": "Timer: %s",

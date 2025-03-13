@@ -56,4 +56,9 @@ public class Util {
     public static <T> void with(List<T> list, int index, UnaryOperator<T> operator) {
         list.set(index, operator.apply(list.get(index)));
     }
+
+    @SuppressWarnings("unchecked")
+    public static <E extends Throwable, U> U sneakyThrow(Throwable e) throws E {
+        throw (E) e;
+    }
 }

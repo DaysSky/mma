@@ -1,7 +1,6 @@
 package com.floweytf.fma.mixin;
 
 import com.floweytf.fma.FMAClient;
-import com.floweytf.fma.compat.WaypointHandler;
 import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -28,14 +27,7 @@ public class MultiPlayerGameModeMixin {
     private void breakChest(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (FMAClient.config().features.recordChestBreak &&
             Objects.requireNonNull(minecraft.level).getBlockState(pos).getBlock() == Blocks.CHEST) {
-
-            WaypointHandler.withInstance(waypointHandler -> {
-                final var ent = new WaypointHandler.Waypoint(pos, "Chest", "C", 6, false);
-
-                if (waypointHandler.getWaypoints().noneMatch(ent::equals)) {
-                    waypointHandler.addWaypoint(ent);
-                }
-            });
+            // TODO:
         }
     }
 
@@ -45,14 +37,7 @@ public class MultiPlayerGameModeMixin {
         final var pos = result.getBlockPos();
         if (FMAClient.config().features.recordChestBreak &&
             Objects.requireNonNull(minecraft.level).getBlockState(pos).getBlock() == Blocks.CHEST) {
-
-            WaypointHandler.withInstance(waypointHandler -> {
-                final var ent = new WaypointHandler.Waypoint(pos, "Chest", "C", 6, false);
-
-                if (waypointHandler.getWaypoints().noneMatch(ent::equals)) {
-                    waypointHandler.addWaypoint(ent);
-                }
-            });
+            // TODO:
         }
     }
 }

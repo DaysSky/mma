@@ -34,6 +34,11 @@ public class FMAConfig implements ConfigData {
         public boolean enableLoomFirmCount = false;
     }
 
+    public static class Performance {
+        public int obfTextCharCap = 0;
+        public boolean fastPathMemoryStack = false;
+    }
+
     public static class SidebarToggles {
         public boolean enable = true;
         public boolean enableProxy = true;
@@ -57,6 +62,8 @@ public class FMAConfig implements ConfigData {
         public boolean suppressDebugWarning = !SharedConstants.IS_RUNNING_IN_IDE;
         public boolean recordChestBreak = false;
         public boolean versionCheck = false;
+        @ConfigEntry.Gui.CollapsibleObject
+        public Performance performance = new Performance();
     }
 
     public static class Appearance {
@@ -150,6 +157,7 @@ public class FMAConfig implements ConfigData {
         public boolean dpsSplit = false;
         public boolean bossSplit = true;
     }
+
     public static class Chat {
         public String meowingChannel = "wc";
         public String meowingText = "meow";

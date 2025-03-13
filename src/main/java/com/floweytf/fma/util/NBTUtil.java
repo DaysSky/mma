@@ -20,6 +20,8 @@ public class NBTUtil {
     public static final String STOCK = "Stock";
     public static final String MONUMENTA_TIER_KEY = "Tier";
     public static final String MONUMENTA_CHARM_POWER_KEY = "CharmPower";
+    public static final String PLAIN_KEY = "plain";
+
     public static final String PLAYER_MODIFIED = "PlayerModified";
     public static final List<String> BLOCK_PLACER = List.of("Doorway from Eternity", "Worldshaper's Loom", "Firmament");
 
@@ -105,8 +107,14 @@ public class NBTUtil {
         return getDisplay(stack).flatMap(tag -> getList(tag, LORE_KEY, Tag.TAG_STRING));
     }
 
-    public static Optional<String> getName(ItemStack stack) {
-        return getDisplay(stack).flatMap(tag -> getString(tag, NAME_KEY));
+    public static Optional<CompoundTag> getPlainTag(ItemStack stack) {
+        return get(stack).flatMap(tag -> getCompound(tag, PLAIN_KEY));
+    }
+
+    public static String getPlainName(ItemStack stack) {
+        return getPlainTag(stack)
+            .flatMap(tag -> getString(tag, NAME_KEY))
+            .orElseGet(() -> stack.getHoverName().getString());
     }
 
     public static Optional<IntIntPair> getVanityDurabilityInfo(ItemStack stack) {

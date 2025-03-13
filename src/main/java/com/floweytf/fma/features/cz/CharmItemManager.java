@@ -4,7 +4,6 @@ import com.floweytf.fma.FMAClient;
 import com.floweytf.fma.features.cz.data.CharmEffectRarity;
 import com.floweytf.fma.features.cz.data.CharmEffectType;
 import com.floweytf.fma.features.cz.data.CharmRarity;
-import static com.floweytf.fma.util.FormatUtil.literal;
 import com.floweytf.fma.util.HoverControlHandler;
 import com.floweytf.fma.util.NBTUtil;
 import com.google.common.collect.Lists;
@@ -15,8 +14,10 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.Tag;
-import static net.minecraft.network.chat.Component.empty;
 import net.minecraft.world.item.ItemStack;
+
+import static com.floweytf.fma.util.FormatUtil.literal;
+import static net.minecraft.network.chat.Component.empty;
 
 public class CharmItemManager {
     public static final String ZENITH_CHARM_TIER = "zenithcharm";
@@ -41,6 +42,7 @@ public class CharmItemManager {
             }
 
             try {
+                // TODO: i18n
                 getCharm(stack).ifPresent(charm -> {
                     if (FMAClient.config().zenith.disableMonumentaLore && !FMAClient.features().enableDebug) {
                         lines.subList(1, lines.size()).clear();
@@ -51,6 +53,17 @@ public class CharmItemManager {
                     }
 
                     charm.buildLore(Minecraft.getInstance().fontFilterFishy, lines, charmHoverHandler.isEnabled(stack));
+
+                    // somewhat important because I don't want people using outdated flowey mod, which might have bugs
+                    final var currVersionString = FMAClient.MOD.getMetadata().getVersion().getFriendlyString();
+                    lines.add(literal("Mod version: ").append(literal(currVersionString,
+                        switch (FMAClient.VERSION_CHECK.getVersionInfo().state()) {
+                            case OUTDATED -> ChatFormatting.RED;
+                            case NOT_AVAILABLE, NOT_READY, DISABLED -> ChatFormatting.GRAY;
+                            case LATEST -> ChatFormatting.GREEN;
+                            case DEV_BUILD -> ChatFormatting.YELLOW;
+                        }
+                    )));
                 });
             } catch (Exception e) {
                 lines.add(literal("* Failed to parse charm data *", ChatFormatting.RED));
