@@ -30,6 +30,10 @@ public class FMAMixinConfigPlugin implements IMixinConfigPlugin {
             return FabricLoader.getInstance().isModLoaded("unofficial-monumenta-mod");
         }
 
+        if (mixinClassName.startsWith(mixinPackage + ".sodium")) {
+            return FabricLoader.getInstance().isModLoaded("sodium");
+        }
+
         return true;
     }
 

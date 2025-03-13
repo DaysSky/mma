@@ -57,6 +57,8 @@ dependencies {
     // Optional dependency, take care to never classload
     modCompileOnly(libs.bundles.umm)
 
+    modCompileOnly("maven.modrinth:sodium:mc1.20.4-0.5.8-fabric")
+
     modRuntimeOnly("maven.modrinth:auth-me:8.0.0+1.20.4-fabric")
 }
 
