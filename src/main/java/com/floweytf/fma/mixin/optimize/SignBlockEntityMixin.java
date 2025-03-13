@@ -70,12 +70,12 @@ public abstract class SignBlockEntityMixin implements SignBlockEntityAccess {
     }
 
     @Override
-    public int[] fma$getCachedBackTextWidth() {
-        return fma$cachedBackTextWidth;
+    public int[] fma$getCachedFrontTextWidth() {
+        return fma$cachedFrontTextWidth;
     }
 
     @Override
-    public int[] fma$getCachedFrontTextWidth() {
-        return fma$cachedFrontTextWidth;
+    public int[] fma$getCachedBackTextWidth() {
+        return fma$cachedBackTextWidth;
     }
 }

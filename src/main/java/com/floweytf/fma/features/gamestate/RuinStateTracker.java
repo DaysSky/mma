@@ -3,9 +3,10 @@ package com.floweytf.fma.features.gamestate;
 import com.floweytf.fma.FMAClient;
 import com.floweytf.fma.util.ChatUtil;
 import com.floweytf.fma.util.StatsUtil;
-import static com.floweytf.fma.util.Util.now;
 import java.util.List;
 import net.minecraft.network.chat.Component;
+
+import static com.floweytf.fma.util.Util.now;
 
 public class RuinStateTracker implements StateTracker {
     public static class Data {
@@ -49,7 +50,7 @@ public class RuinStateTracker implements StateTracker {
     private boolean hasWon = false;
 
     public RuinStateTracker() {
-        this.data = new Data();
+        data = new Data();
         startTime = now();
     }
 

@@ -2,9 +2,10 @@ package com.floweytf.fma.features.cz.data;
 
 
 import com.floweytf.fma.FMAClient;
-import static com.floweytf.fma.features.cz.data.ZenithAbility.*;
 import java.util.Arrays;
 import java.util.Optional;
+
+import static com.floweytf.fma.features.cz.data.ZenithAbility.*;
 
 public enum CharmEffectType {
     // Dawnbringer

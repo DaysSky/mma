@@ -1,7 +1,8 @@
 package com.floweytf.fma.features.cz.data;
 
-import static com.floweytf.fma.util.FormatUtil.literal;
 import net.minecraft.network.chat.Component;
+
+import static com.floweytf.fma.util.FormatUtil.literal;
 
 public enum CharmRarity {
     COMMON("Common", 0x9f929c, 2),
@@ -19,7 +20,7 @@ public enum CharmRarity {
         this.displayName = displayName;
         this.color = color;
         this.budgetMultiplier = budgetMultiplier;
-        this.coloredText = literal(displayName, color);
+        coloredText = literal(displayName, color);
     }
 
     public CharmRarity upgrade() {

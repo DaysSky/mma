@@ -20,6 +20,20 @@ import static com.floweytf.fma.util.ChatUtil.sendWarn;
 import static net.minecraft.network.chat.Component.translatable;
 
 public class VersionChecker {
+    public record Info(Result state, Optional<Version> remoteVersion) {
+        public enum Result {
+            NOT_READY,
+            NOT_AVAILABLE,
+            DISABLED,
+            OUTDATED,
+            LATEST,
+            DEV_BUILD
+        }
+
+        public Version unwrap() {
+            return remoteVersion.orElseThrow();
+        }
+    }
     private static final String VERSION_URL =
         "https://raw.githubusercontent.com/Floweynt/flowey-monumenta-addons/refs/heads/master/versions.json";
     private final CompletableFuture<Optional<Version>> latestVersion;
@@ -68,21 +82,6 @@ public class VersionChecker {
             case NOT_AVAILABLE -> sendWarn(translatable("text.fma.version.common.update_check_fail"));
             }
         });
-    }
-
-    public record Info(Result state, Optional<Version> remoteVersion) {
-        public enum Result {
-            NOT_READY,
-            NOT_AVAILABLE,
-            DISABLED,
-            OUTDATED,
-            LATEST,
-            DEV_BUILD
-        }
-
-        public Version unwrap() {
-            return remoteVersion.orElseThrow();
-        }
     }
 
     public Info getVersionInfo() {

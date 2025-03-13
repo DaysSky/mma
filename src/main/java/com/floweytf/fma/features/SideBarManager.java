@@ -2,10 +2,8 @@ package com.floweytf.fma.features;
 
 import com.floweytf.fma.FMAClient;
 import com.floweytf.fma.FMAConfig;
-import static com.floweytf.fma.util.FormatUtil.*;
 import com.floweytf.fma.util.NBTUtil;
 import com.floweytf.fma.util.Util;
-import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,15 +12,19 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import static net.minecraft.network.chat.Component.translatable;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
+
+import static com.floweytf.fma.util.FormatUtil.join;
+import static com.floweytf.fma.util.FormatUtil.literal;
+import static com.floweytf.fma.util.FormatUtil.numeric;
+import static com.floweytf.fma.util.FormatUtil.withColor;
+import static net.minecraft.network.chat.Component.translatable;
 
 public class SideBarManager {
     private static final Map<String, String> IP_TO_SHORTHAND = Map.of(
@@ -49,46 +51,16 @@ public class SideBarManager {
         EntityType.PARROT,
         EntityType.FOX
     );
-
+    private static float lastTickHp;
+    private static float lastTickAbsorb;
+    private static int lastHitTicks;
     private final Component title;
     private final int textColor;
     private final int altColor;
     private final int errorColor;
     private List<Component> builtinText = List.of();
-    private List<Component> situationalText = new ArrayList<>();
+    private final List<Component> situationalText = new ArrayList<>();
     private List<Component> additionalText = List.of();
-
-    private static float lastTickHp;
-    private static float lastTickAbsorb;
-    private static int lastHitTicks;
-
-    private void updateHitTimer(@Nullable Player player) {
-        if(player == null) {
-            lastHitTicks = 0;
-        } else {
-            lastHitTicks++;
-
-            if(lastTickAbsorb > player.getAbsorptionAmount() || lastTickHp > player.getHealth()) {
-                lastHitTicks = 0;
-            }
-
-            lastTickHp = player.getHealth();
-            lastTickAbsorb = player.getAbsorptionAmount();
-        }
-    }
-
-    private int countEnemyInRadius(Player player, float radius) {
-        return (int) player.level().getEntities(player, AABB.ofSize(
-            player.position().subtract(radius, radius, radius),
-            2 * radius, 2 * radius, 2 * radius
-        )).stream().filter(entity -> {
-            if(IGNORED_ENTITIES.contains(entity.getType())) {
-                return false;
-            }
-
-            return entity.position().distanceToSqr(player.position()) <= radius * radius;
-        }).count();
-    }
 
     public SideBarManager(FMAConfig config) {
         title = join(
@@ -106,20 +78,49 @@ public class SideBarManager {
         onTick(Minecraft.getInstance());
     }
 
+    private void updateHitTimer(@Nullable Player player) {
+        if (player == null) {
+            lastHitTicks = 0;
+        } else {
+            lastHitTicks++;
+
+            if (lastTickAbsorb > player.getAbsorptionAmount() || lastTickHp > player.getHealth()) {
+                lastHitTicks = 0;
+            }
+
+            lastTickHp = player.getHealth();
+            lastTickAbsorb = player.getAbsorptionAmount();
+        }
+    }
+
+    private int countEnemyInRadius(Player player, float radius) {
+        return (int) player.level().getEntities(player, AABB.ofSize(
+            player.position().subtract(radius, radius, radius),
+            2 * radius, 2 * radius, 2 * radius
+        )).stream().filter(entity -> {
+            if (IGNORED_ENTITIES.contains(entity.getType())) {
+                return false;
+            }
+
+            return entity.position().distanceToSqr(player.position()) <= radius * radius;
+        }).count();
+    }
+
     private void updateSituational(Player player) {
         // obtain gear data
-        final var reflexesLevel = NBTUtil.getEnchantLevel(player, "Reflexes");
-        final var etherealLevel = NBTUtil.getEnchantLevel(player, "Ethereal");
-        final var tempoLevel =   NBTUtil.getEnchantLevel(player, "Tempo");
-        final var poiseLevel = NBTUtil.getEnchantLevel(player, "Poise");
-        final var steadFastLevel = NBTUtil.getEnchantLevel(player, "Steadfast");
-        final var secondWindLevel = NBTUtil.getEnchantLevel(player, "Second Wind");
-        final var cloakedLevel = NBTUtil.getEnchantLevel(player, "Cloaked");
+        final var enchants = NBTUtil.getAllEnchants(player);
+        final var reflexesLevel = enchants.getOrDefault("Reflexes", 0);
+        final var etherealLevel = enchants.getOrDefault("Ethereal", 0);
+        final var tempoLevel = enchants.getOrDefault("Tempo", 0);
+        final var poiseLevel = enchants.getOrDefault("Poise", 0);
+        final var steadFastLevel = enchants.getOrDefault("Steadfast", 0);
+        final var secondWindLevel = enchants.getOrDefault("Second Wind", 0);
+        final var cloakedLevel = enchants.getOrDefault("Cloaked", 0);
 
         final var playerHpPerc = player.getHealth() / player.getMaxHealth();
 
-        if(reflexesLevel > 0) {
-            if(countEnemyInRadius(player, 8) >= 4) {
+        if (reflexesLevel > 0) {
+            if (countEnemyInRadius(player, 8) >= 4) {
                 situationalText.add(translatable(
                     "hud.fma.sidebar.reflexes_active",
                     numeric(20 * etherealLevel)
@@ -132,7 +133,7 @@ public class SideBarManager {
             }
         }
 
-        if(etherealLevel > 0) {
+        if (etherealLevel > 0) {
             if (lastHitTicks < 2 * 20) {
                 situationalText.add(translatable(
                     "hud.fma.sidebar.ethereal_active",
@@ -146,8 +147,8 @@ public class SideBarManager {
             }
         }
 
-        if(tempoLevel > 0) {
-            if (lastHitTicks > 4 * 20 ) {
+        if (tempoLevel > 0) {
+            if (lastHitTicks > 4 * 20) {
                 situationalText.add(translatable(
                     "hud.fma.sidebar.tempo_active",
                     numeric(20 * tempoLevel)
@@ -200,8 +201,8 @@ public class SideBarManager {
             }
         }
 
-        if(cloakedLevel > 0) {
-            if(countEnemyInRadius(player, 5) <= 2) {
+        if (cloakedLevel > 0) {
+            if (countEnemyInRadius(player, 5) <= 2) {
                 situationalText.add(translatable(
                     "hud.fma.sidebar.cloaked_active",
                     numeric(20 * etherealLevel)
@@ -218,7 +219,7 @@ public class SideBarManager {
     public void onTick(Minecraft mc) {
         final var config = FMAClient.features();
 
-        if(mc.player != null) {
+        if (mc.player != null) {
             updateHitTimer(mc.player);
             situationalText.clear();
             if (config.sidebarToggles.situationals) {

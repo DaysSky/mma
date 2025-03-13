@@ -1,9 +1,9 @@
 package com.floweytf.fma.features.gamestate;
 
 import com.floweytf.fma.util.StatsUtil;
-import static com.floweytf.fma.util.Util.now;
 import net.minecraft.network.chat.Component;
-import org.apache.logging.log4j.core.appender.rolling.action.IfAll;
+
+import static com.floweytf.fma.util.Util.now;
 
 /**
  * Hexfall State Diagram
@@ -70,7 +70,7 @@ public class HexfallStateTracker implements StateTracker {
     public void onTitle(Component message) {
         final var raw = message.getString();
 
-        if(raw.contains("Ru'Ten")) {
+        if (raw.contains("Ru'Ten")) {
             rutenStartTime = now();
         }
     }

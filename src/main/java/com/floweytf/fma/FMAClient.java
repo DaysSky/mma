@@ -79,7 +79,7 @@ public class FMAClient implements ClientModInitializer {
     public static FMAConfig.FeatureToggles features() {
         return CONFIG.get().features;
     }
-    
+
     @Override
     public void onInitializeClient() {
         CONFIG = FMAConfig.register();
@@ -89,7 +89,7 @@ public class FMAClient implements ClientModInitializer {
         // stupid ass hack
         ClientLifecycleEvents.CLIENT_STARTED.register(this::initializeAfterMC);
         // what the fuck
-        
+
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             SIDEBAR.onTick(mc);
             Keybinds.tick();

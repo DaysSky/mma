@@ -25,6 +25,7 @@ public class FormatUtil {
             return join(Component.empty(), elements);
         }
     }
+
     private static final ResourceLocation SPACING = new ResourceLocation("fma:formatting/spacing");
 
     public static ComponentJoiner joiner() {

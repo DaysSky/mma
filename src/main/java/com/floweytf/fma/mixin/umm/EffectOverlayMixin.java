@@ -5,12 +5,9 @@ import ch.njol.unofficialmonumentamod.features.effects.Effect;
 import ch.njol.unofficialmonumentamod.features.effects.EffectOverlay;
 import com.floweytf.fma.FMAClient;
 import com.floweytf.fma.Graphics;
-import static com.floweytf.fma.util.FormatUtil.join;
-import static com.floweytf.fma.util.FormatUtil.literal;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
-import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.ArrayList;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
@@ -28,6 +25,9 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import static com.floweytf.fma.util.FormatUtil.join;
+import static com.floweytf.fma.util.FormatUtil.literal;
 
 @Mixin(
     value = EffectOverlay.class,

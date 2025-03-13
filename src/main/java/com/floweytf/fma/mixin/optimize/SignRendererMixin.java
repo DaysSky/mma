@@ -1,7 +1,6 @@
 package com.floweytf.fma.mixin.optimize;
 
 import com.floweytf.fma.duck.SignBlockEntityAccess;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;

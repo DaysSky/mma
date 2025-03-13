@@ -1,6 +1,5 @@
 package com.floweytf.fma.mixin.optimize;
 
-import com.floweytf.fma.FMAClient;
 import com.floweytf.fma.FMAMixinConfigPlugin;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.system.MemoryStack;
@@ -14,7 +13,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = MemoryStack.class, remap = false)
 public class MemoryStackMixin {
-    @Shadow @Final private static ThreadLocal<MemoryStack> TLS;
+    @Shadow
+    @Final
+    private static ThreadLocal<MemoryStack> TLS;
     @Unique
     private static MemoryStack fma$minecraftThreadInstance;
 

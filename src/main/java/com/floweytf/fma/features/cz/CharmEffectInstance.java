@@ -6,7 +6,6 @@ import com.floweytf.fma.features.cz.data.CharmEffectRarity;
 import com.floweytf.fma.features.cz.data.CharmEffectType;
 import com.floweytf.fma.features.cz.data.CharmRarity;
 import com.floweytf.fma.util.FormatUtil;
-import static com.floweytf.fma.util.FormatUtil.*;
 import com.floweytf.fma.util.Util;
 import com.google.common.collect.Streams;
 import java.util.ArrayList;
@@ -20,6 +19,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import org.jetbrains.annotations.Nullable;
+
+import static com.floweytf.fma.util.FormatUtil.fmtDouble;
+import static com.floweytf.fma.util.FormatUtil.fmtDoubleDelta;
+import static com.floweytf.fma.util.FormatUtil.join;
+import static com.floweytf.fma.util.FormatUtil.joiner;
+import static com.floweytf.fma.util.FormatUtil.literal;
+import static com.floweytf.fma.util.FormatUtil.tabulate;
+import static com.floweytf.fma.util.FormatUtil.twoDecimal;
 
 public final class CharmEffectInstance {
     private final double rollValue;
@@ -36,7 +43,7 @@ public final class CharmEffectInstance {
     public CharmEffectInstance(double rollValue, CharmEffectType effect, CharmEffectRarity rarity) {
         this.rollValue = rollValue;
         this.effect = effect;
-        this.effectRarity = rarity;
+        effectRarity = rarity;
         // we should compute a few other values
         final var rawBaseValue = effect.rarityValue(rarity.charmRarity);
 
@@ -60,13 +67,13 @@ public final class CharmEffectInstance {
         }
 
         // prep colors
-        this.rarityColor = Style.EMPTY.withColor(rarity.color);
+        rarityColor = Style.EMPTY.withColor(rarity.color);
 
         // basically, if the base value is negative, we can assume that a low roll is good
         // or else we can assume a high roll is good
         // if it's negative, we negate this
 
-        this.displayRollValue = (rawBaseValue < 0 == rarity.isNegative) ? rollValue :
+        displayRollValue = (rawBaseValue < 0 == rarity.isNegative) ? rollValue :
             (1 - rollValue);
 
         rollColor = Style.EMPTY.withColor(Util.colorRange((float) displayRollValue));

@@ -1,7 +1,8 @@
 package com.floweytf.fma.features.cz.data;
 
-import static com.floweytf.fma.util.FormatUtil.literal;
 import net.minecraft.network.chat.Component;
+
+import static com.floweytf.fma.util.FormatUtil.literal;
 
 public enum ZenithClass {
     DAWNBRINGER("Dawnbringer", 0xf0b326),
@@ -20,7 +21,7 @@ public enum ZenithClass {
     ZenithClass(String displayName, int color) {
         this.displayName = displayName;
         this.color = color;
-        this.coloredName = literal(displayName, s -> s.withColor(color));
-        this.coloredShortName = literal(displayName.substring(0, 2), s -> s.withColor(color));
+        coloredName = literal(displayName, s -> s.withColor(color));
+        coloredShortName = literal(displayName.substring(0, 2), s -> s.withColor(color));
     }
 }
