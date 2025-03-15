@@ -64,6 +64,8 @@ public class FMAConfig implements ConfigData {
         public boolean versionCheck = false;
         @ConfigEntry.Gui.CollapsibleObject
         public Performance performance = new Performance();
+        public boolean contractCheck = true;
+        public int contractThreshold = 40;
     }
 
     public static class Appearance {
