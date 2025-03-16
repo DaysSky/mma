@@ -4,9 +4,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 
 public interface SignBlockEntityAccess {
-    void fma$updateCaches(Minecraft minecraft, Font font);
+    default void fma$updateCaches(Minecraft minecraft, Font font) {
+        throw new AbstractMethodError();
+    }
 
-    int[] fma$getCachedFrontTextWidth();
+    default int[] fma$getCachedFrontTextWidth() {
+        throw new AbstractMethodError();
+    }
 
-    int[] fma$getCachedBackTextWidth();
+    default int[] fma$getCachedBackTextWidth() {
+        throw new AbstractMethodError();
+    }
 }

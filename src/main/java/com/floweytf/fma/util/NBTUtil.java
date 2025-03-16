@@ -1,5 +1,6 @@
 package com.floweytf.fma.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,15 @@ public class NBTUtil {
 
         public List<String> getPlainLore() {
             return this.<ListTag>resolve("Lore", PLAIN_KEY, DISPLAY_KEY).map(
-                x -> x.stream().map(Tag::getAsString).toList()
+                x -> {
+                    // TODO: streams are slow for some reason...
+                    final List<String> list = new ArrayList<>(x.size());
+                    for (final var t : x) {
+                        list.add(t.getAsString());
+                    }
+
+                    return list;
+                }
             ).orElse(List.of());
         }
 

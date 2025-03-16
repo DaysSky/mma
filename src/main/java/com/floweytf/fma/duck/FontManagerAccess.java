@@ -1,5 +1,7 @@
 package com.floweytf.fma.duck;
 
 public interface FontManagerAccess {
-    long fma$getReloadCounter();
+    default long fma$getReloadCounter() {
+        throw new AbstractMethodError();
+    }
 }

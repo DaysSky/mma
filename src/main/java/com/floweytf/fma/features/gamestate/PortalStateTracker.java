@@ -67,7 +67,6 @@ public class PortalStateTracker implements StateTracker {
     private long phase2Split;
     private boolean enteredBoss = false;
     private boolean isCubeAlive = false;
-    private boolean hasWon = false;
 
     public PortalStateTracker() {
         data = new Data();
@@ -131,7 +130,6 @@ public class PortalStateTracker implements StateTracker {
                 phase2Split,
                 phase3Split
             );
-            hasWon = true;
             data.send();
             break;
         }

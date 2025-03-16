@@ -9,21 +9,21 @@
         "BlockEntityRendererDispatcherMixin",
         "GuiGraphicsMixin",
         "GuiMixin",
+        "ItemStackMixin",
         "LevelRendererMixin",
         "MultiPlayerGameModeMixin",
         "SplashManagerMixin",
         "optimize.FontManagerMixin",
         "optimize.FontSetMixin",
+        "optimize.ItemRendererMixin",
         "optimize.SignBlockEntityMixin",
         "optimize.SignRendererMixin",
+        "sodium.BakedModelEncoderMixin",
+        "sodium.VertexSerializerRegistryImplMixin",
         "umm.EffectOverlayMixin"
     ],
     "plugin": "com.floweytf.fma.FMAMixinConfigPlugin",
     "injectors": {
         "defaultRequire": 1
-    },
-    "mixins": [
-        "optimize.MemoryStackMixin",
-        "sodium.VertexSerializerRegistryImplMixin"
-    ]
+    }
 }

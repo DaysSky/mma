@@ -1,11 +1,10 @@
 package com.floweytf.fma.mixin.sodium;
 
 import com.floweytf.fma.FMAClient;
-import java.util.concurrent.locks.StampedLock;
+import com.floweytf.fma.util.Spinlock;
 import me.jellysquid.mods.sodium.client.render.vertex.serializers.VertexSerializerRegistryImpl;
 import net.caffeinemc.mods.sodium.api.vertex.format.VertexFormatDescription;
 import net.caffeinemc.mods.sodium.api.vertex.serializer.VertexSerializer;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,9 +12,10 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(value = VertexSerializerRegistryImpl.class, remap = false)
 public abstract class VertexSerializerRegistryImplMixin {
-    @Shadow
-    @Final
-    private StampedLock lock;
+    // it turns out that spinlocks are so much faster than r/w locks that the minor performance
+    // pessimization is irrelevant.
+    @Unique
+    private final Spinlock fma$lock = new Spinlock();
 
     @Shadow
     private static VertexSerializer createSerializer(VertexFormatDescription svf, VertexFormatDescription dvf) {
@@ -56,7 +56,7 @@ public abstract class VertexSerializerRegistryImplMixin {
     @Overwrite
     private VertexSerializer create(long identifier, VertexFormatDescription srcFormat,
                                     VertexFormatDescription dstFormat) {
-        long stamp = lock.writeLock();
+        fma$lock.lock();
 
         VertexSerializer serializer;
         try {
@@ -74,7 +74,7 @@ public abstract class VertexSerializerRegistryImplMixin {
 
             serializer = fma$cache[(int) identifier];
         } finally {
-            lock.unlockWrite(stamp);
+            fma$lock.unlock();
         }
 
         return serializer;
@@ -86,13 +86,13 @@ public abstract class VertexSerializerRegistryImplMixin {
      */
     @Overwrite
     private VertexSerializer find(long identifier) {
-        long stamp = lock.readLock();
+        fma$lock.lock();
 
         VertexSerializer res;
         try {
             res = fma$cache[(int) identifier];
         } finally {
-            lock.unlockRead(stamp);
+            fma$lock.unlock();
         }
 
         return res;

@@ -7,3 +7,4 @@ accessible field net/minecraft/world/item/ItemCooldowns$CooldownInstance endTime
 accessible field net/minecraft/world/item/ItemCooldowns tickCount I
 accessible method net/minecraft/nbt/CompoundTag entries ()Ljava/util/Map;
 accessible field net/minecraft/client/Minecraft fontManager Lnet/minecraft/client/gui/font/FontManager;
+accessible field net/minecraft/client/Minecraft clientTickCount J

@@ -52,13 +52,14 @@ dependencies {
     }
 
     // modmenu isn't strictly required
-    modCompileOnly(libs.modmenu)
+    modImplementation(libs.modmenu)
 
     // Optional dependency, take care to never classload
-    modCompileOnly(libs.bundles.umm)
+    modImplementation(libs.bundles.umm)
+    modImplementation("maven.modrinth:sodium:mc1.20.4-0.5.8-fabric")
+    implementation("club.minnced:java-discord-rpc:2.0.1")
 
-    modCompileOnly("maven.modrinth:sodium:mc1.20.4-0.5.8-fabric")
-
+    modRuntimeOnly("maven.modrinth:spark:1.10.58-fabric")
     modRuntimeOnly("maven.modrinth:auth-me:8.0.0+1.20.4-fabric")
 }
 

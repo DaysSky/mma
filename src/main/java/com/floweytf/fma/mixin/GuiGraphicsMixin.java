@@ -16,10 +16,6 @@ import static com.floweytf.fma.util.Util.c;
 
 @Mixin(GuiGraphics.class)
 public abstract class GuiGraphicsMixin {
-    @Shadow
-    @Final
-    private PoseStack pose;
-
     @Inject(
         method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;" +
             "IILjava/lang/String;)V",

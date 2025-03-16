@@ -222,7 +222,7 @@ public class SideBarManager {
         if (mc.player != null) {
             updateHitTimer(mc.player);
             situationalText.clear();
-            if (config.sidebarToggles.situationals) {
+            if (config.sidebarToggles.enable && config.sidebarToggles.situationals) {
                 updateSituational(mc.player);
             }
         }
@@ -289,5 +289,7 @@ public class SideBarManager {
             graphics.drawString(font, line, startX, textY, textColor);
             textY += font.lineHeight;
         }
+
+        additionalText = List.of();
     }
 }

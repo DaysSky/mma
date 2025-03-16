@@ -9,6 +9,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -35,7 +36,7 @@ import static com.floweytf.fma.util.FormatUtil.literal;
 )
 public abstract class EffectOverlayMixin extends HudElement {
     @Unique
-    private static final Set<MobEffect> BAD_EFFECTS = Set.of(
+    private static final Set<MobEffect> fma$BAD_EFFECTS = Set.of(
         MobEffects.MOVEMENT_SLOWDOWN,
         MobEffects.DIG_SLOWDOWN,
         MobEffects.CONFUSION,
@@ -47,6 +48,13 @@ public abstract class EffectOverlayMixin extends HudElement {
         MobEffects.UNLUCK,
         MobEffects.BAD_OMEN
     );
+
+    @Unique
+    private List<Component> fma$effectCache = null;
+
+    @Unique
+    private boolean fma$prevRAlign = false;
+
     @Shadow
     @Final
     private ArrayList<Effect> effects;
@@ -56,6 +64,49 @@ public abstract class EffectOverlayMixin extends HudElement {
                                 LocalIntRef currentY) {
         Graphics.drawString(matrix, font, text, rAlign ? (width - 5 - font.width(text)) : 5, currentY.get(), -1);
         currentY.set(currentY.get() + 11);
+    }
+
+    @Unique
+    private List<Component> fma$getTextToRender(boolean rAlign) {
+        if (rAlign != fma$prevRAlign) {
+            fma$effectCache = null;
+            fma$prevRAlign = rAlign;
+        }
+
+        if (fma$effectCache == null) {
+            fma$effectCache = new ArrayList<>();
+
+            final var player = Minecraft.getInstance().player;
+
+            if (player != null) {
+                final var space = literal(" ");
+
+                for (final var activeEffect : player.getActiveEffects()) {
+                    final var nameText = activeEffect.getEffect().getDisplayName();
+                    final var amp = activeEffect.getAmplifier();
+                    final var levelText = literal(amp == 0 ? "" : (amp + 1) + " ");
+                    final var timeText = MobEffectUtil.formatDuration(activeEffect, 1f, 20);
+                    final var color = fma$BAD_EFFECTS.contains(activeEffect.getEffect()) ? ChatFormatting.RED :
+                        ChatFormatting.GREEN;
+
+                    final var effectText = join(nameText, space, levelText).withStyle(color);
+
+                    final var text = rAlign ? join(effectText, timeText) : join(timeText, space, effectText);
+
+                    fma$effectCache.add(text);
+                }
+            }
+        }
+
+        return fma$effectCache;
+    }
+
+    @Inject(
+        method = "tick",
+        at = @At("HEAD")
+    )
+    private void updateCache(CallbackInfo ci) {
+        fma$effectCache = null;
     }
 
     // we need to render vanilla effects as well...
@@ -82,25 +133,12 @@ public abstract class EffectOverlayMixin extends HudElement {
             return;
         }
 
-        final var space = literal(" ");
-
         if (!player.getActiveEffects().isEmpty()) {
             fma$renderLine(font, graphics, Component.translatable("hud.fma.ummEffects.vanillaCategory"), rAlign, width,
                 currentY);
         }
 
-        for (final var activeEffect : player.getActiveEffects()) {
-            final var nameText = activeEffect.getEffect().getDisplayName();
-            final var amp = activeEffect.getAmplifier();
-            final var levelText = literal(amp == 0 ? "" : (amp + 1) + " ");
-            final var timeText = MobEffectUtil.formatDuration(activeEffect, 1f, 20);
-            final var color = BAD_EFFECTS.contains(activeEffect.getEffect()) ? ChatFormatting.RED :
-                ChatFormatting.GREEN;
-
-            final var effectText = join(nameText, space, levelText).withStyle(color);
-
-            final var text = rAlign ? join(effectText, timeText) : join(timeText, space, effectText);
-
+        for (final var text : fma$getTextToRender(rAlign)) {
             fma$renderLine(font, graphics, text, rAlign, width, currentY);
         }
 

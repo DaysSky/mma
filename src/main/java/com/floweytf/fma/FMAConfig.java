@@ -32,11 +32,12 @@ public class FMAConfig implements ConfigData {
         public boolean enableCZCharmPower = false;
         public boolean enablePICount = true;
         public boolean enableLoomFirmCount = false;
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 20)
+        public int updateDelayTicks = 5;
     }
 
     public static class Performance {
         public int obfTextCharCap = 0;
-        public boolean fastPathMemoryStack = false;
     }
 
     public static class SidebarToggles {

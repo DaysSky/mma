@@ -65,7 +65,6 @@ public class FMAClient implements ClientModInitializer {
     public static void reload() {
         final var config = CONFIG.get();
         SIDEBAR = new SideBarManager(config);
-        FMAMixinConfigPlugin.shouldFastPathMemoryStack = CONFIG.get().features.performance.fastPathMemoryStack;
     }
 
     public static FMAConfig config() {

@@ -1,6 +1,5 @@
 package com.floweytf.fma.mixin.optimize;
 
-import com.floweytf.fma.duck.FontManagerAccess;
 import com.floweytf.fma.duck.SignBlockEntityAccess;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
@@ -52,8 +51,8 @@ public abstract class SignBlockEntityMixin implements SignBlockEntityAccess {
             fma$dirty = true;
         }
 
-        if (((FontManagerAccess) minecraft.fontManager).fma$getReloadCounter() != fma$cachedReloadCounter) {
-            fma$cachedReloadCounter = ((FontManagerAccess) minecraft.fontManager).fma$getReloadCounter();
+        if (minecraft.fontManager.fma$getReloadCounter() != fma$cachedReloadCounter) {
+            fma$cachedReloadCounter = minecraft.fontManager.fma$getReloadCounter();
             fma$dirty = true;
         }
 

@@ -8,9 +8,6 @@ import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 public class FMAMixinConfigPlugin implements IMixinConfigPlugin {
-    // explicitly declared here so we prevent unnecessary classloading
-    public static boolean shouldFastPathMemoryStack = false;
-
     private String mixinPackage;
 
     @Override

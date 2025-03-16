@@ -34,5 +34,18 @@
     "suggests": {
         "modmenu": "*"
     },
+    "custom": {
+        "loom:injected_interfaces": {
+            "net/minecraft/class_378": [
+                "com/floweytf/fma/duck/FontManagerAccess"
+            ],
+            "net/minecraft/class_1799": [
+                "com/floweytf/fma/duck/ItemStackAccess"
+            ],
+            "net/minecraft/class_2625": [
+                "com/floweytf/fma/duck/SignBlockEntityAccess"
+            ]
+        }
+    },
     "accessWidener": "fma.accesswidener"
 }

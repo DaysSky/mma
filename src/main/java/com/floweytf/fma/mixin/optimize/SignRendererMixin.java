@@ -56,8 +56,8 @@ public class SignRendererMixin {
         SignBlockEntity signEntity, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay,
         BlockState state, SignBlock signBlock, WoodType woodType, Model model, CallbackInfo ci
     ) {
-        ((SignBlockEntityAccess) signEntity).fma$updateCaches(Minecraft.getInstance(), font);
-        fma$widths = ((SignBlockEntityAccess) signEntity).fma$getCachedFrontTextWidth();
+        signEntity.fma$updateCaches(Minecraft.getInstance(), font);
+        fma$widths = signEntity.fma$getCachedFrontTextWidth();
     }
 
     @Inject(
@@ -74,6 +74,6 @@ public class SignRendererMixin {
         SignBlockEntity signEntity, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay,
         BlockState state, SignBlock signBlock, WoodType woodType, Model model, CallbackInfo ci
     ) {
-        fma$widths = ((SignBlockEntityAccess) signEntity).fma$getCachedBackTextWidth();
+        fma$widths = signEntity.fma$getCachedBackTextWidth();
     }
 }
