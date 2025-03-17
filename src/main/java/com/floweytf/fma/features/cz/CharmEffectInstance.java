@@ -279,6 +279,7 @@ public final class CharmEffectInstance {
 
     public boolean canUpgrade(CharmRarity charmRarity, int remainingBudget) {
         return effectRarity.canUpgrade(charmRarity, remainingBudget) &&
+            effectRarity.compareTo(effect.maxRarity) < 0 &&
             effect.rarityValue(effectRarity.upgrade().charmRarity) != 0;
     }
 
