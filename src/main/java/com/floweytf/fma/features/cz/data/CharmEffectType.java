@@ -1,6 +1,5 @@
 package com.floweytf.fma.features.cz.data;
 
-
 import com.floweytf.fma.FMAClient;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,6 +8,7 @@ import java.util.Optional;
 
 import static com.floweytf.fma.features.cz.data.ZenithAbility.*;
 
+// TODO: make this json driven
 public enum CharmEffectType {
     // Dawnbringer
     BOTTLED_SUNLIGHT_COOLDOWN("Cooldown", BOTTLED_SUNLIGHT, false, true, 3.0, -30.0, CharmEffectRarity.LEGENDARY, -5.0, -7.5, -10.0, -12.5, -15.0),
@@ -424,5 +424,9 @@ public enum CharmEffectType {
 
     public double rarityValue(CharmRarity rarity) {
         return rarityValues[rarity.ordinal()];
+    }
+
+    public static void main(String... args){
+        System.out.println(values().length);
     }
 }

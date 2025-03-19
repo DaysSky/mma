@@ -3,7 +3,7 @@ plugins {
     id("maven-publish")
 }
 
-version = "1.6.3+mc1.20.4"
+version = "1.7-dev+mc1.20.4"
 group = "com.floweytf"
 
 base {
@@ -56,7 +56,7 @@ dependencies {
 
     // Optional dependency, take care to never classload
     modImplementation(libs.bundles.umm)
-    modImplementation("maven.modrinth:sodium:mc1.20.4-0.5.8-fabric")
+    modCompileOnly("maven.modrinth:sodium:mc1.20.4-0.5.8-fabric")
     implementation("club.minnced:java-discord-rpc:2.0.1")
 
     modRuntimeOnly("maven.modrinth:spark:1.10.58-fabric")

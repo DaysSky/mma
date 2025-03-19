@@ -8,6 +8,7 @@ import com.floweytf.fma.features.SideBarManager;
 import com.floweytf.fma.features.cz.CharmItemManager;
 import com.floweytf.fma.features.gamestate.GameState;
 import com.floweytf.fma.util.TickScheduler;
+import com.google.gson.Gson;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -34,6 +35,7 @@ public class FMAClient implements ClientModInitializer {
         "monumenta sucks, play gtnh instead"
     );
 
+    public static final Gson GSON = new Gson();
     public static final Logger LOGGER = LogManager.getLogger();
     public static final TickScheduler SCHEDULER = new TickScheduler();
     public static final LeaderboardUtils LEADERBOARD = new LeaderboardUtils();

@@ -5,6 +5,7 @@ import com.floweytf.fma.util.ChatUtil;
 import com.floweytf.fma.util.FormatUtil;
 import com.floweytf.fma.util.StatsUtil;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -67,6 +68,7 @@ public class PortalStateTracker implements StateTracker {
     private long phase2Split;
     private boolean enteredBoss = false;
     private boolean isCubeAlive = false;
+    private boolean hasWon = false;
 
     public PortalStateTracker() {
         data = new Data();
@@ -77,12 +79,26 @@ public class PortalStateTracker implements StateTracker {
         return StatsUtil.logTime("timer.fma.portal." + key, send, start, deltaBegin, deltaEnd, entries);
     }
 
-    private void render() {
+
+    @Override
+    public void onLeave() {
+        if (!FMAClient.features().enableTimerAndStats) {
+            return;
+        }
+
+        if (!hasWon) {
+            ChatUtil.send(Component.translatable("stat.fma.portal.fail"));
+            data.send();
+        }
+    }
+
+    @Override
+    public List<Component> getAdditionalSidebarText() {
         final var parts = new ArrayList<Component>();
         parts.add(Component.translatable("hud.fma.sidebar.timer", FormatUtil.timestamp(now() - startTime)));
         parts.add(Component.translatable("hud.fma.sidebar.portal.chests", FormatUtil.numeric(data.chestCount)));
         parts.add(Component.translatable("hud.fma.sidebar.portal.souls", FormatUtil.numeric(data.soulCount)));
-        FMAClient.SIDEBAR.setAdditionalText(parts);
+        return parts;
     }
 
     @Override
@@ -131,6 +147,7 @@ public class PortalStateTracker implements StateTracker {
                 phase3Split
             );
             data.send();
+            hasWon = true;
             break;
         }
     }
@@ -174,8 +191,6 @@ public class PortalStateTracker implements StateTracker {
 
     @Override
     public void onTick() {
-        render();
-
         if (!enteredBoss) {
             return;
         }

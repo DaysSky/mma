@@ -60,7 +60,6 @@ public class SideBarManager {
     private final int errorColor;
     private List<Component> builtinText = List.of();
     private final List<Component> situationalText = new ArrayList<>();
-    private List<Component> additionalText = List.of();
 
     public SideBarManager(FMAConfig config) {
         title = join(
@@ -259,16 +258,12 @@ public class SideBarManager {
         }
     }
 
-    public void setAdditionalText(List<Component> additionalText) {
-        this.additionalText = additionalText;
-    }
-
     public void render(Minecraft mc, GuiGraphics graphics) {
         final var font = mc.fontFilterFishy;
         final var lines = Stream.of(
             builtinText.stream(),
             situationalText.stream(),
-            additionalText.stream()
+            FMAClient.GAME_STATE.getAdditionalSidebarText().stream()
         ).flatMap(x -> x).toList();
 
         final var width = Math.max(font.width(title), lines.stream().mapToInt(font::width).max().orElse(0));
@@ -289,7 +284,5 @@ public class SideBarManager {
             graphics.drawString(font, line, startX, textY, textColor);
             textY += font.lineHeight;
         }
-
-        additionalText = List.of();
     }
 }

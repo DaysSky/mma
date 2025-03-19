@@ -200,7 +200,13 @@ public class ItemOverlay {
             return;
         }
 
-        final var lore = NBTUtil.access(stack).getPlainLore();
+        final var access = NBTUtil.access(stack);
+
+        if(!access.isVirtualItem()) {
+            return;
+        }
+
+        final var lore = access.getRawLore();
 
         if (lore.isEmpty()) {
             return;
@@ -222,14 +228,15 @@ public class ItemOverlay {
             return;
         }
 
-        RenderSystem.disableDepthTest();
         int width = Math.round((durability * 13.0f) / maxDurability);
         int color = Util.colorRange(durability, maxDurability);
         int barX = x + 2;
         int barY = y + 13;
+        graphics.pose().pushPose();
+        graphics.pose().translate(0, 1000, 0);
         Graphics.fill(graphics, barX, barY, barX + 13, barY + 2, 0xff000000);
         Graphics.fill(graphics, barX, barY, barX + width, barY + 1, color | 0xFF000000);
-        RenderSystem.enableDepthTest();
+        graphics.pose().popPose();
     }
 
     public static void renderVanityDurability(GuiGraphics graphics, ItemStack stack, int x, int y) {

@@ -1,5 +1,6 @@
 package com.floweytf.fma;
 
+import com.floweytf.fma.features.Waypoint;
 import com.floweytf.fma.features.cz.data.CharmEffectType;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -67,6 +68,8 @@ public class FMAConfig implements ConfigData {
         public Performance performance = new Performance();
         public boolean contractCheck = true;
         public int contractThreshold = 40;
+        @ConfigEntry.Gui.CollapsibleObject
+        public Waypoint.Config waypoint = new Waypoint.Config();
     }
 
     public static class Appearance {

@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 public class GameState {
@@ -90,6 +91,10 @@ public class GameState {
 
             currentStateTracker = null;
         });
+    }
+
+    public List<Component> getAdditionalSidebarText() {
+        return currentStateTracker == null ? List.of() : currentStateTracker.getAdditionalSidebarText();
     }
 
     private void updateLevel(ClientLevel level) {

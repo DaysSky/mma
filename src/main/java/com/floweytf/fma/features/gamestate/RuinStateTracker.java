@@ -2,7 +2,9 @@ package com.floweytf.fma.features.gamestate;
 
 import com.floweytf.fma.FMAClient;
 import com.floweytf.fma.util.ChatUtil;
+import com.floweytf.fma.util.FormatUtil;
 import com.floweytf.fma.util.StatsUtil;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 
@@ -59,12 +61,19 @@ public class RuinStateTracker implements StateTracker {
     }
 
     @Override
+    public List<Component> getAdditionalSidebarText() {
+        final var parts = new ArrayList<Component>();
+        parts.add(Component.translatable("hud.fma.sidebar.timer", FormatUtil.timestamp(now() - startTime)));
+        parts.add(Component.translatable("hud.fma.sidebar.ruin.chests", FormatUtil.numeric(data.chestCount)));
+        parts.add(Component.translatable("hud.fma.sidebar.ruin.souls", FormatUtil.numeric(data.soulCount)));
+        return parts;
+    }
+
+    @Override
     public void onLeave() {
         if (!FMAClient.features().enableTimerAndStats) {
             return;
         }
-
-        FMAClient.SIDEBAR.setAdditionalText(List.of());
 
         if (!hasWon) {
             ChatUtil.send(Component.translatable("stat.fma.ruin.fail"));

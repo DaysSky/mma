@@ -7,10 +7,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -58,6 +61,11 @@ public class NBTUtil {
             return primitive("Name", Tag.TAG_STRING, Tag::getAsString, PLAIN_KEY, DISPLAY_KEY);
         }
 
+        public boolean isVirtualItem()  {
+            return primitive("IsVirtualItem", Tag.TAG_BYTE, tag -> ((ByteTag) tag).getAsByte() == 1, MONUMENTA_KEY)
+                .orElse(false);
+        }
+
         public List<String> getPlainLore() {
             return this.<ListTag>resolve("Lore", PLAIN_KEY, DISPLAY_KEY).map(
                 x -> {
@@ -65,6 +73,21 @@ public class NBTUtil {
                     final List<String> list = new ArrayList<>(x.size());
                     for (final var t : x) {
                         list.add(t.getAsString());
+                    }
+
+                    return list;
+                }
+            ).orElse(List.of());
+        }
+
+        public List<String> getRawLore() {
+            return this.<ListTag>resolve("Lore", DISPLAY_KEY).map(
+                x -> {
+                    // TODO: streams are slow for some reason...
+                    final List<String> list = new ArrayList<>(x.size());
+                    for (final var t : x) {
+                        final var line = Component.Serializer.fromJson(t.getAsString());
+                        list.add(line == null ? "" : line.getString());
                     }
 
                     return list;

@@ -64,8 +64,6 @@ public class VerdantStateTracker implements StateTracker {
             return;
         }
 
-        FMAClient.SIDEBAR.setAdditionalText(List.of());
-
         if (!hasWon) {
             ChatUtil.send(Component.translatable("stat.fma.ruin.fail"));
             data.send();

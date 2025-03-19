@@ -8,3 +8,5 @@ accessible field net/minecraft/world/item/ItemCooldowns tickCount I
 accessible method net/minecraft/nbt/CompoundTag entries ()Ljava/util/Map;
 accessible field net/minecraft/client/Minecraft fontManager Lnet/minecraft/client/gui/font/FontManager;
 accessible field net/minecraft/client/Minecraft clientTickCount J
+accessible class net/minecraft/client/renderer/RenderType$CompositeState
+accessible class net/minecraft/client/renderer/RenderType$OutlineProperty
