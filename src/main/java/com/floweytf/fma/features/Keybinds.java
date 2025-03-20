@@ -6,6 +6,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.lwjgl.glfw.GLFW;
 
@@ -22,12 +23,18 @@ public class Keybinds {
         GLFW.GLFW_MOUSE_BUTTON_MIDDLE,
         "category.fma"
     );
+    private static final KeyMapping togglePlayerHpIndicator = new KeyMapping(
+        "key.fma.togglePlayerHpIndicator",
+        InputConstants.Type.KEYSYM,
+        GLFW.GLFW_KEY_B,
+        "category.fma"
+    );
     private static long meowMsNext = System.currentTimeMillis();
 
     public static void init() {
         KeyBindingHelper.registerKeyBinding(keyBindingMeow);
-
         KeyBindingHelper.registerKeyBinding(keyBindingPS);
+        KeyBindingHelper.registerKeyBinding(togglePlayerHpIndicator);
     }
 
     public static void tick() {
@@ -37,6 +44,12 @@ public class Keybinds {
 
         if (keyBindingPS.consumeClick()) {
             onPressedPS();
+        }
+
+        if(togglePlayerHpIndicator.consumeClick()) {
+            boolean value = FMAClient.config().hpIndicator.enableGlowingPlayer =
+                !FMAClient.config().hpIndicator.enableGlowingPlayer;
+            ChatUtil.send(Component.literal("player HP glowing: " + (value ? "enabled" : "disabled")));
         }
     }
 

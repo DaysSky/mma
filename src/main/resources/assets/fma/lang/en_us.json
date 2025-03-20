@@ -4,6 +4,7 @@
     "key.fma.playerstats": "Playerstats keybind",
     "key.fma.meow": "Meow :3",
     "key.fma.toggleChestWP": "Toggle chest waypoint recording",
+    "key.fma.togglePlayerHpIndicator": "Toggle player HP indicator",
     // Command feedback
     "commands.fma.leaderboard": "%s: #%s %s - %s",
     "text.autoconfig.fma.title": "Flowey's Monumenta Addons Config",
@@ -51,7 +52,6 @@
     "text.autoconfig.fma.option.features.waypoint.disableInPlots": "Disable recording in plots",
     "text.autoconfig.fma.option.features.waypoint.disabledWorlds": "Disabled worlds",
     "text.autoconfig.fma.option.features.waypoint.skipBrokenChests": "Skip highlights on broken chests",
-
     // Chat appearance
     "text.autoconfig.fma.option.appearance.bracketColor": "Tag bracket color",
     "text.autoconfig.fma.option.appearance.tagColor": "Tag text color",

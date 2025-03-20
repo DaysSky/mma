@@ -60,7 +60,7 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
     private final Minecraft minecraft = Minecraft.getInstance();
     private final KeyMapping keybind = new KeyMapping(
         "key.fma.toggleChestWP",
-        InputConstants.Type.MOUSE,
+        InputConstants.Type.KEYSYM,
         GLFW.GLFW_KEY_K,
         "category.fma"
     );
