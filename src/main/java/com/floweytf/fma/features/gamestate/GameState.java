@@ -67,7 +67,7 @@ public class GameState {
             return EventResult.CONTINUE;
         });
 
-        WorldRenderEvents.AFTER_ENTITIES.register(context -> {
+        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
             if (currentStateTracker == null || Minecraft.getInstance().player == null) {
                 return;
             }

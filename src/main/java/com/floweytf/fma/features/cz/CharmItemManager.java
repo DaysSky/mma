@@ -76,8 +76,6 @@ public class CharmItemManager {
     }
 
     public static Optional<Charm> getCharm(ItemStack item) {
-        // TODO: this probably won't port well to 1.20.5, but that's too far in the future... Perhaps I'm
-        //  foot-gunning myself...
         final var access = NBTUtil.access(item);
         final var tier = access.getTier();
         final var charmPower = access.getCharmPower();

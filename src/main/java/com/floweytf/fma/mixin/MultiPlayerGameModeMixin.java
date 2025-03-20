@@ -31,24 +31,6 @@ public class MultiPlayerGameModeMixin {
     @Final
     private Minecraft minecraft;
 
-    @Inject(method = "destroyBlock", at = @At("HEAD"))
-    private void breakChest(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (FMAClient.config().features.recordChestBreak &&
-            Objects.requireNonNull(minecraft.level).getBlockState(pos).getBlock() == Blocks.CHEST) {
-            // TODO:
-        }
-    }
-
-    @Inject(method = "performUseItemOn", at = @At("HEAD"))
-    private void rightClickChest(LocalPlayer player, InteractionHand hand, BlockHitResult result,
-                                 CallbackInfoReturnable<InteractionResult> cir) {
-        final var pos = result.getBlockPos();
-        if (FMAClient.config().features.recordChestBreak &&
-            Objects.requireNonNull(minecraft.level).getBlockState(pos).getBlock() == Blocks.CHEST) {
-            // TODO:
-        }
-    }
-
     @Inject(method = "setLocalMode(Lnet/minecraft/world/level/GameType;)V", at = @At("HEAD"))
     private void onChangeGameMode(GameType type, CallbackInfo ci) {
         if (FMAClient.config().features.contractCheck && type == GameType.SURVIVAL) {

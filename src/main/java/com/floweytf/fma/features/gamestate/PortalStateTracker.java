@@ -1,6 +1,7 @@
 package com.floweytf.fma.features.gamestate;
 
 import com.floweytf.fma.FMAClient;
+import com.floweytf.fma.Graphics;
 import com.floweytf.fma.util.ChatUtil;
 import com.floweytf.fma.util.FormatUtil;
 import com.floweytf.fma.util.StatsUtil;
@@ -234,7 +235,7 @@ public class PortalStateTracker implements StateTracker {
 
         int r = isCubeAlive ? 1 : 0;
         int g = isCubeAlive ? 0 : 1;
-        final var buffer = Objects.requireNonNull(context.consumers()).getBuffer(RenderType.lines());
+        final var buffer = Objects.requireNonNull(context.consumers()).getBuffer(Graphics.LINES);
         final var pose = context.matrixStack();
 
         if (enteredBoss) {

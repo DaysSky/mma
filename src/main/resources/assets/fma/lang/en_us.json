@@ -1,10 +1,9 @@
 {
     // Keybindings
     "category.fma": "Flowey Monumenta Addons",
-    "key.fma.cycle_chat_builtin": "Cycle builtin chat channels",
-    "key.fma.cycle_chat_dm": "Cycle DM chat channels",
-    "key.fma.toggle_dm_builtin": "Toggle DM/builtin channels",
+    "key.fma.playerstats": "Playerstats keybind",
     "key.fma.meow": "Meow :3",
+    "key.fma.toggleChestWP": "Toggle chest waypoint recording",
     // Command feedback
     "commands.fma.leaderboard": "%s: #%s %s - %s",
     "text.autoconfig.fma.title": "Flowey's Monumenta Addons Config",
@@ -39,14 +38,20 @@
     "text.autoconfig.fma.option.features.inventoryOverlay.enableLoomFirmCount": "Firm/loom block count overlay",
     "text.autoconfig.fma.option.features.enableDebug": "Debugging mode",
     "text.autoconfig.fma.option.features.suppressDebugWarning": "Silence debugging warnings",
-    "text.autoconfig.fma.option.features.recordChestBreak": "Record chest breaks",
     "text.autoconfig.fma.option.features.versionCheck": "Version checks",
     "text.autoconfig.fma.option.features.performance": "Micro-optimizations/performance",
     "text.autoconfig.fma.option.features.performance.obfTextCharCap": "Obfuscated text glyph cap",
     "text.autoconfig.fma.option.features.performance.obfTextCharCap.@Tooltip": "Vanilla minecraft's obfuscated text rendering is slow because it attempts to load all glphys, which are baked lazily. This how many distinct glyphs obfuscated text will use, thus improving performance. Any value <= 64 will disable this feature.",
     "text.autoconfig.fma.option.features.performance.fastPathMemoryStack": "Skip ThreadLocal#get() calls when rending on main thread, which performs poorly.",
+    "text.autoconfig.fma.option.features.contractCheck": "Warn you to switch contracts",
+    "text.autoconfig.fma.option.features.contractThreshold": "Levels at which to warn you to switch contracts",
     "text.autoconfig.fma.option.features.waypoint": "Chest waypoint settings",
     "text.autoconfig.fma.option.features.waypoint.enable": "Enable",
+    "text.autoconfig.fma.option.features.waypoint.recordChests": "Record chest breaks",
+    "text.autoconfig.fma.option.features.waypoint.disableInPlots": "Disable recording in plots",
+    "text.autoconfig.fma.option.features.waypoint.disabledWorlds": "Disabled worlds",
+    "text.autoconfig.fma.option.features.waypoint.skipBrokenChests": "Skip highlights on broken chests",
+
     // Chat appearance
     "text.autoconfig.fma.option.appearance.bracketColor": "Tag bracket color",
     "text.autoconfig.fma.option.appearance.tagColor": "Tag text color",
@@ -197,8 +202,5 @@
     "text.fma.timer_start": "Started timer!",
     "text.fma.timer_end": "Timer: %s",
     "hud.fma.sidebar.steadfast_active": "Steadfast: %s%% Armor",
-
-    "text.autoconfig.fma.option.features.contractCheck": "Warn you to switch contracts",
-    "text.autoconfig.fma.option.features.contractThreshold": "Levels at which to warn you to switch contracts",
     "text.fma.contract_warning": "Switch your contract :3"
 }

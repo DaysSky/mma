@@ -62,7 +62,6 @@ public class FMAConfig implements ConfigData {
         public SidebarToggles sidebarToggles = new SidebarToggles();
         public boolean enableDebug = SharedConstants.IS_RUNNING_IN_IDE;
         public boolean suppressDebugWarning = !SharedConstants.IS_RUNNING_IN_IDE;
-        public boolean recordChestBreak = false;
         public boolean versionCheck = false;
         @ConfigEntry.Gui.CollapsibleObject
         public Performance performance = new Performance();

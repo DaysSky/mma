@@ -1,9 +1,14 @@
 package com.floweytf.fma;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalDouble;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -43,4 +48,19 @@ public class Graphics {
         graphics.drawString(font, text, x, y, color);
         graphics.pose().popPose();
     }
+
+    public static final RenderType LINES = RenderType.create(
+        "lines",
+        DefaultVertexFormat.POSITION_COLOR_NORMAL,
+        VertexFormat.Mode.LINES,
+        1536,
+        RenderType.CompositeState.builder()
+            .setShaderState(RenderStateShard.RENDERTYPE_LINES_SHADER)
+            .setLineState(new RenderStateShard.LineStateShard(OptionalDouble.empty()))
+            .setTransparencyState(RenderStateShard.NO_TRANSPARENCY)
+            .setOutputState(RenderStateShard.ITEM_ENTITY_TARGET)
+            .setDepthTestState(RenderStateShard.NO_DEPTH_TEST)
+            .setCullState(RenderStateShard.NO_CULL)
+            .createCompositeState(false)
+    );
 }

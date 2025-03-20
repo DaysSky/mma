@@ -5,6 +5,7 @@ import com.floweytf.fma.features.Commands;
 import com.floweytf.fma.features.Keybinds;
 import com.floweytf.fma.features.LeaderboardUtils;
 import com.floweytf.fma.features.SideBarManager;
+import com.floweytf.fma.features.Waypoint;
 import com.floweytf.fma.features.cz.CharmItemManager;
 import com.floweytf.fma.features.gamestate.GameState;
 import com.floweytf.fma.util.TickScheduler;
@@ -16,10 +17,12 @@ import me.shedaniel.autoconfig.ConfigHolder;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,6 +44,7 @@ public class FMAClient implements ClientModInitializer {
     public static final LeaderboardUtils LEADERBOARD = new LeaderboardUtils();
     public final static GameState GAME_STATE = new GameState();
     public final static ModContainer MOD = FabricLoader.getInstance().getModContainer("fma").orElseThrow();
+    public static final Waypoint WAYPOINT = new Waypoint();
     public static SideBarManager SIDEBAR;
     public static ConfigHolder<FMAConfig> CONFIG;
     public static VersionChecker VERSION_CHECK;
@@ -94,16 +98,32 @@ public class FMAClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             SIDEBAR.onTick(mc);
             Keybinds.tick();
+            WAYPOINT.tick();
         });
         Debug.init();
         Commands.init();
         CharmItemManager.init();
+        WAYPOINT.init();
+
+        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
+            final var stack = context.matrixStack();
+            stack.pushPose();
+            stack.translate(
+                -context.camera().getPosition().x,
+                -context.camera().getPosition().y,
+                -context.camera().getPosition().z
+            );
+
+            WAYPOINT.render(context);
+            stack.popPose();
+        });
 
         VERSION_CHECK = new VersionChecker(CONFIG.get());
         VERSION_CHECK.registerEvent();
     }
 
     private void initializeAfterMC(Minecraft minecraft) {
+        WAYPOINT.clientInit();
         reload();
     }
 }

@@ -6,7 +6,6 @@
     "client": [
         "ClientPacketListenerMixin",
         "EntityRenderDispatcherMixin",
-        "BlockEntityRendererDispatcherMixin",
         "GuiGraphicsMixin",
         "GuiMixin",
         "ItemStackMixin",

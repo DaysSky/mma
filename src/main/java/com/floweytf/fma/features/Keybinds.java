@@ -31,10 +31,11 @@ public class Keybinds {
     }
 
     public static void tick() {
-        if (keyBindingMeow.isDown()) {
+        if (keyBindingMeow.consumeClick()) {
             onPressedMeow();
         }
-        if (keyBindingPS.isDown()) {
+
+        if (keyBindingPS.consumeClick()) {
             onPressedPS();
         }
     }
