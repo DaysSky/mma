@@ -3,7 +3,7 @@ plugins {
     id("maven-publish")
 }
 
-version = "1.7-beta.1+mc1.20.4"
+version = "1.7-beta.2+mc1.20.4"
 group = "com.floweytf"
 
 base {
@@ -26,7 +26,6 @@ repositories {
     maven("https://jitpack.io/")
     maven("https://cursemaven.com")
     maven("https://maven.nucleoid.xyz/")
-    maven("https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1")
     mavenCentral()
 }
 
@@ -47,20 +46,24 @@ dependencies {
     modImplementation(libs.fabric.loader)
     modImplementation(libs.fabric.api)
 
-    modApi(libs.cloth) {
+    modImplementation(libs.cloth) {
         exclude(group = "net.fabricmc.fabric-api")
     }
 
     // modmenu isn't strictly required
     modImplementation(libs.modmenu)
 
-    // Optional dependency, take care to never classload
+    // Optional dependencies
     modImplementation(libs.bundles.umm)
-    modCompileOnly("maven.modrinth:sodium:mc1.20.4-0.5.8-fabric")
-    implementation("club.minnced:java-discord-rpc:2.0.1")
+    modImplementation(libs.sodium)
 
-    modRuntimeOnly("maven.modrinth:spark:1.10.58-fabric")
-    modRuntimeOnly("maven.modrinth:auth-me:8.0.0+1.20.4-fabric")
+    // some runtime deps to make debugging easier
+    modRuntimeOnly(libs.bundles.dev)
+
+    // mixin^2
+    annotationProcessor(libs.mixinsquared)
+    implementation(libs.mixinsquared)
+    include(libs.mixinsquared)
 }
 
 tasks {

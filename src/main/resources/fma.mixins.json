@@ -15,8 +15,9 @@
         "optimize.FontManagerMixin",
         "optimize.FontSetMixin",
         "optimize.ItemRendererMixin",
-        "optimize.SignBlockEntityMixin",
         "optimize.SignRendererMixin",
+        "optimize.SignTextMixin",
+        "sodium.BakedGlyphMixin",
         "sodium.BakedModelEncoderMixin",
         "sodium.VertexSerializerRegistryImplMixin",
         "umm.EffectOverlayMixin"

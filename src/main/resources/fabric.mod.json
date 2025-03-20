@@ -42,8 +42,8 @@
             "net/minecraft/class_1799": [
                 "com/floweytf/fma/duck/ItemStackAccess"
             ],
-            "net/minecraft/class_2625": [
-                "com/floweytf/fma/duck/SignBlockEntityAccess"
+            "net/minecraft/class_8242": [
+                "com/floweytf/fma/duck/SignTextAccess"
             ]
         }
     },
