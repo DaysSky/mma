@@ -61,15 +61,6 @@ public class RuinStateTracker implements StateTracker {
     }
 
     @Override
-    public List<Component> getAdditionalSidebarText() {
-        final var parts = new ArrayList<Component>();
-        parts.add(Component.translatable("hud.fma.sidebar.timer", FormatUtil.timestamp(now() - startTime)));
-        parts.add(Component.translatable("hud.fma.sidebar.ruin.chests", FormatUtil.numeric(data.chestCount)));
-        parts.add(Component.translatable("hud.fma.sidebar.ruin.souls", FormatUtil.numeric(data.soulCount)));
-        return parts;
-    }
-
-    @Override
     public void onLeave() {
         if (!FMAClient.features().enableTimerAndStats) {
             return;
@@ -157,5 +148,14 @@ public class RuinStateTracker implements StateTracker {
         } else if (raw.contains("total chests")) {
             data.chestCount = Integer.parseInt(raw.split(" ")[0]);
         }
+    }
+
+    @Override
+    public List<Component> getAdditionalSidebarText() {
+        final var parts = new ArrayList<Component>();
+        parts.add(Component.translatable("hud.fma.sidebar.timer", FormatUtil.timestamp(now() - startTime)));
+        parts.add(Component.translatable("hud.fma.sidebar.ruin.chests", FormatUtil.numeric(data.chestCount)));
+        parts.add(Component.translatable("hud.fma.sidebar.ruin.souls", FormatUtil.numeric(data.soulCount)));
+        return parts;
     }
 }

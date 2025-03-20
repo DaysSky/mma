@@ -3,7 +3,6 @@ package com.floweytf.fma.features.gamestate;
 import com.floweytf.fma.FMAClient;
 import com.floweytf.fma.util.ChatUtil;
 import com.floweytf.fma.util.StatsUtil;
-import java.util.List;
 import net.minecraft.network.chat.Component;
 
 import static com.floweytf.fma.util.Util.now;

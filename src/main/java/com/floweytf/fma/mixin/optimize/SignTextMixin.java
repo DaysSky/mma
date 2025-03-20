@@ -15,21 +15,17 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(SignText.class)
 public class SignTextMixin implements SignTextAccess {
+    @Unique
+    private final FontManager fma$fm = Minecraft.getInstance().fontManager;
     @Shadow
     @Final
     private Component[] messages;
-
     @Unique
     private WeakReference<Font> fma$font;
-
     @Unique
     private long fma$cachedReloadCounter;
-
     @Unique
     private int[] fma$widths = null;
-
-    @Unique
-    private final FontManager fma$fm = Minecraft.getInstance().fontManager;
 
     @Override
     public int fma$getWidth(Font font, int index) {

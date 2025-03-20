@@ -10,8 +10,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import javax.swing.text.html.Option;
+import net.fabricmc.loader.api.SemanticVersion;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.VersionParsingException;
 
@@ -34,40 +37,57 @@ public class VersionChecker {
             return remoteVersion.orElseThrow();
         }
     }
-    private static final String VERSION_URL =
-        "https://raw.githubusercontent.com/Floweynt/flowey-monumenta-addons/refs/heads/master/versions.json";
+
+    private static final String VERSION_URL = "https://api.github.com/repos/Floweynt/flowey-monumenta-addons/releases";
+    private static final Gson GSON = new Gson();
+
+    private static final HttpClient CLIENT = HttpClient.newBuilder()
+        .connectTimeout(Duration.of(10, ChronoUnit.SECONDS))
+        .build();
+
+    private static final HttpRequest REQUEST = HttpRequest.newBuilder()
+        .uri(URI.create(VERSION_URL))
+        .GET()
+        .build();
+
     private final CompletableFuture<Optional<Version>> latestVersion;
 
     public VersionChecker(FMAConfig config) {
         if (config.features.versionCheck) {
-            latestVersion = makeVersionCheckRequestAsync();
-        } else {
-            latestVersion = CompletableFuture.completedFuture(Optional.empty());
-        }
-    }
-
-    private static CompletableFuture<Optional<Version>> makeVersionCheckRequestAsync() {
-        return HttpClient.newBuilder().connectTimeout(Duration.of(10, ChronoUnit.SECONDS)).build()
-            .sendAsync(HttpRequest.newBuilder()
-                    .uri(URI.create(VERSION_URL))
-                    .GET()
-                    .build(),
-                HttpResponse.BodyHandlers.ofString()
-            )
-            .thenApply(HttpResponse::body)
-            .thenApply(s -> {
-                final var versionStr = new Gson()
-                    .fromJson(s, JsonElement.class)
-                    .getAsJsonObject()
-                    .get("latest")
-                    .getAsString();
+            latestVersion = CLIENT.sendAsync(REQUEST, HttpResponse.BodyHandlers.ofString()).thenApply(s -> {
+                final var list = new ArrayList<Version>();
 
                 try {
-                    return Optional.of(Version.parse(versionStr));
+                    final var versions = GSON
+                        .fromJson(s.body(), JsonElement.class)
+                        .getAsJsonArray();
+
+                    for (final var version : versions) {
+                        final var file = version.getAsJsonObject().get("tag_name").getAsString();
+                        final var preRelease = version.getAsJsonObject().get("prerelease").getAsBoolean();
+
+                        if(preRelease && !FMAClient.features().versionCheckIncludeBeta) {
+                            continue;
+                        }
+
+                        final var semVer = SemanticVersion.parse(file.substring(1));
+                        list.add(semVer);
+                    }
                 } catch (VersionParsingException e) {
                     throw new RuntimeException(e);
                 }
+
+                list.sort(Version::compareTo);
+
+                if(list.isEmpty()) {
+                    return Optional.empty();
+                }
+
+                return Optional.of(list.get(list.size() - 1));
             });
+        } else {
+            latestVersion = CompletableFuture.completedFuture(Optional.empty());
+        }
     }
 
     public void registerEvent() {

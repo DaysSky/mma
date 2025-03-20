@@ -53,10 +53,6 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
         ResourceLocation.CODEC,
         BlockPos.CODEC.listOf()
     );
-
-    // note: only access from main thread!
-    private Map<ResourceLocation, Set<BlockPos>> byWorld = new HashMap<>();
-    private CompletableFuture<Void> currCompletionToken = CompletableFuture.completedFuture(null);
     private final Minecraft minecraft = Minecraft.getInstance();
     private final KeyMapping keybind = new KeyMapping(
         "key.fma.toggleChestWP",
@@ -64,6 +60,9 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
         GLFW.GLFW_KEY_K,
         "category.fma"
     );
+    // note: only access from main thread!
+    private Map<ResourceLocation, Set<BlockPos>> byWorld = new HashMap<>();
+    private CompletableFuture<Void> currCompletionToken = CompletableFuture.completedFuture(null);
 
     private void load() {
         if (!Files.exists(Waypoint.PATH)) {
@@ -195,7 +194,8 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
         if (keybind.consumeClick()) {
             config().recordChests = !config().recordChests;
             // TODO: i18n
-            ChatUtil.send(Component.literal("chest break recording: " + (config().recordChests ? "enabled" : "disabled")));
+            ChatUtil.send(Component.literal("chest break recording: " + (config().recordChests ? "enabled" :
+                "disabled")));
         }
     }
 
@@ -209,7 +209,7 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
         final var entries = byWorld.getOrDefault(FMAClient.level().dimension().location(), Set.of());
 
         for (final var entry : entries) {
-            if(config().skipBrokenChests && context.world().getBlockState(entry).getBlock() != Blocks.CHEST) {
+            if (config().skipBrokenChests && context.world().getBlockState(entry).getBlock() != Blocks.CHEST) {
                 continue;
             }
 

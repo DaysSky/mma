@@ -16,6 +16,8 @@ public abstract class VertexSerializerRegistryImplMixin {
     // pessimization is irrelevant.
     @Unique
     private final Spinlock fma$lock = new Spinlock();
+    @Unique
+    private VertexSerializer[] fma$cache = new VertexSerializer[4096];
 
     @Shadow
     private static VertexSerializer createSerializer(VertexFormatDescription svf, VertexFormatDescription dvf) {
@@ -29,9 +31,6 @@ public abstract class VertexSerializerRegistryImplMixin {
         long k2 = dstFormat.id();
         return (k1 + k2) * (k1 + k2 + 1) / 2 + k2;
     }
-
-    @Unique
-    private VertexSerializer[] fma$cache = new VertexSerializer[4096];
 
     /**
      * @author Flowey

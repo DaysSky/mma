@@ -63,6 +63,7 @@ public class FMAConfig implements ConfigData {
         public boolean enableDebug = SharedConstants.IS_RUNNING_IN_IDE;
         public boolean suppressDebugWarning = !SharedConstants.IS_RUNNING_IN_IDE;
         public boolean versionCheck = false;
+        public boolean versionCheckIncludeBeta = false;
         @ConfigEntry.Gui.CollapsibleObject
         public Performance performance = new Performance();
         public boolean contractCheck = true;

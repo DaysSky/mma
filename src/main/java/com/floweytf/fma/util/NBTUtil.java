@@ -13,7 +13,6 @@ import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -61,7 +60,7 @@ public class NBTUtil {
             return primitive("Name", Tag.TAG_STRING, Tag::getAsString, PLAIN_KEY, DISPLAY_KEY);
         }
 
-        public boolean isVirtualItem()  {
+        public boolean isVirtualItem() {
             return primitive("IsVirtualItem", Tag.TAG_BYTE, tag -> ((ByteTag) tag).getAsByte() == 1, MONUMENTA_KEY)
                 .orElse(false);
         }

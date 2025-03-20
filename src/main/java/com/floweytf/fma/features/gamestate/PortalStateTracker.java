@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Objects;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -91,15 +90,6 @@ public class PortalStateTracker implements StateTracker {
             ChatUtil.send(Component.translatable("stat.fma.portal.fail"));
             data.send();
         }
-    }
-
-    @Override
-    public List<Component> getAdditionalSidebarText() {
-        final var parts = new ArrayList<Component>();
-        parts.add(Component.translatable("hud.fma.sidebar.timer", FormatUtil.timestamp(now() - startTime)));
-        parts.add(Component.translatable("hud.fma.sidebar.portal.chests", FormatUtil.numeric(data.chestCount)));
-        parts.add(Component.translatable("hud.fma.sidebar.portal.souls", FormatUtil.numeric(data.soulCount)));
-        return parts;
     }
 
     @Override
@@ -251,5 +241,14 @@ public class PortalStateTracker implements StateTracker {
                 r, g, 0, 1
             );
         }
+    }
+
+    @Override
+    public List<Component> getAdditionalSidebarText() {
+        final var parts = new ArrayList<Component>();
+        parts.add(Component.translatable("hud.fma.sidebar.timer", FormatUtil.timestamp(now() - startTime)));
+        parts.add(Component.translatable("hud.fma.sidebar.portal.chests", FormatUtil.numeric(data.chestCount)));
+        parts.add(Component.translatable("hud.fma.sidebar.portal.souls", FormatUtil.numeric(data.soulCount)));
+        return parts;
     }
 }

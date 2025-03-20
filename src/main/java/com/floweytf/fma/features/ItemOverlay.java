@@ -5,7 +5,6 @@ import com.floweytf.fma.Graphics;
 import com.floweytf.fma.features.cz.CharmItemManager;
 import com.floweytf.fma.util.NBTUtil;
 import com.floweytf.fma.util.Util;
-import com.mojang.blaze3d.systems.RenderSystem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -202,7 +201,7 @@ public class ItemOverlay {
 
         final var access = NBTUtil.access(stack);
 
-        if(!access.isVirtualItem()) {
+        if (!access.isVirtualItem()) {
             return;
         }
 

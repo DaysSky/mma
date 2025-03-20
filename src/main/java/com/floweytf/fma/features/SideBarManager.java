@@ -58,8 +58,8 @@ public class SideBarManager {
     private final int textColor;
     private final int altColor;
     private final int errorColor;
-    private List<Component> builtinText = List.of();
     private final List<Component> situationalText = new ArrayList<>();
+    private List<Component> builtinText = List.of();
 
     public SideBarManager(FMAConfig config) {
         title = join(

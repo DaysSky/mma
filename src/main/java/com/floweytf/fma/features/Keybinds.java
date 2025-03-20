@@ -46,7 +46,7 @@ public class Keybinds {
             onPressedPS();
         }
 
-        if(togglePlayerHpIndicator.consumeClick()) {
+        if (togglePlayerHpIndicator.consumeClick()) {
             boolean value = FMAClient.config().hpIndicator.enableGlowingPlayer =
                 !FMAClient.config().hpIndicator.enableGlowingPlayer;
             ChatUtil.send(Component.literal("player HP glowing: " + (value ? "enabled" : "disabled")));
