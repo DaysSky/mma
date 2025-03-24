@@ -53,13 +53,23 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
         ResourceLocation.CODEC,
         BlockPos.CODEC.listOf()
     );
+
     private final Minecraft minecraft = Minecraft.getInstance();
-    private final KeyMapping keybind = new KeyMapping(
-        "key.fma.toggleChestWP",
+
+    private final KeyMapping toggleRecordingKey = new KeyMapping(
+        "key.fma.toggleChestWaypointRecording",
         InputConstants.Type.KEYSYM,
         GLFW.GLFW_KEY_K,
         "category.fma"
     );
+
+    private final KeyMapping toggleKey = new KeyMapping(
+        "key.fma.toggleChestWaypoint",
+        InputConstants.Type.KEYSYM,
+        GLFW.GLFW_KEY_N,
+        "category.fma"
+    );
+
     // note: only access from main thread!
     private Map<ResourceLocation, Set<BlockPos>> byWorld = new HashMap<>();
     private CompletableFuture<Void> currCompletionToken = CompletableFuture.completedFuture(null);
@@ -147,7 +157,8 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
     public void init() {
         load();
 
-        KeyBindingHelper.registerKeyBinding(keybind);
+        KeyBindingHelper.registerKeyBinding(toggleRecordingKey);
+        KeyBindingHelper.registerKeyBinding(toggleKey);
 
         AttackBlockCallback.EVENT.register((player, level, interactionHand, blockPos, direction) -> {
             if (!level.isClientSide()) {
@@ -191,11 +202,16 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
 
     @Override
     public void tick() {
-        if (keybind.consumeClick()) {
+        if (toggleRecordingKey.consumeClick()) {
             config().recordChests = !config().recordChests;
             // TODO: i18n
-            ChatUtil.send(Component.literal("chest break recording: " + (config().recordChests ? "enabled" :
-                "disabled")));
+            ChatUtil.send(Component.literal("chest break recording: " + (config().recordChests ? "enabled" : "disabled")));
+        }
+
+        if(toggleKey.consumeClick()) {
+            config().enable = !config().enable;
+            // TODO: i18n
+            ChatUtil.send(Component.literal("chest waypoints: " + (config().recordChests ? "enabled" : "disabled")));
         }
     }
 

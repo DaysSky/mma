@@ -5,6 +5,7 @@
     "key.fma.meow": "Meow :3",
     "key.fma.toggleChestWP": "Toggle chest waypoint recording",
     "key.fma.togglePlayerHpIndicator": "Toggle player HP indicator",
+    "key.fma.toggleChestWaypoint": "Toggle chest waypoints",
     // Command feedback
     "commands.fma.leaderboard": "%s: #%s %s - %s",
     "text.autoconfig.fma.title": "Flowey's Monumenta Addons Config",

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
@@ -130,6 +129,49 @@ public class ItemOverlay {
         }
     }
 
+    private static Optional<RenderOp> renderVanityDurability(ItemStack stack) {
+        final var access = NBTUtil.access(stack);
+
+        if (!access.isVirtualItem()) {
+            return Optional.empty();
+        }
+
+        final var lore = access.getRawLore();
+
+        if (lore.isEmpty()) {
+            return Optional.empty();
+        }
+
+        final var line = lore.get(lore.size() - 1);
+
+        if (!line.startsWith("Durability: ")) {
+            return  Optional.empty();
+        }
+
+        final var scanner = new Scanner(line);
+        scanner.next();
+        final var durability = scanner.nextInt();
+        scanner.next();
+        final var maxDurability = scanner.nextInt();
+
+        if (durability == maxDurability) {
+            return Optional.empty();
+        }
+
+        int width = Math.round((durability * 13.0f) / maxDurability);
+        int color = Util.colorRange(durability, maxDurability);
+
+        return Optional.of((graphics, font, x, y) -> {
+            int barX = x + 2;
+            int barY = y + 13;
+            graphics.pose().pushPose();
+            graphics.pose().translate(0, -1000, 0);
+            Graphics.fill(graphics, barX, barY, barX + 13, barY + 2, 0xff000000);
+            Graphics.fill(graphics, barX, barY, barX + width, barY + 1, color | 0xFF000000);
+            graphics.pose().popPose();
+        });
+    }
+
     private static List<RenderOp> buildRenderOps(ItemStack stack) {
         final var config = FMAClient.features().inventoryOverlay;
 
@@ -160,6 +202,10 @@ public class ItemOverlay {
             list.add(renderPlacerCount(dataAccess));
         }
 
+        if(FMAClient.features().enableVanityDurability) {
+            renderVanityDurability(stack).ifPresent(list::add);
+        }
+
         return list;
     }
 
@@ -176,73 +222,10 @@ public class ItemOverlay {
                 renderCooldowns(stack, graphics, font, x, y);
             }
 
-            final var rc = stack.fma$getRenderCache();
-            if (rc.lastUpdateTick + config.updateDelayTicks <= Minecraft.getInstance().clientTickCount) {
-                rc.lastUpdateTick = Minecraft.getInstance().clientTickCount;
-                rc.renderOps = null;
-            }
-
-            if (rc.renderOps == null) {
-                rc.renderOps = buildRenderOps(stack);
-            }
-
-            for (RenderOp renderOp : rc.renderOps) {
-                renderOp.render(graphics, font, x, y);
-            }
+            stack.fma$getOverlayRenderCache()
+                .render(config.updateDelayTicks, () -> buildRenderOps(stack), graphics, font, x, y);
         } catch (Throwable e) {
             FMAClient.LOGGER.warn("ItemOverlay#renderItemOverlay: ", e);
-        }
-    }
-
-    public static void renderVanityDurability0(GuiGraphics graphics, ItemStack stack, int x, int y) {
-        if (!FMAClient.features().enableVanityDurability) {
-            return;
-        }
-
-        final var access = NBTUtil.access(stack);
-
-        if (!access.isVirtualItem()) {
-            return;
-        }
-
-        final var lore = access.getRawLore();
-
-        if (lore.isEmpty()) {
-            return;
-        }
-
-        final var line = lore.get(lore.size() - 1);
-
-        if (!line.startsWith("Durability: ")) {
-            return;
-        }
-
-        final var scanner = new Scanner(line);
-        scanner.next();
-        final var durability = scanner.nextInt();
-        scanner.next();
-        final var maxDurability = scanner.nextInt();
-
-        if (durability == maxDurability) {
-            return;
-        }
-
-        int width = Math.round((durability * 13.0f) / maxDurability);
-        int color = Util.colorRange(durability, maxDurability);
-        int barX = x + 2;
-        int barY = y + 13;
-        graphics.pose().pushPose();
-        graphics.pose().translate(0, -1000, 0);
-        Graphics.fill(graphics, barX, barY, barX + 13, barY + 2, 0xff000000);
-        Graphics.fill(graphics, barX, barY, barX + width, barY + 1, color | 0xFF000000);
-        graphics.pose().popPose();
-    }
-
-    public static void renderVanityDurability(GuiGraphics graphics, ItemStack stack, int x, int y) {
-        try {
-            renderVanityDurability0(graphics, stack, x, y);
-        } catch (Throwable e) {
-            FMAClient.LOGGER.warn("ItemOverlay#renderVanityDurability: ", e);
         }
     }
 }

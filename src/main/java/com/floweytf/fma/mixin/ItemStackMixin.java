@@ -8,11 +8,10 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(ItemStack.class)
 public class ItemStackMixin implements ItemStackAccess {
     @Unique
-    private final RenderCacheState fma$state = new RenderCacheState();
-
+    private final RenderCacheState fma$overlayState = new RenderCacheState();
 
     @Override
-    public RenderCacheState fma$getRenderCache() {
-        return fma$state;
+    public RenderCacheState fma$getOverlayRenderCache() {
+        return fma$overlayState;
     }
 }

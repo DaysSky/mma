@@ -18,22 +18,11 @@ public abstract class GuiGraphicsMixin {
             "IILjava/lang/String;)V",
         at = @At(
             value = "INVOKE",
-            target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V"
+            target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V",
+            shift = At.Shift.AFTER
         )
     )
     private void renderItemOverlay(Font font, ItemStack stack, int x, int y, String string, CallbackInfo ci) {
         ItemOverlay.renderItemOverlay(c(this), font, stack, x, y);
-    }
-
-    @Inject(
-        method = "renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;" +
-            "IILjava/lang/String;)V",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/item/ItemStack;isBarVisible()Z"
-        )
-    )
-    private void renderVanityDurability(Font font, ItemStack stack, int x, int y, String string, CallbackInfo ci) {
-        ItemOverlay.renderVanityDurability(c(this), stack, x, y);
     }
 }
