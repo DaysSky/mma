@@ -20,6 +20,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.math.Color;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
@@ -45,6 +47,8 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
         public boolean recordChests = false;
         public boolean disableInPlots = true;
         public boolean skipBrokenChests = false;
+        @ConfigEntry.ColorPicker
+        public int color = 0x00ff00;
         public List<String> disabledWorlds = new ArrayList<>();
     }
 
@@ -208,7 +212,7 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
             ChatUtil.send(Component.literal("chest break recording: " + (config().recordChests ? "enabled" : "disabled")));
         }
 
-        if(toggleKey.consumeClick()) {
+        if (toggleKey.consumeClick()) {
             config().enable = !config().enable;
             // TODO: i18n
             ChatUtil.send(Component.literal("chest waypoints: " + (config().recordChests ? "enabled" : "disabled")));
@@ -232,7 +236,17 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
             int x = entry.getX();
             int y = entry.getY();
             int z = entry.getZ();
-            LevelRenderer.renderLineBox(context.matrixStack(), consumer, x, y, z, x + 1, y + 1, z + 1, 0, 1, 0, 1);
+
+            final var color = Color.ofOpaque(config().color);
+            LevelRenderer.renderLineBox(
+                context.matrixStack(),
+                consumer,
+                x, y, z, x + 1, y + 1, z + 1,
+                color.getRed() / 255f,
+                color.getGreen() / 255f,
+                color.getBlue() / 255f,
+                1
+            );
         }
 
         context.consumers();
