@@ -24,7 +24,8 @@ public class BakedGlyphMixin {
             value = "INVOKE",
             target = "Lorg/lwjgl/system/MemoryStack;stackPush()Lorg/lwjgl/system/MemoryStack;",
             remap = false
-        )
+        ),
+        require = 0
     )
     private static MemoryStack fastStackPush() {
         if (fma$MS == null) {

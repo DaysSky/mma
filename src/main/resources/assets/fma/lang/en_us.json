@@ -45,7 +45,7 @@
     "text.autoconfig.fma.option.features.versionCheckIncludeBeta": "Include betas in version checks",
     "text.autoconfig.fma.option.features.performance": "Micro-optimizations/performance",
     "text.autoconfig.fma.option.features.performance.obfTextCharCap": "Obfuscated text glyph cap",
-    "text.autoconfig.fma.option.features.performance.obfTextCharCap.@Tooltip": "Vanilla minecraft's obfuscated text rendering is slow because it attempts to load all glphys, which are baked lazily. This how many distinct glyphs obfuscated text will use, thus improving performance. Any value <= 64 will disable this feature.",
+    "text.autoconfig.fma.option.features.performance.obfTextCharCap.@Tooltip": "Vanilla minecraft's obfuscated text rendering is slow because it attempts to load all glphys, which are baked lazily. This limits how many distinct glyphs obfuscated text will use, thus improving performance. Any value <= 64 will disable this feature.",
     "text.autoconfig.fma.option.features.performance.fastPathMemoryStack": "Skip ThreadLocal#get() calls when rending on main thread, which performs poorly.",
     "text.autoconfig.fma.option.features.contractCheck": "Warn you to switch contracts",
     "text.autoconfig.fma.option.features.contractThreshold": "Levels at which to warn you to switch contracts",
