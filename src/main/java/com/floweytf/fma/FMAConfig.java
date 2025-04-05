@@ -37,10 +37,6 @@ public class FMAConfig implements ConfigData {
         public int updateDelayTicks = 5;
     }
 
-    public static class Performance {
-        public int obfTextCharCap = 0;
-    }
-
     public static class SidebarToggles {
         public boolean enable = true;
         public boolean enableProxy = true;
@@ -64,8 +60,6 @@ public class FMAConfig implements ConfigData {
         public boolean suppressDebugWarning = !SharedConstants.IS_RUNNING_IN_IDE;
         public boolean versionCheck = false;
         public boolean versionCheckIncludeBeta = false;
-        @ConfigEntry.Gui.CollapsibleObject
-        public Performance performance = new Performance();
         public boolean contractCheck = true;
         public int contractThreshold = 40;
         @ConfigEntry.Gui.CollapsibleObject
