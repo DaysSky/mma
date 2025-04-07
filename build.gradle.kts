@@ -59,11 +59,6 @@ dependencies {
 
     // some runtime deps to make debugging easier
     modRuntimeOnly(libs.bundles.dev)
-
-    // mixin^2
-    annotationProcessor(libs.mixinsquared)
-    implementation(libs.mixinsquared)
-    include(libs.mixinsquared)
 }
 
 tasks {
