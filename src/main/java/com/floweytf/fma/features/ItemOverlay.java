@@ -165,7 +165,7 @@ public class ItemOverlay {
             int barX = x + 2;
             int barY = y + 13;
             graphics.pose().pushPose();
-            graphics.pose().translate(0, -1000, 0);
+            graphics.pose().translate(0, 0, 1000);
             Graphics.fill(graphics, barX, barY, barX + 13, barY + 2, 0xff000000);
             Graphics.fill(graphics, barX, barY, barX + width, barY + 1, color | 0xFF000000);
             graphics.pose().popPose();
