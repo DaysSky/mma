@@ -1,5 +1,6 @@
 package com.floweytf.fma.features.gamestate;
 
+import java.util.List;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.network.chat.Component;
 
@@ -30,5 +31,9 @@ public interface StateTracker {
 
     default void onRender(WorldRenderContext context) {
 
+    }
+
+    default List<Component> getAdditionalSidebarText() {
+        return List.of();
     }
 }

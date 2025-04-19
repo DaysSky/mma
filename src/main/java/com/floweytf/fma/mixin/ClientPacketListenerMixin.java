@@ -1,9 +1,20 @@
 package com.floweytf.fma.mixin;
 
 import com.floweytf.fma.FMAClient;
-import com.floweytf.fma.events.*;
+import com.floweytf.fma.events.ClientJoinServerEvent;
+import com.floweytf.fma.events.ClientReceiveSystemChatEvent;
+import com.floweytf.fma.events.ClientReceiveTabListCustomizationEvent;
+import com.floweytf.fma.events.ClientRespawnEvent;
+import com.floweytf.fma.events.ClientSetTitleEvent;
+import com.floweytf.fma.events.EventResult;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.network.protocol.game.*;
+import net.minecraft.network.protocol.game.ClientboundLoginPacket;
+import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
+import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
+import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

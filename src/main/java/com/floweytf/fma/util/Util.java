@@ -1,6 +1,10 @@
 package com.floweytf.fma.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
@@ -55,5 +59,10 @@ public class Util {
 
     public static <T> void with(List<T> list, int index, UnaryOperator<T> operator) {
         list.set(index, operator.apply(list.get(index)));
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <E extends Throwable, U> U sneakyThrow(Throwable e) throws E {
+        throw (E) e;
     }
 }

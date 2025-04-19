@@ -4,19 +4,18 @@ import com.floweytf.fma.FMAClient;
 import com.floweytf.fma.features.cz.data.CharmEffectRarity;
 import com.floweytf.fma.features.cz.data.CharmEffectType;
 import com.floweytf.fma.features.cz.data.CharmRarity;
-import static com.floweytf.fma.util.FormatUtil.literal;
 import com.floweytf.fma.util.HoverControlHandler;
 import com.floweytf.fma.util.NBTUtil;
-import com.google.common.collect.Lists;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.Tag;
-import static net.minecraft.network.chat.Component.empty;
 import net.minecraft.world.item.ItemStack;
+
+import static com.floweytf.fma.util.FormatUtil.literal;
+import static net.minecraft.network.chat.Component.empty;
 
 public class CharmItemManager {
     public static final String ZENITH_CHARM_TIER = "zenithcharm";
@@ -41,6 +40,7 @@ public class CharmItemManager {
             }
 
             try {
+                // TODO: i18n
                 getCharm(stack).ifPresent(charm -> {
                     if (FMAClient.config().zenith.disableMonumentaLore && !FMAClient.features().enableDebug) {
                         lines.subList(1, lines.size()).clear();
@@ -51,6 +51,17 @@ public class CharmItemManager {
                     }
 
                     charm.buildLore(Minecraft.getInstance().fontFilterFishy, lines, charmHoverHandler.isEnabled(stack));
+
+                    // somewhat important because I don't want people using outdated flowey mod, which might have bugs
+                    final var currVersionString = FMAClient.MOD.getMetadata().getVersion().getFriendlyString();
+                    lines.add(literal("Mod version: ").append(literal(currVersionString,
+                        switch (FMAClient.VERSION_CHECK.getVersionInfo().state()) {
+                            case OUTDATED -> ChatFormatting.RED;
+                            case NOT_AVAILABLE, NOT_READY, DISABLED -> ChatFormatting.GRAY;
+                            case LATEST -> ChatFormatting.GREEN;
+                            case DEV_BUILD -> ChatFormatting.YELLOW;
+                        }
+                    )));
                 });
             } catch (Exception e) {
                 lines.add(literal("* Failed to parse charm data *", ChatFormatting.RED));
@@ -65,19 +76,12 @@ public class CharmItemManager {
     }
 
     public static Optional<Charm> getCharm(ItemStack item) {
-        // TODO: this probably won't port well to 1.20.5, but that's too far in the future... Perhaps I'm
-        //  foot-gunning myself...
-        final var monumenta = NBTUtil.getMonumenta(item);
-        final var tier = NBTUtil.getTier(item);
-        final var charmPower = NBTUtil.getCharmPower(item);
+        final var access = NBTUtil.access(item);
+        final var tier = access.getTier();
+        final var charmPower = access.getCharmPower();
+        final var charmDataOptional = access.getPlayerModified();
 
-        if (tier.isEmpty() || charmPower.isEmpty() || !tier.get().equals(ZENITH_CHARM_TIER) || monumenta.isEmpty()) {
-            return Optional.empty();
-        }
-
-        // meow meow meow meow meow meow
-        final var charmDataOptional = NBTUtil.getPlayerModified(item);
-        if (charmDataOptional.isEmpty()) {
+        if (tier.isEmpty() || charmPower.isEmpty() || !tier.get().equals(ZENITH_CHARM_TIER) || charmDataOptional.isEmpty()) {
             return Optional.empty();
         }
 
@@ -99,26 +103,22 @@ public class CharmItemManager {
         final var budgetArr = new int[]{0};
 
         final var effects = IntStream.range(1, effectsCount.get() + 1).mapToObj(i -> {
-            final var roll = NBTUtil.getDouble(charmData, CHARM_ROLLS_KEY + i)
-                .orElseThrow(ise("CHARM_ROLLS_KEY must be double"));
-
-            final var effectKey = NBTUtil.getString(charmData, CHARM_EFFECTS_KEY + i)
-                .orElseThrow(ise("CHARM_EFFECTS_KEY can't be found"));
-
+            final var roll = charmData.getDouble(CHARM_ROLLS_KEY + i);
+            final var effectKey = charmData.getString(CHARM_EFFECTS_KEY + i);
             final var effectType = CharmEffectType.byName(effectKey)
                 .orElseThrow(ise("CHARM_EFFECTS_KEY can't be matched: " + effectKey));
 
-            final var effectRarityOpt = NBTUtil.getString(charmData, CHARM_ACTIONS_KEY + (i - 1))
-                .map(x -> CharmEffectRarity.byName(x).orElseThrow(ise("CHARM_ACTIONS_KEY can't be found")));
+            CharmEffectRarity effectRarity;
 
-            final var effectRarity = effectRarityOpt
-                .orElse(CharmEffectRarity.byCharmRarity(rarity));
-
-            effectRarityOpt.map(x -> budgetArr[0] -= x.budget);
+            if (charmData.contains(CHARM_ACTIONS_KEY + (i - 1))) {
+                effectRarity = CharmEffectRarity.byName(charmData.getString(CHARM_ACTIONS_KEY + (i - 1)));
+                budgetArr[0] -= effectRarity.budget;
+            } else {
+                effectRarity = CharmEffectRarity.byCharmRarity(rarity);
+            }
 
             return new CharmEffectInstance(roll, effectType, effectRarity);
         }).toList();
-
 
         return Optional.of(new Charm(
             charmPower.get(),
@@ -129,7 +129,7 @@ public class CharmItemManager {
             charmData.getInt(TARGET_BUDGET_KEY),
             charmData.getInt(CHARM_TYPE_KEY),
             charmData.getBoolean(HAS_USED_KEY),
-            Lists.transform(NBTUtil.getLore(item).orElseThrow(), Tag::getAsString)
+            access.getPlainLore()
         ));
     }
 }

@@ -3,10 +3,14 @@
     "id": "fma",
     "version": "${version}",
     "name": "flowey-monumenta-addons",
-    "description": "",
-    "authors": [],
+    "description": "Monumenta utilities",
+    "authors": [
+        "Flowey",
+        "catgirljade_"
+    ],
     "contact": {
-        "repo": "https://github.com/flowey/flowey-monumenta-addons"
+        "issues": "https://github.com/flowey/flowey-monumenta-addons/issues",
+        "sources": "https://github.com/flowey/flowey-monumenta-addons"
     },
     "license": "GPL-3.0",
     "icon": "assets/fma/icon.png",
@@ -16,7 +20,7 @@
             "com.floweytf.fma.FMAClient"
         ],
         "modmenu": [
-            "com.floweytf.fma.FMAConfigMenu"
+            "com.floweytf.fma.compat.FMAConfigMenu"
         ]
     },
     "mixins": [
@@ -25,9 +29,26 @@
     "depends": {
         "fabricloader": ">=${loader_version}",
         "fabric": "*",
-        "modmenu": "*",
         "cloth-config": "*",
         "minecraft": "${minecraft_version}"
+    },
+    "suggests": {
+        "modmenu": "*",
+        "sodium": "*"
+    },
+    "custom": {
+        "modmenu": {
+            "links": {
+                "modmenu.discord": "https://discord.gg/bSpYTPa9qw",
+                "modmenu.github_releases": "https://github.com/Floweynt/flowey-monumenta-addons/releases",
+                "modmenu.modrinth": "https://modrinth.com/mod/flowey-moumenta-addons"
+            }
+        },
+        "loom:injected_interfaces": {
+            "net/minecraft/class_1799": [
+                "com/floweytf/fma/duck/ItemStackAccess"
+            ]
+        }
     },
     "accessWidener": "fma.accesswidener"
 }

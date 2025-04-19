@@ -1,18 +1,13 @@
 plugins {
-    id("fabric-loom") version "1.6-SNAPSHOT"
+    id("fabric-loom") version "1.9-SNAPSHOT"
     id("maven-publish")
 }
 
-val version: String by project
-val group: String by project
-val archives_base_name: String by project
-val minecraft_version: String by project
-val loader_version: String by project
-val fabric_version: String by project
-val minecraft_version_target: String by project
+version = "1.7-rc.1+mc1.20.4"
+group = "com.floweytf"
 
 base {
-    archivesName = archives_base_name
+    archivesName = "fma"
 }
 
 repositories {
@@ -30,7 +25,7 @@ repositories {
     maven("https://maven.terraformersmc.com/releases/")
     maven("https://jitpack.io/")
     maven("https://cursemaven.com")
-    mavenLocal()
+    maven("https://maven.nucleoid.xyz/")
     mavenCentral()
 }
 
@@ -40,44 +35,45 @@ loom {
 
 dependencies {
     // To change the versions see the gradle.properties file
-    minecraft("com.mojang:minecraft:${minecraft_version_target}")
+    minecraft(libs.minecraft)
+
+    @Suppress("UnstableApiUsage")
     mappings(loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.20.4:2024.04.14@zip")
+        parchment(libs.parchment)
     })
 
-    modImplementation("net.fabricmc:fabric-loader:${loader_version}")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
+    modImplementation(libs.fabric.loader)
+    modImplementation(libs.fabric.api)
 
-    modApi("com.terraformersmc:modmenu:7.2.2")
-    modApi("me.shedaniel.cloth:cloth-config-fabric:11.1.118") {
+    modImplementation(libs.cloth) {
         exclude(group = "net.fabricmc.fabric-api")
     }
 
-    // Optional dependency, take care to never classload
-    modApi("maven.modrinth:unofficial-monumenta-mod:1.10-fabric,1.20.4")
+    // modmenu isn't strictly required
+    modImplementation(libs.modmenu)
 
-    //modApi(files("libs/Njols-UI-framework-mc1_20_4-1.1.1.jar"))
-    modApi("com.github.Ascynx:MCUIFramework:mc1.20.4-SNAPSHOT")
+    // Optional dependencies
+    modImplementation(libs.bundles.umm)
+    modImplementation(libs.sodium)
 
-    modApi("com.github.Ascynx:MCConfigFramework:mc1.20.4-SNAPSHOT")
-
-    modApi("maven.modrinth:xaeros-minimap-fair:FP24.2.0_Fabric_1.20.4-fabric,1.20.4")
+    // some runtime deps to make debugging easier
+    modRuntimeOnly(libs.bundles.dev)
 }
 
 tasks {
     processResources {
         inputs.property("version", version)
-        inputs.property("minecraft_version", minecraft_version)
-        inputs.property("loader_version", loader_version)
+        inputs.property("minecraft_version", libs.versions.minecraft.get())
+        inputs.property("loader_version", libs.versions.fabric.loader.get())
         filteringCharset = "UTF-8"
 
         filesMatching("fabric.mod.json") {
             expand(
                 mapOf(
                     "version" to version,
-                    "minecraft_version" to minecraft_version,
-                    "loader_version" to loader_version
+                    "minecraft_version" to libs.versions.minecraft.get(),
+                    "loader_version" to libs.versions.fabric.loader.get()
                 )
             )
         }
@@ -89,7 +85,7 @@ tasks {
 
     jar {
         from("LICENSE") {
-            rename { "${it}_${archives_base_name}" }
+            rename { "${it}_${base.archivesName}" }
         }
     }
 }
@@ -113,11 +109,11 @@ java {
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
-            artifactId = archives_base_name
             from(project.components["java"])
         }
     }
 
     repositories {
+        mavenLocal()
     }
 }

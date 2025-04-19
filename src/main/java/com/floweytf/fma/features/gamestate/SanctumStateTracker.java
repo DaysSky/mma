@@ -3,9 +3,9 @@ package com.floweytf.fma.features.gamestate;
 import com.floweytf.fma.FMAClient;
 import com.floweytf.fma.util.ChatUtil;
 import com.floweytf.fma.util.StatsUtil;
-import static com.floweytf.fma.util.Util.now;
-import java.util.List;
 import net.minecraft.network.chat.Component;
+
+import static com.floweytf.fma.util.Util.now;
 
 public class SanctumStateTracker implements StateTracker {
     public static class Data {
@@ -43,21 +43,30 @@ public class SanctumStateTracker implements StateTracker {
     }
 
     private final long startTime;
-
+    private final Data data;
     private long startBossSplit;
     private long daggersSplit;
-
-    private final Data data;
-
     private boolean hasWon = false;
 
     public SanctumStateTracker() {
-        this.data = new Data();
+        data = new Data();
         startTime = now();
     }
 
     private int logTime(String key, boolean send, long start, long deltaBegin, long deltaEnd, long... entries) {
         return StatsUtil.logTime("timer.fma.portal." + key, send, start, deltaBegin, deltaEnd, entries);
+    }
+
+    @Override
+    public void onLeave() {
+        if (!FMAClient.features().enableTimerAndStats) {
+            return;
+        }
+
+        if (!hasWon) {
+            ChatUtil.send(Component.translatable("stat.fma.ruin.fail"));
+            data.send();
+        }
     }
 
     @Override
@@ -98,20 +107,6 @@ public class SanctumStateTracker implements StateTracker {
             hasWon = true;
             data.send();
             break;
-        }
-    }
-
-    @Override
-    public void onLeave() {
-        if (!FMAClient.features().enableTimerAndStats) {
-            return;
-        }
-
-        FMAClient.SIDEBAR.setAdditionalText(List.of());
-
-        if (!hasWon) {
-            ChatUtil.send(Component.translatable("stat.fma.ruin.fail"));
-            data.send();
         }
     }
 

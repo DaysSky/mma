@@ -1,5 +1,6 @@
 package com.floweytf.fma;
 
+import com.floweytf.fma.features.Waypoint;
 import com.floweytf.fma.features.cz.data.CharmEffectType;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -32,6 +33,8 @@ public class FMAConfig implements ConfigData {
         public boolean enableCZCharmPower = false;
         public boolean enablePICount = true;
         public boolean enableLoomFirmCount = false;
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 20)
+        public int updateDelayTicks = 5;
     }
 
     public static class SidebarToggles {
@@ -55,8 +58,12 @@ public class FMAConfig implements ConfigData {
         public SidebarToggles sidebarToggles = new SidebarToggles();
         public boolean enableDebug = SharedConstants.IS_RUNNING_IN_IDE;
         public boolean suppressDebugWarning = !SharedConstants.IS_RUNNING_IN_IDE;
-        public boolean recordChestBreak = false;
         public boolean versionCheck = false;
+        public boolean versionCheckIncludeBeta = false;
+        public boolean contractCheck = true;
+        public int contractThreshold = 40;
+        @ConfigEntry.Gui.CollapsibleObject
+        public Waypoint.Config waypoint = new Waypoint.Config();
     }
 
     public static class Appearance {
@@ -150,6 +157,7 @@ public class FMAConfig implements ConfigData {
         public boolean dpsSplit = false;
         public boolean bossSplit = true;
     }
+
     public static class Chat {
         public String meowingChannel = "wc";
         public String meowingText = "meow";

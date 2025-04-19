@@ -1,9 +1,15 @@
 package com.floweytf.fma.util;
 
-import it.unimi.dsi.fastutil.ints.IntIntPair;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -12,146 +18,117 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public class NBTUtil {
-    public static final String MONUMENTA_KEY = "Monumenta";
-    public static final String BLOCK_ENTITY_KEY = "BlockEntityTag";
-    public static final String DISPLAY_KEY = "display";
-    public static final String LORE_KEY = "Lore";
-    public static final String NAME_KEY = "Name";
-    public static final String STOCK = "Stock";
-    public static final String MONUMENTA_TIER_KEY = "Tier";
-    public static final String MONUMENTA_CHARM_POWER_KEY = "CharmPower";
-    public static final String PLAYER_MODIFIED = "PlayerModified";
-    public static final List<String> BLOCK_PLACER = List.of("Doorway from Eternity", "Worldshaper's Loom", "Firmament");
+    public record Access(CompoundTag tag) {
+        @SuppressWarnings("unchecked")
+        private <T extends Tag> Optional<T> resolve(String key, String... parentPathFrag) {
+            CompoundTag root = tag;
 
-    public static Optional<CompoundTag> get(ItemStack stack) {
-        return Optional.ofNullable(stack.getTag());
-    }
+            for (String s : parentPathFrag) {
+                if (!root.contains(s, Tag.TAG_COMPOUND)) {
+                    return Optional.empty();
+                }
 
-    public static Optional<CompoundTag> getCompound(CompoundTag root, String name) {
-        if (!root.contains(name, Tag.TAG_COMPOUND))
-            return Optional.empty();
-        return Optional.of(root.getCompound(name));
-    }
+                root = root.getCompound(s);
+            }
 
-    public static Optional<String> getString(CompoundTag root, String name) {
-        if (!root.contains(name, Tag.TAG_STRING))
-            return Optional.empty();
-        return Optional.of(root.getString(name));
-    }
-
-    public static Optional<Integer> getInt(CompoundTag root, String name) {
-        if (!root.contains(name, Tag.TAG_INT))
-            return Optional.empty();
-        return Optional.of(root.getInt(name));
-    }
-
-    public static Optional<Double> getDouble(CompoundTag root, String name) {
-        if (!root.contains(name, Tag.TAG_DOUBLE))
-            return Optional.empty();
-        return Optional.of(root.getDouble(name));
-    }
-
-    public static Optional<ListTag> getList(CompoundTag root, String name, int type) {
-        if (!root.contains(name, Tag.TAG_LIST))
-            return Optional.empty();
-        return Optional.of(root.getList(name, type));
-    }
-
-    public static Optional<CompoundTag> getMonumenta(ItemStack stack) {
-        return get(stack).flatMap(tag -> getCompound(tag, MONUMENTA_KEY));
-    }
-
-
-    public static Optional<CompoundTag> getPlayerModified(ItemStack stack) {
-        return getMonumenta(stack).flatMap(tag -> getCompound(tag, PLAYER_MODIFIED));
-    }
-
-    public static Optional<CompoundTag> getStock(ItemStack stack) {
-        return getMonumenta(stack).flatMap(tag -> getCompound(tag, STOCK));
-    }
-
-    public static Optional<CompoundTag> getEnchantsTag(ItemStack stack) {
-        return getStock(stack).flatMap(tag -> getCompound(tag, "Enchantments"));
-    }
-
-    public static Map<String, Integer> getEnchants(ItemStack stack) {
-        return getEnchantsTag(stack)
-            .map(v -> v.entries().entrySet().stream().collect(
-                    Collectors.toMap(
-                        Map.Entry::getKey,
-                        (entry) -> ((CompoundTag) entry.getValue()).getInt("Level"))
-                )
-            )
-            .orElse(Map.of());
-    }
-
-    public static Optional<String> getTier(ItemStack stack) {
-        return getMonumenta(stack).flatMap(tag -> getString(tag, MONUMENTA_TIER_KEY));
-    }
-
-    public static Optional<Integer> getCharmPower(ItemStack stack) {
-        return getMonumenta(stack).flatMap(tag -> getInt(tag, MONUMENTA_CHARM_POWER_KEY));
-    }
-
-    public static Optional<CompoundTag> getDisplay(ItemStack stack) {
-        return get(stack).flatMap(tag -> getCompound(tag, DISPLAY_KEY));
-    }
-
-    public static Optional<CompoundTag> getBlockEntityData(ItemStack stack) {
-        return get(stack).flatMap(tag -> getCompound(tag, BLOCK_ENTITY_KEY));
-    }
-
-    public static Optional<ListTag> getLore(ItemStack stack) {
-        return getDisplay(stack).flatMap(tag -> getList(tag, LORE_KEY, Tag.TAG_STRING));
-    }
-
-    public static Optional<String> getName(ItemStack stack) {
-        return getDisplay(stack).flatMap(tag -> getString(tag, NAME_KEY));
-    }
-
-    public static Optional<IntIntPair> getVanityDurabilityInfo(ItemStack stack) {
-        // Items with durability don't have custom vanity info
-        if (stack.getItem().canBeDepleted()) {
-            return Optional.empty();
+            return Optional.ofNullable((T) root.get(key));
         }
 
-        return getLore(stack).flatMap(loreTag -> {
-            if (loreTag.size() < 2) {
-                return Optional.empty();
-            }
+        private <T> Optional<T> primitive(String key, byte type, Function<Tag, T> map, String... parentPathFrag) {
+            return resolve(key, parentPathFrag).flatMap(tag -> {
+                if (tag.getId() != type) {
+                    return Optional.empty();
+                }
 
-            final var lastLine = NBTUtil.jsonToRaw(loreTag.getString(loreTag.size() - 1));
+                return Optional.of(map.apply(tag));
+            });
+        }
 
-            if (!lastLine.startsWith("Durability: ")) {
-                return Optional.empty();
-            }
+        public Optional<String> getTier() {
+            return primitive("Tier", Tag.TAG_STRING, Tag::getAsString, MONUMENTA_KEY);
+        }
 
-            final var parts = lastLine.split("\\s+");
-            if (parts.length != 4) {
-                return Optional.empty();
-            }
+        public Optional<CompoundTag> getPlayerModified() {
+            return resolve("PlayerModified", MONUMENTA_KEY);
+        }
 
-            return Optional.of(IntIntPair.of(
-                Integer.parseInt(parts[1]),
-                Integer.parseInt(parts[3])
-            ));
-        });
+        public Optional<Integer> getCharmPower() {
+            return primitive("CharmPower", Tag.TAG_INT, tag -> ((IntTag) tag).getAsInt(), MONUMENTA_KEY);
+        }
+
+        public Optional<String> getPlainName() {
+            return primitive("Name", Tag.TAG_STRING, Tag::getAsString, PLAIN_KEY, DISPLAY_KEY);
+        }
+
+        public boolean isVirtualItem() {
+            return primitive("IsVirtualItem", Tag.TAG_BYTE, tag -> ((ByteTag) tag).getAsByte() == 1, MONUMENTA_KEY)
+                .orElse(false);
+        }
+
+        public List<String> getPlainLore() {
+            return this.<ListTag>resolve("Lore", PLAIN_KEY, DISPLAY_KEY).map(
+                x -> {
+                    // TODO: streams are slow for some reason...
+                    final List<String> list = new ArrayList<>(x.size());
+                    for (final var t : x) {
+                        list.add(t.getAsString());
+                    }
+
+                    return list;
+                }
+            ).orElse(List.of());
+        }
+
+        public List<String> getRawLore() {
+            return this.<ListTag>resolve("Lore", DISPLAY_KEY).map(
+                x -> {
+                    // TODO: streams are slow for some reason...
+                    final List<String> list = new ArrayList<>(x.size());
+                    for (final var t : x) {
+                        final var line = Component.Serializer.fromJson(t.getAsString());
+                        list.add(line == null ? "" : line.getString());
+                    }
+
+                    return list;
+                }
+            ).orElse(List.of());
+        }
+
+        public Map<String, Integer> getEnchants() {
+            return this.<CompoundTag>resolve("Enchantments", MONUMENTA_KEY, "Stock").map(tag ->
+                tag.entries().entrySet().stream().collect(Collectors.toMap(
+                    Map.Entry::getKey,
+                    x -> ((CompoundTag) x.getValue()).getInt("Level")
+                ))
+            ).orElse(Map.of());
+        }
+
+        public ListTag getContainedItemsTag() {
+            return this.<ListTag>resolve("Items", "BlockEntityTag").orElse(new ListTag());
+        }
     }
 
-    public static Optional<List<ItemStack>> getInventory(ItemStack stack) {
-        return NBTUtil.getBlockEntityData(stack)
-            .flatMap(t -> NBTUtil.getList(t, "Items", Tag.TAG_COMPOUND))
-            .map(list -> list.stream().map(data -> ItemStack.of((CompoundTag) data)).toList());
+    public static final String MONUMENTA_KEY = "Monumenta";
+    public static final String DISPLAY_KEY = "display";
+    public static final String PLAIN_KEY = "plain";
+    public static final List<String> BLOCK_PLACER = List.of("Doorway from Eternity", "Worldshaper's Loom", "Firmament");
+
+    public static Map<String, Integer> getAllEnchants(Player player) {
+        final var map = new HashMap<String, Integer>();
+
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            Map<String, Integer> enchantMap = access(player.getItemBySlot(slot)).getEnchants();
+            enchantMap.forEach((k, v) -> map.merge(k, v, Integer::sum));
+        }
+
+        return map;
     }
 
-    public static String jsonToRaw(String name) {
-        return Objects.requireNonNull(Component.Serializer.fromJson(name)).getString();
+    public static Access access(ItemStack stack) {
+        return new Access(stack.getOrCreateTag());
     }
 
-    public static int getEnchantLevel(Player player, String name) {
-        return Arrays.stream(EquipmentSlot.values())
-            .map(player::getItemBySlot)
-            .map(item -> getEnchants(item).getOrDefault(name, 0))
-            .reduce(0, Integer::sum);
+    public static Access access(CompoundTag tag) {
+        return new Access(tag);
     }
 }

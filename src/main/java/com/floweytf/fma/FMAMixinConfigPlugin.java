@@ -7,10 +7,12 @@ import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
-public class MixinConfigPlugin implements IMixinConfigPlugin {
+public class FMAMixinConfigPlugin implements IMixinConfigPlugin {
+    private String mixinPackage;
+
     @Override
     public void onLoad(String mixinPackage) {
-
+        this.mixinPackage = mixinPackage;
     }
 
     @Override
@@ -21,7 +23,7 @@ public class MixinConfigPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         // Mixin compatibility stuff
-        if (mixinClassName.startsWith("com.floweytf.fma.umm")) {
+        if (mixinClassName.startsWith(mixinPackage + ".umm")) {
             return FabricLoader.getInstance().isModLoaded("unofficial-monumenta-mod");
         }
 

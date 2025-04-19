@@ -6,14 +6,16 @@
     "client": [
         "ClientPacketListenerMixin",
         "EntityRenderDispatcherMixin",
-        "GuiMixin",
         "GuiGraphicsMixin",
+        "GuiMixin",
+        "ItemStackMixin",
         "LevelRendererMixin",
+        "LocalPlayerMixin",
         "MultiPlayerGameModeMixin",
         "SplashManagerMixin",
         "umm.EffectOverlayMixin"
     ],
-    "plugin": "com.floweytf.fma.MixinConfigPlugin",
+    "plugin": "com.floweytf.fma.FMAMixinConfigPlugin",
     "injectors": {
         "defaultRequire": 1
     }

@@ -17,6 +17,7 @@ public class TickScheduler {
             return (int) (targetTick - task.targetTick);
         }
     }
+
     private final PriorityQueue<Task> taskQueue = new PriorityQueue<>();
     private long tick;
 

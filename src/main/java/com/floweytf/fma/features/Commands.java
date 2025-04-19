@@ -2,14 +2,10 @@ package com.floweytf.fma.features;
 
 import com.floweytf.fma.FMAClient;
 import com.floweytf.fma.FMAConfig;
-import com.floweytf.fma.compat.WaypointHandler;
 import com.floweytf.fma.debug.Debug;
 import com.floweytf.fma.util.ChatUtil;
 import com.floweytf.fma.util.CommandUtil;
-import static com.floweytf.fma.util.CommandUtil.arg;
-import static com.floweytf.fma.util.CommandUtil.lit;
 import com.floweytf.fma.util.FormatUtil;
-import static com.floweytf.fma.util.FormatUtil.join;
 import com.floweytf.fma.util.Util;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -23,7 +19,13 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 
+import static com.floweytf.fma.util.CommandUtil.arg;
+import static com.floweytf.fma.util.CommandUtil.lit;
+import static com.floweytf.fma.util.FormatUtil.join;
+
 public class Commands {
+    private static long timerMs = -1;
+
     private static LiteralArgumentBuilder<FabricClientCommandSource> alias(String name, String target) {
         return lit(name,
             // forward
@@ -33,8 +35,6 @@ public class Commands {
             }
         );
     }
-
-    private static long timerMs = -1;
 
     public static void init() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
@@ -142,16 +142,13 @@ public class Commands {
             ));
 
             dispatcher.register(lit("compass", context -> {
-                WaypointHandler.withInstance(waypointHandler -> {
-                    final var pos = FMAClient.player().level().getSharedSpawnPos();
-                    waypointHandler.addWaypoint(new WaypointHandler.Waypoint(pos, "Compass", "C", 8, true));
-                });
-
+                final var pos = FMAClient.player().level().getSharedSpawnPos();
+                ChatUtil.send("Position: %s, %s, %s".formatted(pos.getX(), pos.getY(), pos.getZ()));
                 return 0;
             }));
 
             dispatcher.register(lit("timer", context -> {
-                if(timerMs == -1) {
+                if (timerMs == -1) {
                     timerMs = Util.now();
                     ChatUtil.send(Component.translatable("text.fma.timer_start"));
                 } else {

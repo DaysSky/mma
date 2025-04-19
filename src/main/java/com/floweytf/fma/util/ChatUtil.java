@@ -1,11 +1,15 @@
 package com.floweytf.fma.util;
 
 import com.floweytf.fma.FMAClient;
-import static com.floweytf.fma.util.FormatUtil.*;
 import java.util.Objects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+
+import static com.floweytf.fma.util.FormatUtil.colored;
+import static com.floweytf.fma.util.FormatUtil.join;
+import static com.floweytf.fma.util.FormatUtil.literal;
+import static com.floweytf.fma.util.FormatUtil.withColor;
 import static net.minecraft.network.chat.Component.empty;
 
 public class ChatUtil {

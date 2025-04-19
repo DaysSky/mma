@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 public class GameState {
@@ -66,7 +67,11 @@ public class GameState {
             return EventResult.CONTINUE;
         });
 
-        WorldRenderEvents.AFTER_ENTITIES.register(context -> {
+        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
+            if (currentStateTracker == null || Minecraft.getInstance().player == null) {
+                return;
+            }
+
             final var stack = context.matrixStack();
             stack.pushPose();
             stack.translate(
@@ -75,9 +80,7 @@ public class GameState {
                 -context.camera().getPosition().z
             );
 
-            if (currentStateTracker != null && Minecraft.getInstance().player != null) {
-                currentStateTracker.onRender(context);
-            }
+            currentStateTracker.onRender(context);
             stack.popPose();
         });
 
@@ -88,6 +91,10 @@ public class GameState {
 
             currentStateTracker = null;
         });
+    }
+
+    public List<Component> getAdditionalSidebarText() {
+        return currentStateTracker == null ? List.of() : currentStateTracker.getAdditionalSidebarText();
     }
 
     private void updateLevel(ClientLevel level) {

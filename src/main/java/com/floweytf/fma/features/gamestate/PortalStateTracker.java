@@ -1,20 +1,21 @@
 package com.floweytf.fma.features.gamestate;
 
 import com.floweytf.fma.FMAClient;
+import com.floweytf.fma.Graphics;
 import com.floweytf.fma.util.ChatUtil;
 import com.floweytf.fma.util.FormatUtil;
 import com.floweytf.fma.util.StatsUtil;
-import static com.floweytf.fma.util.Util.now;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.Items;
+
+import static com.floweytf.fma.util.Util.now;
 
 public class PortalStateTracker implements StateTracker {
     public static class Data {
@@ -70,7 +71,7 @@ public class PortalStateTracker implements StateTracker {
     private boolean hasWon = false;
 
     public PortalStateTracker() {
-        this.data = new Data();
+        data = new Data();
         startTime = now();
     }
 
@@ -78,12 +79,17 @@ public class PortalStateTracker implements StateTracker {
         return StatsUtil.logTime("timer.fma.portal." + key, send, start, deltaBegin, deltaEnd, entries);
     }
 
-    private void render() {
-        final var parts = new ArrayList<Component>();
-        parts.add(Component.translatable("hud.fma.sidebar.timer", FormatUtil.timestamp(now() - startTime)));
-        parts.add(Component.translatable("hud.fma.sidebar.portal.chests", FormatUtil.numeric(data.chestCount)));
-        parts.add(Component.translatable("hud.fma.sidebar.portal.souls", FormatUtil.numeric(data.soulCount)));
-        FMAClient.SIDEBAR.setAdditionalText(parts);
+
+    @Override
+    public void onLeave() {
+        if (!FMAClient.features().enableTimerAndStats) {
+            return;
+        }
+
+        if (!hasWon) {
+            ChatUtil.send(Component.translatable("stat.fma.portal.fail"));
+            data.send();
+        }
     }
 
     @Override
@@ -131,8 +137,8 @@ public class PortalStateTracker implements StateTracker {
                 phase2Split,
                 phase3Split
             );
-            hasWon = true;
             data.send();
+            hasWon = true;
             break;
         }
     }
@@ -176,8 +182,6 @@ public class PortalStateTracker implements StateTracker {
 
     @Override
     public void onTick() {
-        render();
-
         if (!enteredBoss) {
             return;
         }
@@ -221,7 +225,7 @@ public class PortalStateTracker implements StateTracker {
 
         int r = isCubeAlive ? 1 : 0;
         int g = isCubeAlive ? 0 : 1;
-        final var buffer = Objects.requireNonNull(context.consumers()).getBuffer(RenderType.lines());
+        final var buffer = Objects.requireNonNull(context.consumers()).getBuffer(Graphics.LINES);
         final var pose = context.matrixStack();
 
         if (enteredBoss) {
@@ -237,5 +241,14 @@ public class PortalStateTracker implements StateTracker {
                 r, g, 0, 1
             );
         }
+    }
+
+    @Override
+    public List<Component> getAdditionalSidebarText() {
+        final var parts = new ArrayList<Component>();
+        parts.add(Component.translatable("hud.fma.sidebar.timer", FormatUtil.timestamp(now() - startTime)));
+        parts.add(Component.translatable("hud.fma.sidebar.portal.chests", FormatUtil.numeric(data.chestCount)));
+        parts.add(Component.translatable("hud.fma.sidebar.portal.souls", FormatUtil.numeric(data.soulCount)));
+        return parts;
     }
 }

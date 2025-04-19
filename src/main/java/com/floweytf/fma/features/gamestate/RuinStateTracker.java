@@ -2,10 +2,13 @@ package com.floweytf.fma.features.gamestate;
 
 import com.floweytf.fma.FMAClient;
 import com.floweytf.fma.util.ChatUtil;
+import com.floweytf.fma.util.FormatUtil;
 import com.floweytf.fma.util.StatsUtil;
-import static com.floweytf.fma.util.Util.now;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.network.chat.Component;
+
+import static com.floweytf.fma.util.Util.now;
 
 public class RuinStateTracker implements StateTracker {
     public static class Data {
@@ -49,7 +52,7 @@ public class RuinStateTracker implements StateTracker {
     private boolean hasWon = false;
 
     public RuinStateTracker() {
-        this.data = new Data();
+        data = new Data();
         startTime = now();
     }
 
@@ -62,8 +65,6 @@ public class RuinStateTracker implements StateTracker {
         if (!FMAClient.features().enableTimerAndStats) {
             return;
         }
-
-        FMAClient.SIDEBAR.setAdditionalText(List.of());
 
         if (!hasWon) {
             ChatUtil.send(Component.translatable("stat.fma.ruin.fail"));
@@ -147,5 +148,14 @@ public class RuinStateTracker implements StateTracker {
         } else if (raw.contains("total chests")) {
             data.chestCount = Integer.parseInt(raw.split(" ")[0]);
         }
+    }
+
+    @Override
+    public List<Component> getAdditionalSidebarText() {
+        final var parts = new ArrayList<Component>();
+        parts.add(Component.translatable("hud.fma.sidebar.timer", FormatUtil.timestamp(now() - startTime)));
+        parts.add(Component.translatable("hud.fma.sidebar.ruin.chests", FormatUtil.numeric(data.chestCount)));
+        parts.add(Component.translatable("hud.fma.sidebar.ruin.souls", FormatUtil.numeric(data.soulCount)));
+        return parts;
     }
 }

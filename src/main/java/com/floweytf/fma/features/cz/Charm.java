@@ -5,10 +5,7 @@ import com.floweytf.fma.features.cz.data.CharmEffectRarity;
 import com.floweytf.fma.features.cz.data.CharmRarity;
 import com.floweytf.fma.features.cz.data.ZenithAbility;
 import com.floweytf.fma.features.cz.data.ZenithClass;
-import static com.floweytf.fma.util.FormatUtil.*;
-import com.floweytf.fma.util.NBTUtil;
 import com.floweytf.fma.util.Util;
-import static com.floweytf.fma.util.Util.colorRange;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -16,8 +13,15 @@ import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
-import static net.minecraft.network.chat.Component.empty;
 import org.jetbrains.annotations.Nullable;
+
+import static com.floweytf.fma.util.FormatUtil.fmtDouble;
+import static com.floweytf.fma.util.FormatUtil.join;
+import static com.floweytf.fma.util.FormatUtil.joiner;
+import static com.floweytf.fma.util.FormatUtil.literal;
+import static com.floweytf.fma.util.FormatUtil.twoDecimal;
+import static com.floweytf.fma.util.Util.colorRange;
+import static net.minecraft.network.chat.Component.empty;
 
 public final class Charm {
     public static final int[] BUDGET_BY_CP = {2, 4, 7, 11, 16};
@@ -49,25 +53,25 @@ public final class Charm {
         this.effects = new ArrayList<>(effects);
         this.hasUpgraded = hasUpgraded;
 
-        this.classes = effects.stream()
+        classes = effects.stream()
             .map(x -> x.effect().ability.zenithClass)
             .collect(Collectors.toSet())
             .stream()
             .sorted(Comparator.comparingInt(Enum::ordinal))
             .toList();
 
-        this.abilities = effects.stream()
+        abilities = effects.stream()
             .map(x -> x.effect().ability)
             .collect(Collectors.toSet())
             .stream()
             .sorted(Comparator.comparingInt(Enum::ordinal))
             .toList();
 
-        this.type = CharmType.byId(typeId);
+        type = CharmType.byId(typeId);
 
         this.maxBudget = maxBudget;
         this.budget = budget;
-        this.hasWarning = selfTest(monumentaLore);
+        hasWarning = selfTest(monumentaLore);
 
         if (canUpgrade()) {
             final var upgradedCharmRarity = rarity.upgrade();
@@ -99,13 +103,13 @@ public final class Charm {
             } while (hasUpgrade);
 
             // currBudget is the new budget, need to store this somewhere
-            this.upgradedEffects = result;
-            this.upgradedBudget = newBudget - remainingBudget;
-            this.upgradedMaxBudget = newBudget;
+            upgradedEffects = result;
+            upgradedBudget = newBudget - remainingBudget;
+            upgradedMaxBudget = newBudget;
         } else {
-            this.upgradedEffects = null;
-            this.upgradedBudget = -1;
-            this.upgradedMaxBudget = -1;
+            upgradedEffects = null;
+            upgradedBudget = -1;
+            upgradedMaxBudget = -1;
         }
 
         if (!FMAClient.config().zenith.nbtOrder) {
@@ -120,7 +124,7 @@ public final class Charm {
         return (int) (BUDGET_BY_CP[cp - 1] * rarity.budgetMultiplier * type.factor());
     }
 
-    private boolean selfTest(List<String> monumentaLore) {
+    private boolean selfTest(List<String> rawLore) {
         var hasWarning = false;
 
         // We try to guess the max budget, to check
@@ -130,11 +134,9 @@ public final class Charm {
             FMAClient.LOGGER.error("Budget algo is likely bugged: flowey={}, monumenta={}", computedBudget, maxBudget);
         }
 
-        final var loreSet = monumentaLore.stream().map(NBTUtil::jsonToRaw).collect(Collectors.toSet());
-
         for (final var effect : effects) {
             final var text = effect.monumentaText();
-            if (!loreSet.contains(text)) {
+            if (!rawLore.contains(text)) {
                 hasWarning = true;
                 FMAClient.LOGGER.error("not found: {}", text);
             }

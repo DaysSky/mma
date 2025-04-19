@@ -1,11 +1,12 @@
 accessWidener v2 named
-accessible field net/minecraft/client/gui/screens/ChatScreen input Lnet/minecraft/client/gui/components/EditBox;
-accessible field net/minecraft/client/gui/screens/ChatScreen initial Ljava/lang/String;
 accessible field net/minecraft/client/gui/components/PlayerTabOverlay footer Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/client/gui/components/PlayerTabOverlay header Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/world/item/ItemCooldowns cooldowns Ljava/util/Map;
 accessible field net/minecraft/world/item/ItemCooldowns$CooldownInstance startTime I
 accessible field net/minecraft/world/item/ItemCooldowns$CooldownInstance endTime I
 accessible field net/minecraft/world/item/ItemCooldowns tickCount I
-accessible field com/mojang/blaze3d/platform/NativeImage pixels J
 accessible method net/minecraft/nbt/CompoundTag entries ()Ljava/util/Map;
+accessible field net/minecraft/client/Minecraft fontManager Lnet/minecraft/client/gui/font/FontManager;
+accessible field net/minecraft/client/Minecraft clientTickCount J
+accessible class net/minecraft/client/renderer/RenderType$CompositeState
+accessible class net/minecraft/client/renderer/RenderStateShard$LineStateShard

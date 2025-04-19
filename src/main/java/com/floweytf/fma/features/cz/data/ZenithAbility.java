@@ -1,7 +1,8 @@
 package com.floweytf.fma.features.cz.data;
 
-import static com.floweytf.fma.util.FormatUtil.literal;
 import net.minecraft.network.chat.Component;
+
+import static com.floweytf.fma.util.FormatUtil.literal;
 
 public enum ZenithAbility {
     FIREWORK_BLAST("Firework Blast", ZenithClass.STEELSAGE),
@@ -89,6 +90,6 @@ public enum ZenithAbility {
     ZenithAbility(String displayName, ZenithClass zenithClass) {
         this.displayName = displayName;
         this.zenithClass = zenithClass;
-        this.coloredName = literal(displayName, zenithClass.color);
+        coloredName = literal(displayName, zenithClass.color);
     }
 }

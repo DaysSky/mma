@@ -1,7 +1,6 @@
 package com.floweytf.fma.features.cz.data;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 public enum CharmEffectRarity {
     N_LEGENDARY("Negative Legendary", CharmRarity.LEGENDARY, 15, true, 0xff5555),
@@ -33,10 +32,11 @@ public enum CharmEffectRarity {
         this.color = color;
     }
 
-    public static Optional<CharmEffectRarity> byName(String actionName) {
+    public static CharmEffectRarity byName(String actionName) {
         return Arrays.stream(values())
             .filter(x -> actionName.equalsIgnoreCase(x.name))
-            .findFirst();
+            .findFirst()
+            .orElseThrow();
     }
 
     public static CharmEffectRarity byCharmRarity(CharmRarity rarity) {
