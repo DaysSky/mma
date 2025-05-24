@@ -60,7 +60,7 @@ public class FMAConfig implements ConfigData {
         public boolean suppressDebugWarning = !SharedConstants.IS_RUNNING_IN_IDE;
         public boolean versionCheck = false;
         public boolean versionCheckIncludeBeta = false;
-        public boolean contractCheck = true;
+        public boolean contractCheck = false;
         public int contractThreshold = 40;
         @ConfigEntry.Gui.CollapsibleObject
         public Waypoint.Config waypoint = new Waypoint.Config();
