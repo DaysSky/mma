@@ -5,6 +5,7 @@ import com.floweytf.fma.FMAConfig.FeatureToggles;
 import com.floweytf.fma.debug.Debug;
 import com.floweytf.fma.events.EntityShieldDisabledEvent;
 import com.floweytf.fma.features.Commands;
+import com.floweytf.fma.features.ContractCheck;
 import com.floweytf.fma.features.Keybinds;
 import com.floweytf.fma.features.LeaderboardUtils;
 import com.floweytf.fma.features.SideBarManager;
@@ -93,6 +94,8 @@ public class FMAClient implements ClientModInitializer {
             SIDEBAR.onTick(mc);
             Keybinds.tick();
             WAYPOINT.tick();
+            ContractCheck.tick();
+            
         }));
         Debug.init();
         Commands.init();
@@ -118,4 +121,6 @@ public class FMAClient implements ClientModInitializer {
         WAYPOINT.clientInit();
         reload();
     }
+
+    
 }

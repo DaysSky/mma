@@ -224,7 +224,6 @@ public class SideBarManager {
                 if (config.sidebarToggles.enable && config.sidebarToggles.situationals) {
                     this.updateSituational(mc.player);
                 }
-                this.updateXYZ(mc.player);
             }
 
             this.builtinText = new ArrayList<>();
@@ -253,38 +252,10 @@ public class SideBarManager {
                     this.builtinText.add(Component.translatable("hud.fma.sidebar.ip", new Object[]{FormatUtil.withColor(ip, this.altColor)}));
                 }
             }
-            if (config.contractCheck) {
-                final boolean newZenith = inZenithArea();
-                if (isInZenithArea != newZenith) {
-                    isInZenithArea = newZenith;
-                    if (isInZenithArea && mc.player != null && mc.player.experienceLevel <= FMAClient.config().features.czContractThreshold) {
-
-                        mc.level.playSound(mc.player, mc.player, SoundEvents.PLAYER_LEVELUP, SoundSource.MASTER, 2.0f, 0.1f);
-                        ChatUtil.sendWarn(Component.literal(new FMAConfig().features.contractCheckText));
-                    }
-                }
-            }
         });
     }
 
-    private void updateXYZ(Player player) {
-        playerX = player.getX();
-        playerY = player.getY();
-        playerZ = player.getZ();
-    }
-
-    private static boolean inZenithArea() {
-        double minX = Math.min(71, 33);
-        double maxX = Math.max(71, 33);
-        double minY = Math.min(14, 30);
-        double maxY = Math.max(14, 30);
-        double minZ = Math.min(-1396, -1410);
-        double maxZ = Math.max(-1396, -1410);
-
-        return playerX >= minX && playerX <= maxX && playerY >= minY && playerY <= maxY && playerZ >= minZ && playerZ <= maxZ;
-
-    }
-
+   
     public void render(Minecraft mc, GuiGraphics graphics) {
         EXCEPTION_LOGGER.runSafely(
                 () -> {
