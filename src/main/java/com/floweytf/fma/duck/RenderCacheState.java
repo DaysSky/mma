@@ -1,9 +1,11 @@
 package com.floweytf.fma.duck;
 
 import com.floweytf.fma.features.ItemOverlay;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
@@ -27,7 +28,7 @@ public record Access(CompoundTag tag) {
             root = root.getCompound(s);
         }
 
-        return Optional.ofNullable((T)root.get(key));
+        return Optional.ofNullable((T) root.get(key));
     }
 
     private <T> Optional<T> primitive(String key, byte type, Function<Tag, T> map, String... parentPathFrag) {
@@ -35,7 +36,7 @@ public record Access(CompoundTag tag) {
     }
 
     public Optional<String> getTier() {
-        return this.primitive("Tier", (byte)8, Tag::getAsString, "Monumenta");
+        return this.primitive("Tier", (byte) 8, Tag::getAsString, "Monumenta");
     }
 
     public Optional<CompoundTag> getPlayerModified() {
@@ -43,15 +44,15 @@ public record Access(CompoundTag tag) {
     }
 
     public Optional<Integer> getCharmPower() {
-        return this.primitive("CharmPower", (byte)3, tag -> ((IntTag)tag).getAsInt(), "Monumenta");
+        return this.primitive("CharmPower", (byte) 3, tag -> ((IntTag) tag).getAsInt(), "Monumenta");
     }
 
     public Optional<String> getPlainName() {
-        return this.primitive("Name", (byte)8, Tag::getAsString, "plain", "display");
+        return this.primitive("Name", (byte) 8, Tag::getAsString, "plain", "display");
     }
 
     public boolean isVirtualItem() {
-        return this.<Boolean>primitive("IsVirtualItem", (byte)1, tag -> ((ByteTag)tag).getAsByte() == 1, "Monumenta").orElse(false);
+        return this.<Boolean>primitive("IsVirtualItem", (byte) 1, tag -> ((ByteTag) tag).getAsByte() == 1, "Monumenta").orElse(false);
     }
 
     public List<String> getPlainLore() {
@@ -81,8 +82,8 @@ public record Access(CompoundTag tag) {
 
     public Map<String, Integer> getEnchants() {
         return this.<CompoundTag>resolve("Enchantments", "Monumenta", "Stock")
-            .map(tag -> tag.entries().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, x -> ((CompoundTag)x.getValue()).getInt("Level"))))
-            .orElse(Map.of());
+                .map(tag -> tag.entries().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, x -> ((CompoundTag) x.getValue()).getInt("Level"))))
+                .orElse(Map.of());
     }
 
     public ListTag getContainedItemsTag() {

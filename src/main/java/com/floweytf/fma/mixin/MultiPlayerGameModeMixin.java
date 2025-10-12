@@ -3,7 +3,9 @@ package com.floweytf.fma.mixin;
 import com.floweytf.fma.FMAClient;
 import com.floweytf.fma.FMAConfig;
 import com.floweytf.fma.util.ChatUtil;
+
 import java.awt.TextComponent;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;

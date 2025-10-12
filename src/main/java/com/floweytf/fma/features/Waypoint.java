@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+
 import me.shedaniel.autoconfig.annotation.ConfigEntry.ColorPicker;
 import me.shedaniel.math.Color;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -55,24 +57,24 @@ public class Waypoint implements AbstractModule<Config> {
 
     private static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve("fma-waypoint.json");
     private static final Codec<Map<ResourceLocation, List<BlockPos>>> CODEC = Codec.unboundedMap(
-        ResourceLocation.CODEC,
-        BlockPos.CODEC.listOf()
+            ResourceLocation.CODEC,
+            BlockPos.CODEC.listOf()
     );
 
     private final Minecraft minecraft = Minecraft.getInstance();
 
     private final KeyMapping toggleRecordingKey = new KeyMapping(
-        "key.fma.toggleChestWaypointRecording",
-        InputConstants.Type.KEYSYM,
-        GLFW.GLFW_KEY_K,
-        "category.fma"
+            "key.fma.toggleChestWaypointRecording",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_K,
+            "category.fma"
     );
 
     private final KeyMapping toggleKey = new KeyMapping(
-        "key.fma.toggleChestWaypoint",
-        InputConstants.Type.KEYSYM,
-        GLFW.GLFW_KEY_N,
-        "category.fma"
+            "key.fma.toggleChestWaypoint",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_N,
+            "category.fma"
     );
 
     // note: only access from main thread!
@@ -93,15 +95,15 @@ public class Waypoint implements AbstractModule<Config> {
         try (final var in = Files.newBufferedReader(Waypoint.PATH)) {
             final var obj = FMAClient.GSON.fromJson(in, JsonElement.class);
             byWorld = CODEC.decode(JsonOps.INSTANCE, obj)
-                .result()
-                .orElseThrow()
-                .getFirst()
-                .entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                    Map.Entry::getKey,
-                    e -> new HashSet<>(e.getValue())
-                ));
+                    .result()
+                    .orElseThrow()
+                    .getFirst()
+                    .entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            e -> new HashSet<>(e.getValue())
+                    ));
 
         } catch (Exception e) {
             FMAClient.LOGGER.warn(e);
@@ -111,17 +113,17 @@ public class Waypoint implements AbstractModule<Config> {
     private void save() {
         Preconditions.checkState(minecraft.isSameThread());
         final Map<ResourceLocation, List<BlockPos>> copy = byWorld.entrySet()
-            .stream()
-            .collect(Collectors.toMap(
-                Map.Entry::getKey,
-                e -> new ArrayList<>(e.getValue())
-            ));
+                .stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> new ArrayList<>(e.getValue())
+                ));
 
         synchronize(() -> {
             try {
                 final var json = CODEC.encodeStart(JsonOps.INSTANCE, copy)
-                    .result()
-                    .orElseThrow();
+                        .result()
+                        .orElseThrow();
 
                 try (final var w = Files.newBufferedWriter(Waypoint.PATH)) {
                     FMAClient.GSON.toJson(json, w);
@@ -245,13 +247,13 @@ public class Waypoint implements AbstractModule<Config> {
 
             final var color = Color.ofOpaque(config().color);
             LevelRenderer.renderLineBox(
-                context.matrixStack(),
-                consumer,
-                x, y, z, x + 1, y + 1, z + 1,
-                color.getRed() / 255f,
-                color.getGreen() / 255f,
-                color.getBlue() / 255f,
-                1
+                    context.matrixStack(),
+                    consumer,
+                    x, y, z, x + 1, y + 1, z + 1,
+                    color.getRed() / 255f,
+                    color.getGreen() / 255f,
+                    color.getBlue() / 255f,
+                    1
             );
         }
 

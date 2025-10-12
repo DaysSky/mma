@@ -1,54 +1,54 @@
 {
-    "schemaVersion": 1,
-    "id": "fma",
-    "version": "${version}",
-    "name": "flowey-monumenta-addons",
-    "description": "Monumenta utilities",
-    "authors": [
-        "Flowey",
-        "catgirljade_"
+  "schemaVersion": 1,
+  "id": "fma",
+  "version": "${version}",
+  "name": "flowey-monumenta-addons",
+  "description": "Monumenta utilities",
+  "authors": [
+    "Flowey",
+    "catgirljade_"
+  ],
+  "contact": {
+    "issues": "https://github.com/flowey/flowey-monumenta-addons/issues",
+    "sources": "https://github.com/flowey/flowey-monumenta-addons"
+  },
+  "license": "GPL-3.0",
+  "icon": "assets/fma/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.floweytf.fma.FMAClient"
     ],
-    "contact": {
-        "issues": "https://github.com/flowey/flowey-monumenta-addons/issues",
-        "sources": "https://github.com/flowey/flowey-monumenta-addons"
+    "modmenu": [
+      "com.floweytf.fma.compat.FMAConfigMenu"
+    ]
+  },
+  "mixins": [
+    "fma.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "cloth-config": "*",
+    "minecraft": "${minecraft_version}"
+  },
+  "suggests": {
+    "modmenu": "*",
+    "sodium": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/bSpYTPa9qw",
+        "modmenu.github_releases": "https://github.com/Floweynt/flowey-monumenta-addons/releases",
+        "modmenu.modrinth": "https://modrinth.com/mod/flowey-moumenta-addons"
+      }
     },
-    "license": "GPL-3.0",
-    "icon": "assets/fma/icon.png",
-    "environment": "client",
-    "entrypoints": {
-        "client": [
-            "com.floweytf.fma.FMAClient"
-        ],
-        "modmenu": [
-            "com.floweytf.fma.compat.FMAConfigMenu"
-        ]
-    },
-    "mixins": [
-        "fma.mixins.json"
-    ],
-    "depends": {
-        "fabricloader": ">=${loader_version}",
-        "fabric": "*",
-        "cloth-config": "*",
-        "minecraft": "${minecraft_version}"
-    },
-    "suggests": {
-        "modmenu": "*",
-        "sodium": "*"
-    },
-    "custom": {
-        "modmenu": {
-            "links": {
-                "modmenu.discord": "https://discord.gg/bSpYTPa9qw",
-                "modmenu.github_releases": "https://github.com/Floweynt/flowey-monumenta-addons/releases",
-                "modmenu.modrinth": "https://modrinth.com/mod/flowey-moumenta-addons"
-            }
-        },
-        "loom:injected_interfaces": {
-            "net/minecraft/class_1799": [
-                "com/floweytf/fma/duck/ItemStackAccess"
-            ]
-        }
-    },
-    "accessWidener": "fma.accesswidener"
+    "loom:injected_interfaces": {
+      "net/minecraft/class_1799": [
+        "com/floweytf/fma/duck/ItemStackAccess"
+      ]
+    }
+  },
+  "accessWidener": "fma.accesswidener"
 }

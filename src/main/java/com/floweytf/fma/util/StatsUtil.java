@@ -4,6 +4,7 @@ import com.floweytf.fma.util.StatsUtil.Custom;
 import com.floweytf.fma.util.StatsUtil.Detail;
 import com.floweytf.fma.util.StatsUtil.Time;
 import com.google.common.base.CaseFormat;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -12,6 +13,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -43,16 +45,16 @@ public class StatsUtil {
         var base = deltaBegin;
         for (int i = 0; i < entries.length; i++) {
             tooltipLines.add(Component.translatable(
-                key + "." + i,
-                FormatUtil.timestamp(entries[i] - base)
+                    key + "." + i,
+                    FormatUtil.timestamp(entries[i] - base)
             ));
             base = entries[i];
         }
 
         final var text = Component.translatable(
-            key,
-            FormatUtil.timestamp(deltaEnd - deltaBegin),
-            FormatUtil.timestampAlt(deltaEnd - start)
+                key,
+                FormatUtil.timestamp(deltaEnd - deltaBegin),
+                FormatUtil.timestampAlt(deltaEnd - start)
         );
 
         if (send) {

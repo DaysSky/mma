@@ -12,21 +12,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin({LocalPlayer.class})
 public abstract class LocalPlayerMixin {
-   @Unique
-   private static final SafeExceptionLogger fma$EH = new SafeExceptionLogger("ShieldDisableEvents");
+    @Unique
+    private static final SafeExceptionLogger fma$EH = new SafeExceptionLogger("ShieldDisableEvents");
 
-   @Inject(
-      method = {"handleEntityEvent"},
-      at = {@At(
-         value = "HEAD",
-         target = "Lnet/minecraft/world/entity/Entity;handleEntityEvent(B)V"
-      )}
-   )
-   private void fireShieldDisableEvent(byte status, CallbackInfo ci) {
-      fma$EH.runSafely(() -> {
-         if (status == 30) {
-            ((EntityShieldDisabledEvent)EntityShieldDisabledEvent.EVENT.invoker()).onShieldDisabled(Util.c(this));
-         }
-      });
-   }
+    @Inject(
+            method = {"handleEntityEvent"},
+            at = {@At(
+                    value = "HEAD",
+                    target = "Lnet/minecraft/world/entity/Entity;handleEntityEvent(B)V"
+            )}
+    )
+    private void fireShieldDisableEvent(byte status, CallbackInfo ci) {
+        fma$EH.runSafely(() -> {
+            if (status == 30) {
+                ((EntityShieldDisabledEvent) EntityShieldDisabledEvent.EVENT.invoker()).onShieldDisabled(Util.c(this));
+            }
+        });
+    }
 }

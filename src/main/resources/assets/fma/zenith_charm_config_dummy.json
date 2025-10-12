@@ -1,342 +1,342 @@
 [
-    {
-        "effectName": "Radiant Blessing Radius",
-        "ability": "Radiant Blessing",
-        "isOnlyPositive": false,
-        "isPercent": true,
-        "variance": 5.0,
-        "effectCap": 50.0,
-        "tree": "Dawnbringer",
-        "maxRarity": 5,
-        "rarityValues": [
-            10.0,
-            15.0,
-            20.0,
-            25.0,
-            30.0
-        ]
-    },
-    {
-        "effectName": "Spark of Inspiration Cooldown",
-        "ability": "Spark of Inspiration",
-        "isOnlyPositive": false,
-        "isPercent": true,
-        "variance": 4.0,
-        "effectCap": -30.0,
-        "tree": "Dawnbringer",
-        "maxRarity": 5,
-        "rarityValues": [
-            -5.0,
-            -7.5,
-            -10.0,
-            -12.5,
-            -15.0
-        ]
-    },
-    {
-        "effectName": "Spark of Inspiration Cast Range",
-        "ability": "Spark of Inspiration",
-        "isOnlyPositive": true,
-        "isPercent": true,
-        "variance": 5.0,
-        "effectCap": 50.0,
-        "tree": "Dawnbringer",
-        "maxRarity": 5,
-        "rarityValues": [
-            10.0,
-            15.0,
-            20.0,
-            25.0,
-            30.0
-        ]
-    },
-    {
-        "effectName": "Spark of Inspiration Cooldown Reduction Rate",
-        "ability": "Spark of Inspiration",
-        "isOnlyPositive": false,
-        "isPercent": true,
-        "variance": 3.0,
-        "effectCap": 40.0,
-        "tree": "Dawnbringer",
-        "maxRarity": 5,
-        "rarityValues": [
-            6.0,
-            9.0,
-            12.0,
-            15.0,
-            18.0
-        ]
-    },
-    {
-        "effectName": "Spark of Inspiration Strength Amplifier",
-        "ability": "Spark of Inspiration",
-        "isOnlyPositive": false,
-        "isPercent": true,
-        "variance": 2.0,
-        "effectCap": 20.0,
-        "tree": "Dawnbringer",
-        "maxRarity": 5,
-        "rarityValues": [
-            3.0,
-            4.5,
-            6.0,
-            7.5,
-            9.0
-        ]
-    },
-    {
-        "effectName": "Spark of Inspiration Buff Duration",
-        "ability": "Spark of Inspiration",
-        "isOnlyPositive": true,
-        "isPercent": false,
-        "variance": 0.5,
-        "effectCap": 3.0,
-        "tree": "Dawnbringer",
-        "maxRarity": 5,
-        "rarityValues": [
-            0.0,
-            0.0,
-            0.5,
-            1.0,
-            1.5
-        ]
-    },
-    {
-        "effectName": "Spark of Inspiration Resistance Duration",
-        "ability": "Spark of Inspiration",
-        "isOnlyPositive": true,
-        "isPercent": false,
-        "variance": 0.0,
-        "effectCap": 2.0,
-        "tree": "Dawnbringer",
-        "maxRarity": 5,
-        "rarityValues": [
-            0.0,
-            0.0,
-            0.5,
-            0.75,
-            1.0
-        ]
-    },
-    {
-        "effectName": "Enlightenment Experience Multiplier",
-        "ability": "Enlightenment",
-        "isOnlyPositive": true,
-        "isPercent": true,
-        "variance": 5.0,
-        "effectCap": 50.0,
-        "tree": "Dawnbringer",
-        "maxRarity": 5,
-        "rarityValues": [
-            5.0,
-            10.0,
-            15.0,
-            20.0,
-            25.0
-        ]
-    },
-    {
-        "effectName": "Ward of Light Cone Angle",
-        "ability": "Ward of Light",
-        "isOnlyPositive": true,
-        "isPercent": true,
-        "variance": 0.0,
-        "effectCap": 100.0,
-        "tree": "Dawnbringer",
-        "maxRarity": 4,
-        "rarityValues": [
-            0.0,
-            0.0,
-            20.0,
-            40.0,
-            60.0
-        ]
-    },
-    {
-        "effectName": "Primordial Mastery Damage Multiplier",
-        "ability": "Primordial Mastery",
-        "isOnlyPositive": true,
-        "isPercent": true,
-        "variance": 2.0,
-        "effectCap": 10.0,
-        "tree": "Flamecaller",
-        "maxRarity": 5,
-        "rarityValues": [
-            1.0,
-            2.5,
-            4.0,
-            5.5,
-            7.5
-        ]
-    },
-    {
-        "effectName": "Snowstorm Damage",
-        "ability": "Snowstorm",
-        "isOnlyPositive": false,
-        "isPercent": true,
-        "variance": 5.0,
-        "effectCap": 80.0,
-        "tree": "Frostborn",
-        "maxRarity": 5,
-        "rarityValues": [
-            10.0,
-            15.0,
-            20.0,
-            25.0,
-            30.0
-        ]
-    },
-    {
-        "effectName": "Frigid Combos Radius",
-        "ability": "Frigid Combos",
-        "isOnlyPositive": false,
-        "isPercent": true,
-        "variance": 5.0,
-        "effectCap": 50.0,
-        "tree": "Frostborn",
-        "maxRarity": 5,
-        "rarityValues": [
-            10.0,
-            15.0,
-            20.0,
-            25.0,
-            30.0
-        ]
-    },
-    {
-        "effectName": "Frigid Combos Slowness Amplifier",
-        "ability": "Frigid Combos",
-        "isOnlyPositive": false,
-        "isPercent": true,
-        "variance": 5.0,
-        "effectCap": 40.0,
-        "tree": "Frostborn",
-        "maxRarity": 5,
-        "rarityValues": [
-            5.0,
-            7.5,
-            10.0,
-            12.5,
-            15.0
-        ]
-    },
-    {
-        "effectName": "Piercing Cold Damage",
-        "ability": "Piercing Cold",
-        "isOnlyPositive": false,
-        "isPercent": true,
-        "variance": 5.0,
-        "effectCap": 80.0,
-        "tree": "Frostborn",
-        "maxRarity": 5,
-        "rarityValues": [
-            10.0,
-            15.0,
-            20.0,
-            25.0,
-            30.0
-        ]
-    },
-    {
-        "effectName": "Scrapshot Recoil Velocity",
-        "ability": "Scrapshot",
-        "isOnlyPositive": true,
-        "isPercent": true,
-        "variance": 0.0,
-        "effectCap": 100.0,
-        "tree": "Steelsage",
-        "maxRarity": 4,
-        "rarityValues": [
-            0.0,
-            0.0,
-            20.0,
-            40.0,
-            60.0
-        ]
-    },
-    {
-        "effectName": "Steel Stallion Horse Speed",
-        "ability": "Steel Stallion",
-        "isOnlyPositive": true,
-        "isPercent": true,
-        "variance": 5.0,
-        "effectCap": 0.0,
-        "tree": "Steelsage",
-        "maxRarity": 4,
-        "rarityValues": [
-            3.0,
-            6.0,
-            9.0,
-            12.0,
-            15.0
-        ]
-    },
-    {
-        "effectName": "Aeroblast Size",
-        "ability": "Aeroblast",
-        "isOnlyPositive": false,
-        "isPercent": true,
-        "variance": 5.0,
-        "effectCap": 50.0,
-        "tree": "Windwalker",
-        "maxRarity": 5,
-        "rarityValues": [
-            10.0,
-            15.0,
-            20.0,
-            25.0,
-            30.0
-        ]
-    },
-    {
-        "effectName": "Thundercloud Form Damage",
-        "ability": "Thundercloud Form",
-        "isOnlyPositive": false,
-        "isPercent": true,
-        "variance": 5.0,
-        "effectCap": 80.0,
-        "tree": "Windwalker",
-        "maxRarity": 5,
-        "rarityValues": [
-            10.0,
-            15.0,
-            20.0,
-            25.0,
-            30.0
-        ]
-    },
-    {
-        "effectName": "Wind Walk Levitation Duration",
-        "ability": "Wind Walk",
-        "isOnlyPositive": true,
-        "isPercent": false,
-        "variance": 0.25,
-        "effectCap": 4.0,
-        "tree": "Windwalker",
-        "maxRarity": 5,
-        "rarityValues": [
-            0.5,
-            0.75,
-            1.0,
-            1.25,
-            1.5
-        ]
-    },
-    {
-        "effectName": "Wind Walk Stun Duration",
-        "ability": "Wind Walk",
-        "isOnlyPositive": true,
-        "isPercent": false,
-        "variance": 0.25,
-        "effectCap": 2.0,
-        "tree": "Windwalker",
-        "maxRarity": 5,
-        "rarityValues": [
-            0.25,
-            0.5,
-            0.75,
-            1.0,
-            1.25
-        ]
-    }
+  {
+    "effectName": "Radiant Blessing Radius",
+    "ability": "Radiant Blessing",
+    "isOnlyPositive": false,
+    "isPercent": true,
+    "variance": 5.0,
+    "effectCap": 50.0,
+    "tree": "Dawnbringer",
+    "maxRarity": 5,
+    "rarityValues": [
+      10.0,
+      15.0,
+      20.0,
+      25.0,
+      30.0
+    ]
+  },
+  {
+    "effectName": "Spark of Inspiration Cooldown",
+    "ability": "Spark of Inspiration",
+    "isOnlyPositive": false,
+    "isPercent": true,
+    "variance": 4.0,
+    "effectCap": -30.0,
+    "tree": "Dawnbringer",
+    "maxRarity": 5,
+    "rarityValues": [
+      -5.0,
+      -7.5,
+      -10.0,
+      -12.5,
+      -15.0
+    ]
+  },
+  {
+    "effectName": "Spark of Inspiration Cast Range",
+    "ability": "Spark of Inspiration",
+    "isOnlyPositive": true,
+    "isPercent": true,
+    "variance": 5.0,
+    "effectCap": 50.0,
+    "tree": "Dawnbringer",
+    "maxRarity": 5,
+    "rarityValues": [
+      10.0,
+      15.0,
+      20.0,
+      25.0,
+      30.0
+    ]
+  },
+  {
+    "effectName": "Spark of Inspiration Cooldown Reduction Rate",
+    "ability": "Spark of Inspiration",
+    "isOnlyPositive": false,
+    "isPercent": true,
+    "variance": 3.0,
+    "effectCap": 40.0,
+    "tree": "Dawnbringer",
+    "maxRarity": 5,
+    "rarityValues": [
+      6.0,
+      9.0,
+      12.0,
+      15.0,
+      18.0
+    ]
+  },
+  {
+    "effectName": "Spark of Inspiration Strength Amplifier",
+    "ability": "Spark of Inspiration",
+    "isOnlyPositive": false,
+    "isPercent": true,
+    "variance": 2.0,
+    "effectCap": 20.0,
+    "tree": "Dawnbringer",
+    "maxRarity": 5,
+    "rarityValues": [
+      3.0,
+      4.5,
+      6.0,
+      7.5,
+      9.0
+    ]
+  },
+  {
+    "effectName": "Spark of Inspiration Buff Duration",
+    "ability": "Spark of Inspiration",
+    "isOnlyPositive": true,
+    "isPercent": false,
+    "variance": 0.5,
+    "effectCap": 3.0,
+    "tree": "Dawnbringer",
+    "maxRarity": 5,
+    "rarityValues": [
+      0.0,
+      0.0,
+      0.5,
+      1.0,
+      1.5
+    ]
+  },
+  {
+    "effectName": "Spark of Inspiration Resistance Duration",
+    "ability": "Spark of Inspiration",
+    "isOnlyPositive": true,
+    "isPercent": false,
+    "variance": 0.0,
+    "effectCap": 2.0,
+    "tree": "Dawnbringer",
+    "maxRarity": 5,
+    "rarityValues": [
+      0.0,
+      0.0,
+      0.5,
+      0.75,
+      1.0
+    ]
+  },
+  {
+    "effectName": "Enlightenment Experience Multiplier",
+    "ability": "Enlightenment",
+    "isOnlyPositive": true,
+    "isPercent": true,
+    "variance": 5.0,
+    "effectCap": 50.0,
+    "tree": "Dawnbringer",
+    "maxRarity": 5,
+    "rarityValues": [
+      5.0,
+      10.0,
+      15.0,
+      20.0,
+      25.0
+    ]
+  },
+  {
+    "effectName": "Ward of Light Cone Angle",
+    "ability": "Ward of Light",
+    "isOnlyPositive": true,
+    "isPercent": true,
+    "variance": 0.0,
+    "effectCap": 100.0,
+    "tree": "Dawnbringer",
+    "maxRarity": 4,
+    "rarityValues": [
+      0.0,
+      0.0,
+      20.0,
+      40.0,
+      60.0
+    ]
+  },
+  {
+    "effectName": "Primordial Mastery Damage Multiplier",
+    "ability": "Primordial Mastery",
+    "isOnlyPositive": true,
+    "isPercent": true,
+    "variance": 2.0,
+    "effectCap": 10.0,
+    "tree": "Flamecaller",
+    "maxRarity": 5,
+    "rarityValues": [
+      1.0,
+      2.5,
+      4.0,
+      5.5,
+      7.5
+    ]
+  },
+  {
+    "effectName": "Snowstorm Damage",
+    "ability": "Snowstorm",
+    "isOnlyPositive": false,
+    "isPercent": true,
+    "variance": 5.0,
+    "effectCap": 80.0,
+    "tree": "Frostborn",
+    "maxRarity": 5,
+    "rarityValues": [
+      10.0,
+      15.0,
+      20.0,
+      25.0,
+      30.0
+    ]
+  },
+  {
+    "effectName": "Frigid Combos Radius",
+    "ability": "Frigid Combos",
+    "isOnlyPositive": false,
+    "isPercent": true,
+    "variance": 5.0,
+    "effectCap": 50.0,
+    "tree": "Frostborn",
+    "maxRarity": 5,
+    "rarityValues": [
+      10.0,
+      15.0,
+      20.0,
+      25.0,
+      30.0
+    ]
+  },
+  {
+    "effectName": "Frigid Combos Slowness Amplifier",
+    "ability": "Frigid Combos",
+    "isOnlyPositive": false,
+    "isPercent": true,
+    "variance": 5.0,
+    "effectCap": 40.0,
+    "tree": "Frostborn",
+    "maxRarity": 5,
+    "rarityValues": [
+      5.0,
+      7.5,
+      10.0,
+      12.5,
+      15.0
+    ]
+  },
+  {
+    "effectName": "Piercing Cold Damage",
+    "ability": "Piercing Cold",
+    "isOnlyPositive": false,
+    "isPercent": true,
+    "variance": 5.0,
+    "effectCap": 80.0,
+    "tree": "Frostborn",
+    "maxRarity": 5,
+    "rarityValues": [
+      10.0,
+      15.0,
+      20.0,
+      25.0,
+      30.0
+    ]
+  },
+  {
+    "effectName": "Scrapshot Recoil Velocity",
+    "ability": "Scrapshot",
+    "isOnlyPositive": true,
+    "isPercent": true,
+    "variance": 0.0,
+    "effectCap": 100.0,
+    "tree": "Steelsage",
+    "maxRarity": 4,
+    "rarityValues": [
+      0.0,
+      0.0,
+      20.0,
+      40.0,
+      60.0
+    ]
+  },
+  {
+    "effectName": "Steel Stallion Horse Speed",
+    "ability": "Steel Stallion",
+    "isOnlyPositive": true,
+    "isPercent": true,
+    "variance": 5.0,
+    "effectCap": 0.0,
+    "tree": "Steelsage",
+    "maxRarity": 4,
+    "rarityValues": [
+      3.0,
+      6.0,
+      9.0,
+      12.0,
+      15.0
+    ]
+  },
+  {
+    "effectName": "Aeroblast Size",
+    "ability": "Aeroblast",
+    "isOnlyPositive": false,
+    "isPercent": true,
+    "variance": 5.0,
+    "effectCap": 50.0,
+    "tree": "Windwalker",
+    "maxRarity": 5,
+    "rarityValues": [
+      10.0,
+      15.0,
+      20.0,
+      25.0,
+      30.0
+    ]
+  },
+  {
+    "effectName": "Thundercloud Form Damage",
+    "ability": "Thundercloud Form",
+    "isOnlyPositive": false,
+    "isPercent": true,
+    "variance": 5.0,
+    "effectCap": 80.0,
+    "tree": "Windwalker",
+    "maxRarity": 5,
+    "rarityValues": [
+      10.0,
+      15.0,
+      20.0,
+      25.0,
+      30.0
+    ]
+  },
+  {
+    "effectName": "Wind Walk Levitation Duration",
+    "ability": "Wind Walk",
+    "isOnlyPositive": true,
+    "isPercent": false,
+    "variance": 0.25,
+    "effectCap": 4.0,
+    "tree": "Windwalker",
+    "maxRarity": 5,
+    "rarityValues": [
+      0.5,
+      0.75,
+      1.0,
+      1.25,
+      1.5
+    ]
+  },
+  {
+    "effectName": "Wind Walk Stun Duration",
+    "ability": "Wind Walk",
+    "isOnlyPositive": true,
+    "isPercent": false,
+    "variance": 0.25,
+    "effectCap": 2.0,
+    "tree": "Windwalker",
+    "maxRarity": 5,
+    "rarityValues": [
+      0.25,
+      0.5,
+      0.75,
+      1.0,
+      1.25
+    ]
+  }
 ]
