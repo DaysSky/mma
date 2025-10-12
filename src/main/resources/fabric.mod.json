@@ -1,30 +1,30 @@
 {
   "schemaVersion": 1,
-  "id": "fma",
+  "id": "mma",
   "version": "${version}",
-  "name": "flowey-monumenta-addons",
+  "name": "monumenta-addons",
   "description": "Monumenta utilities",
   "authors": [
-    "Flowey",
+    "Dayssky",
     "catgirljade_"
   ],
   "contact": {
-    "issues": "https://github.com/flowey/flowey-monumenta-addons/issues",
-    "sources": "https://github.com/flowey/flowey-monumenta-addons"
+    "issues": "https://github.com/dayssky/monumenta-addons/issues",
+    "sources": "https://github.com/dayssky/monumenta-addons"
   },
   "license": "GPL-3.0",
-  "icon": "assets/fma/icon.png",
+  "icon": "assets/mma/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "com.floweytf.fma.FMAClient"
+      "com.dayssky.mma.MMAClient"
     ],
     "modmenu": [
-      "com.floweytf.fma.compat.FMAConfigMenu"
+      "com.dayssky.mma.compat.MMAConfigMenu"
     ]
   },
   "mixins": [
-    "fma.mixins.json"
+    "mma.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
@@ -40,15 +40,15 @@
     "modmenu": {
       "links": {
         "modmenu.discord": "https://discord.gg/bSpYTPa9qw",
-        "modmenu.github_releases": "https://github.com/Floweynt/flowey-monumenta-addons/releases",
-        "modmenu.modrinth": "https://modrinth.com/mod/flowey-moumenta-addons"
+        "modmenu.github_releases": "https://github.com/dayssky/monumenta-addons/releases",
+        "modmenu.modrinth": "https://modrinth.com/mod/moumenta-addons"
       }
     },
     "loom:injected_interfaces": {
       "net/minecraft/class_1799": [
-        "com/floweytf/fma/duck/ItemStackAccess"
+        "com/dayssky/mma/duck/ItemStackAccess"
       ]
     }
   },
-  "accessWidener": "fma.accesswidener"
+  "accessWidener": "mma.accesswidener"
 }

@@ -5,9 +5,9 @@ plugins {
 
 version = "1.8.2-dev+mc1.20.4"
 
-group = "com.floweytf"
+group = "com.dayssky"
 
-base { archivesName = "fma" }
+base { archivesName = "mma" }
 
 repositories {
     exclusiveContent {
@@ -24,7 +24,7 @@ repositories {
     mavenCentral()
 }
 
-loom { accessWidenerPath = file("src/main/resources/fma.accesswidener") }
+loom { accessWidenerPath = file("src/main/resources/mma.accesswidener") }
 
 dependencies {
     // To change the versions see the gradle.properties file

@@ -1,4 +1,4 @@
-# Flowey Monumenta Addons
+#Monumenta Addons
 
 ## Features
 
@@ -7,7 +7,7 @@
 - meow keybind/macro
 - (portal) green box around buttons when cube summon is required
 - leaderboard command shorthand - /lb
-- random command aliases - see /fma help
+- random command aliases - see /mma help
 - vanilla effects in UMM HUD
 - HUD with shard/timer info
 - CZ charm stat helper
