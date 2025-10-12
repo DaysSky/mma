@@ -20,6 +20,8 @@ import com.google.gson.Gson;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 
 import me.shedaniel.autoconfig.ConfigHolder;
@@ -85,6 +87,18 @@ public class MMAClient implements ClientModInitializer {
             CharmDataRegistries.init();
         } catch (IOException var2) {
             Util.sneakyThrow(var2);
+        }
+
+        
+        Path configPath = FabricLoader.getInstance().getConfigDir().resolve("mma.json");
+        Path oldConfigPath = FabricLoader.getInstance().getConfigDir().resolve("fma.json");
+        if (!Files.exists(configPath) && Files.exists(oldConfigPath)) {
+            try {
+                Files.move(oldConfigPath, configPath);
+                LOGGER.info("Migrated config from fma.json to mma.json");
+            } catch (Exception e) {
+                LOGGER.warn("Failed to migrate config from fma.json", e);
+            }
         }
 
         CONFIG = MMAConfig.register();

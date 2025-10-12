@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 public class CharmDataRegistries {
     private static final Path CACHE_PATH = FabricLoader.getInstance().getConfigDir().resolve("mma-cached-charm-effects.json");
+    private static final Path OLD_CACHE_PATH = FabricLoader.getInstance().getConfigDir().resolve("fma-cached-charm-effects.json");
     private static final Logger LOGGER = LoggerFactory.getLogger("CharmDataRegistries");
     private static final String API_URL = "https://api.playmonumenta.com/zenith_charm_effects";
     private static final LateInit<CharmDataRegistries> MAIN = new LateInit<>();
@@ -109,6 +110,16 @@ public class CharmDataRegistries {
 
     public static void init() throws IOException {
         DUMMY.init(fromClassPath("/assets/mma/zenith_charm_config_dummy.json"));
+
+
+        if (!Files.exists(CACHE_PATH) && Files.exists(OLD_CACHE_PATH)) {
+            try {
+                Files.move(OLD_CACHE_PATH, CACHE_PATH);
+                LOGGER.info("Migrated charm cache from fma-cached-charm-effects.json to mma-cached-charm-effects.json");
+            } catch (Exception e) {
+                LOGGER.warn("Failed to migrate charm cache from fma-cached-charm-effects.json", e);
+            }
+        }
 
         try {
             LOGGER.info("GET {}", "https://api.playmonumenta.com/zenith_charm_effects");
