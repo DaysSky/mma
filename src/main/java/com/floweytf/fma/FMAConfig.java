@@ -2,9 +2,16 @@ package com.floweytf.fma;
 
 import com.floweytf.fma.features.Waypoint;
 import com.floweytf.fma.features.cz.data.CharmEffectType;
+import com.floweytf.fma.features.cz.data.CharmType;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -12,7 +19,13 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.BoundedDiscrete;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Category;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.ColorPicker;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.CollapsibleObject;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.PrefixText;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Tooltip;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.TransitiveObject;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -20,255 +33,216 @@ import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 
-@Config(name = "fma")
+@Config(
+   name = "fma"
+)
 public class FMAConfig implements ConfigData {
-    public @interface Hidden {
-    }
+   @Category("features")
+   @TransitiveObject
+   public FMAConfig.FeatureToggles features = new FMAConfig.FeatureToggles();
+   @Category("appearance")
+   @TransitiveObject
+   public FMAConfig.Appearance appearance = new FMAConfig.Appearance();
+   @Category("hpIndicator")
+   @TransitiveObject
+   public FMAConfig.HpIndicator hpIndicator = new FMAConfig.HpIndicator();
+   @Category("chat")
+   @TransitiveObject
+   public FMAConfig.Chat chat = new FMAConfig.Chat();
+   @Category("strikes")
+   @CollapsibleObject
+   public FMAConfig.Portal portal = new FMAConfig.Portal();
+   @Category("strikes")
+   @CollapsibleObject
+   public FMAConfig.Ruin ruin = new FMAConfig.Ruin();
+   @Category("zenith")
+   @TransitiveObject
+   public FMAConfig.Zenith zenith = new FMAConfig.Zenith();
 
-    public static class InventoryOverlayToggles {
-        public boolean enable = true;
-        public boolean enableRarity = false;
-        public boolean enableCZCharmRarity = false;
-        public boolean enableCooldown = true;
-        public boolean enableCZCharmPower = false;
-        public boolean enablePICount = true;
-        public boolean enableLoomFirmCount = false;
-        @ConfigEntry.BoundedDiscrete(min = 0, max = 20)
-        public int updateDelayTicks = 5;
-    }
+   public static ConfigHolder<FMAConfig> register() {
+      ConfigHolder<FMAConfig> holder = AutoConfig.register(
+         FMAConfig.class, (config, clazz) -> new GsonConfigSerializer(config, clazz, FMAConfigHandlerHelper.GSON)
+      );
+      holder.registerSaveListener((configHolder, config) -> {
+         config.validatePostLoad();
+         FMAClient.reload();
+         return InteractionResult.PASS;
+      });
+      FMAConfigHandlerHelper.register();
+      return holder;
+   }
 
-    public static class SidebarToggles {
-        public boolean enable = true;
-        public boolean enableProxy = true;
-        public boolean enableShard = true;
-        public boolean enableIp = true;
-        public boolean enableIpElision = true;
-        public boolean situationals = true;
-    }
+   public void validatePostLoad() {
+      if (this.hpIndicator.mediumHpPercent > this.hpIndicator.goodHpPercent) {
+         this.hpIndicator.mediumHpPercent = this.hpIndicator.goodHpPercent;
+      }
 
-    public static class FeatureToggles {
-        public boolean enableHpIndicators = true;
-        public boolean enableTimerAndStats = true;
-        public boolean enableVanillaEffectInUMMHud = false;
-        public boolean enableVanityDurability = true;
-        public boolean enableCustomSplash = true;
-        @ConfigEntry.Gui.CollapsibleObject
-        public InventoryOverlayToggles inventoryOverlay = new InventoryOverlayToggles();
-        @ConfigEntry.Gui.CollapsibleObject
-        public SidebarToggles sidebarToggles = new SidebarToggles();
-        public boolean enableDebug = SharedConstants.IS_RUNNING_IN_IDE;
-        public boolean suppressDebugWarning = !SharedConstants.IS_RUNNING_IN_IDE;
-        public boolean versionCheck = false;
-        public boolean versionCheckIncludeBeta = false;
-        public boolean contractCheck = false;
-        public int contractThreshold = 40;
-        @ConfigEntry.Gui.CollapsibleObject
-        public Waypoint.Config waypoint = new Waypoint.Config();
-    }
+      if (this.hpIndicator.lowHpPercent > this.hpIndicator.mediumHpPercent) {
+         this.hpIndicator.lowHpPercent = this.hpIndicator.mediumHpPercent;
+      }
+   }
 
-    public static class Appearance {
-        @ConfigEntry.ColorPicker
-        public int bracketColor = 0xb7bdf8;
-        @ConfigEntry.ColorPicker
-        public int tagColor = 0xc6a0f6;
+   public static class Appearance {
+      @ColorPicker
+      public int bracketColor = 12041720;
+      @ColorPicker
+      public int tagColor = 13017334;
+      public String tagText = "MAID";
+      @ColorPicker
+      public int textColor = 16047062;
+      @ColorPicker
+      public int numericColor = 15961000;
+      @ColorPicker
+      public int detailColor = 7106437;
+      @ColorPicker
+      public int playerNameColor = 15703926;
+      @ColorPicker
+      public int altTextColor = 11845374;
+      @ColorPicker
+      public int errorColor = 15091027;
+      @ColorPicker
+      public int warningColor = 14650909;
+   }
 
-        public String tagText = "MAID";
+   public static class Chat {
+      public String meowingChannel = "wc";
+      public String meowingText = "meow";
+   }
 
-        @ConfigEntry.ColorPicker
-        public int textColor = 0xf4dbd6;
-        @ConfigEntry.ColorPicker
-        public int numericColor = 0xf38ba8;
-        @ConfigEntry.ColorPicker
-        public int detailColor = 0x6c6f85;
-        @ConfigEntry.ColorPicker
-        public int playerNameColor = 0xef9f76;
-        @ConfigEntry.ColorPicker
-        public int altTextColor = 0xb4befe;
+   public static class FeatureToggles {
+      public boolean enableHpIndicators = true;
+      public boolean enableTimerAndStats = true;
+      public boolean enableVanillaEffectInUMMHud = false;
+      public boolean enableVanityDurability = true;
+      public boolean enableCustomSplash = true;
+      @CollapsibleObject
+      public FMAConfig.InventoryOverlayToggles inventoryOverlay = new FMAConfig.InventoryOverlayToggles();
+      @CollapsibleObject
+      public FMAConfig.SidebarToggles sidebarToggles = new FMAConfig.SidebarToggles();
+      public boolean enableDebug = SharedConstants.IS_RUNNING_IN_IDE;
+      public boolean suppressDebugWarning = !SharedConstants.IS_RUNNING_IN_IDE;
+      public boolean versionCheck = false;
+      public boolean versionCheckIncludeBeta = false;
+      public boolean contractCheck = true;
+      public String contractCheckText = "Switch your contract";
+      public int contractThreshold = 40;
+      public int czContractThreshold = 50;
+      @CollapsibleObject
+      public Waypoint.Config waypoint = new Waypoint.Config();
+   }
 
-        @ConfigEntry.ColorPicker
-        public int errorColor = 0xe64553;
-        @ConfigEntry.ColorPicker
-        public int warningColor = 0xdf8e1d;
-    }
+   public @interface Hidden {
+   }
 
-    public static class HpIndicator {
-        public boolean enableGlowingPlayer = true;
-        public boolean enableHitboxColoring = true;
-        public boolean countAbsorptionAsHp = true;
+   public static class HpIndicator {
+      public boolean enableGlowingPlayer = true;
+      public boolean enableHitboxColoring = true;
+      public boolean countAbsorptionAsHp = true;
+      public boolean disableSelf = true;
+      public boolean disableInHycenea = true;
+      public boolean smoothColor = false;
+      @BoundedDiscrete(
+         max = 100L
+      )
+      public int goodHpPercent = 70;
+      @BoundedDiscrete(
+         max = 100L
+      )
+      public int mediumHpPercent = 50;
+      @BoundedDiscrete(
+         max = 100L
+      )
+      public int lowHpPercent = 25;
+      @ColorPicker
+      public int goodHpColor = 3403567;
+      @ColorPicker
+      public int mediumHpColor = 14282543;
+      @ColorPicker
+      public int lowHpColor = 15704623;
+      @ColorPicker
+      public int criticalHpColor = 15681325;
+   }
 
-        public boolean smoothColor = false;
+   public static class InventoryOverlayToggles {
+      public boolean enable = true;
+      public boolean enableRarity = false;
+      public boolean enableCZCharmRarity = false;
+      public boolean enableCooldown = true;
+      public boolean enableCZCharmPower = false;
+      public boolean enablePICount = true;
+      public boolean enableLoomFirmCount = false;
+      @BoundedDiscrete(
+         min = 0L,
+         max = 20L
+      )
+      public int updateDelayTicks = 5;
+   }
 
-        @ConfigEntry.BoundedDiscrete(max = 100)
-        public int goodHpPercent = 70;
-        @ConfigEntry.BoundedDiscrete(max = 100)
-        public int mediumHpPercent = 50;
-        @ConfigEntry.BoundedDiscrete(max = 100)
-        public int lowHpPercent = 25;
+   public static class Portal {
+      public boolean enablePortalButtonIndicator = true;
+      public boolean nodeSplit = true;
+      public boolean soulsSplit = true;
+      public boolean startBossSplit = true;
+      public boolean phase1Split = false;
+      public boolean phase2Split = false;
+      public boolean phase3Split = false;
+      public boolean bossSplit = true;
+      public boolean enableIotaFix = true;
+   }
 
-        @ConfigEntry.ColorPicker
-        public int goodHpColor = 0x33ef2f;
-        @ConfigEntry.ColorPicker
-        public int mediumHpColor = 0xd9ef2f;
-        @ConfigEntry.ColorPicker
-        public int lowHpColor = 0xefa22f;
-        @ConfigEntry.ColorPicker
-        public int criticalHpColor = 0xef472d;
-    }
+   public static class Ruin {
+      public boolean soulsSplit = true;
+      public boolean startBossSplit = true;
+      public boolean daggerSplit = false;
+      public boolean dpsSplit = false;
+      public boolean bossSplit = true;
+   }
 
-    public static class Zenith {
-        @ConfigEntry.Gui.PrefixText
-        public boolean enableCustomCharmInfo = true;
-        @ConfigEntry.Gui.Tooltip
-        public boolean disableMonumentaLore = true; // This feature is beta
-        @ConfigEntry.Gui.Tooltip
-        public boolean peliCompatibilityMode = false;
-        @ConfigEntry.Gui.Tooltip
-        public boolean enableStatBreakdown = false;
-        @ConfigEntry.Gui.Tooltip
-        public boolean displayRollValue = true;
-        @ConfigEntry.Gui.Tooltip
-        public boolean displayEffectRarity = false;
-        @ConfigEntry.Gui.Tooltip
-        public boolean displayUUID = false;
-        public boolean nbtOrder = false;
+   public static class SidebarToggles {
+      public boolean enable = true;
+      public boolean enableProxy = true;
+      public boolean enableShard = true;
+      public boolean enableIp = true;
+      public boolean enableIpElision = true;
+      public boolean situationals = true;
+   }
 
-        @ConfigEntry.Gui.Tooltip
-        @ConfigEntry.Gui.CollapsibleObject
-        public EnumMap<CharmEffectType, Boolean> ignoredAbilities = new EnumMap<>(CharmEffectType.class);
-    }
+   public static class Zenith {
+      @PrefixText
+      @DisplayCharmExamples({@CharmTypeExample(CharmType.ABILITY), @CharmTypeExample(CharmType.TREE), @CharmTypeExample(CharmType.WILDCARD)})
+      public boolean enableCustomCharmInfo = true;
+      @Tooltip
+      public boolean disableMonumentaLore = true;
+      @Tooltip
+      public boolean peliCompatibilityMode = false;
+      @Tooltip
+      public boolean compactLore = false;
+      @Tooltip
+      public boolean compactUpgrade = false;
+      public boolean disableBudget = false;
+      public boolean displayAverageRolls = false;
+      @Tooltip
+      public boolean enableStatBreakdown = false;
+      @Tooltip
+      public boolean displayRollValue = true;
+      @Tooltip
+      public boolean displayEffectRarity = false;
+      @Tooltip
+      public boolean displayUUID = false;
+      @ZenithAbilitySelection
+      public Set<CharmEffectType> ignoredAbilities = new HashSet<>();
+   }
 
-    public static class Portal {
-        public boolean enablePortalButtonIndicator = true;
+   @Retention(RetentionPolicy.RUNTIME)
+   @Target({ElementType.FIELD})
+   public @interface ZenithAbilitySelection {
+   }
 
-        public boolean nodeSplit = true;
-        public boolean soulsSplit = true;
-        public boolean startBossSplit = true;
-        public boolean phase1Split = false;
-        public boolean phase2Split = false;
-        public boolean phase3Split = false;
-        public boolean bossSplit = true;
-        public boolean enableIotaFix = true;
-    }
+   public @interface DisplayCharmExamples {
+      CharmTypeExample[] value();
+   }
 
-    public static class Ruin {
-        public boolean soulsSplit = true;
-        public boolean startBossSplit = true;
-        public boolean daggerSplit = false;
-        public boolean dpsSplit = false;
-        public boolean bossSplit = true;
-    }
-
-    public static class Chat {
-        public String meowingChannel = "wc";
-        public String meowingText = "meow";
-    }
-
-    @ConfigEntry.Category("features")
-    @ConfigEntry.Gui.TransitiveObject
-    public FeatureToggles features = new FeatureToggles();
-
-    @ConfigEntry.Category("appearance")
-    @ConfigEntry.Gui.TransitiveObject
-    public Appearance appearance = new Appearance();
-
-    @ConfigEntry.Category("hpIndicator")
-    @ConfigEntry.Gui.TransitiveObject
-    public HpIndicator hpIndicator = new HpIndicator();
-
-    @ConfigEntry.Category("chat")
-    @ConfigEntry.Gui.TransitiveObject
-    public Chat chat = new Chat();
-
-    @ConfigEntry.Category("strikes")
-    @ConfigEntry.Gui.CollapsibleObject
-    public Portal portal = new Portal();
-
-    @ConfigEntry.Category("strikes")
-    @ConfigEntry.Gui.CollapsibleObject
-    public Ruin ruin = new Ruin();
-
-    @ConfigEntry.Category("zenith")
-    @ConfigEntry.Gui.TransitiveObject
-    public Zenith zenith = new Zenith();
-
-    @SuppressWarnings("rawtypes")
-    private static AbstractConfigListEntry buildEntryToggle(CharmEffectType x, ConfigEntryBuilder builder,
-                                                            EnumMap<CharmEffectType, Boolean> config) {
-        return builder.startBooleanToggle(Component.literal(x.modifier), config.getOrDefault(x, false))
-            .setSaveConsumer(b -> config.put(x, b))
-            .setDefaultValue(false)
-            .build();
-    }
-
-    @SuppressWarnings("rawtypes")
-    private static <T, U> Stream<AbstractConfigListEntry> buildClassifying(
-        Stream<T> entries, Function<T, U> classifier,
-        Function<U, Component> nameGetter,
-        Function<Stream<T>, Stream<AbstractConfigListEntry>> entryBuilder,
-        ConfigEntryBuilder builder
-    ) {
-        return entries.collect(Collectors.groupingBy(classifier))
-            .entrySet()
-            .stream()
-            .map(x -> builder.startSubCategory(nameGetter.apply(x.getKey()),
-                entryBuilder.apply(x.getValue().stream()).toList()).build());
-    }
-
-    @SuppressWarnings("unchecked")
-    public static ConfigHolder<FMAConfig> register() {
-        final var holder = AutoConfig.register(FMAConfig.class, GsonConfigSerializer::new);
-
-        AutoConfig.getGuiRegistry(FMAConfig.class).registerTypeProvider(
-            (s, field, o, o1, guiRegistryAccess) -> {
-                final EnumMap<CharmEffectType, Boolean> config;
-
-                try {
-                    config = (EnumMap<CharmEffectType, Boolean>) field.get(o);
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-
-                final var builder = ConfigEntryBuilder.create();
-
-                final var res = buildClassifying(
-                    Arrays.stream(CharmEffectType.values()),
-                    charmEffectType -> charmEffectType.ability.zenithClass,
-                    zenithClass -> Component.literal(zenithClass.displayName),
-                    charmEffectTypes -> buildClassifying(
-                        charmEffectTypes,
-                        charmEffectType -> charmEffectType.ability,
-                        zenithAbility -> Component.literal(zenithAbility.displayName),
-                        entries -> entries.map(x -> buildEntryToggle(x, builder, config)),
-                        builder
-                    ),
-                    builder
-                ).toList();
-
-                return List.of(builder.startSubCategory(Component.translatable(s), res).setExpanded(false).build());
-            },
-            EnumMap.class
-        );
-
-        AutoConfig.getGuiRegistry(FMAConfig.class).registerAnnotationProvider(
-            (s, f, o, o1, a) -> List.of(),
-            Hidden.class
-        );
-
-        holder.registerSaveListener((configHolder, config) -> {
-            config.validatePostLoad();
-            FMAClient.reload();
-            return InteractionResult.PASS;
-        });
-
-        return holder;
-    }
-
-    @Override
-    public void validatePostLoad() {
-        if (hpIndicator.mediumHpPercent > hpIndicator.goodHpPercent)
-            hpIndicator.mediumHpPercent = hpIndicator.goodHpPercent;
-
-        if (hpIndicator.lowHpPercent > hpIndicator.mediumHpPercent)
-            hpIndicator.lowHpPercent = hpIndicator.mediumHpPercent;
-    }
+   public @interface CharmTypeExample {
+      com.floweytf.fma.features.cz.data.CharmType value();
+   }
 }

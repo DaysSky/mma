@@ -1,6 +1,7 @@
 package com.floweytf.fma.mixin;
 
 import com.floweytf.fma.FMAClient;
+import com.floweytf.fma.FMAConfig;
 import com.floweytf.fma.util.ChatUtil;
 import java.awt.TextComponent;
 import net.minecraft.client.Minecraft;
@@ -39,7 +40,7 @@ public class MultiPlayerGameModeMixin {
 
                 minecraft.level.playSound(minecraft.player, player, SoundEvents.PLAYER_LEVELUP, SoundSource.MASTER,
                         2.0f, 0.1f);
-                ChatUtil.sendWarn(Component.translatable("text.fma.contract_warning"));
+                ChatUtil.sendWarn(Component.literal(new FMAConfig().features.contractCheckText));
             }
         }
     }

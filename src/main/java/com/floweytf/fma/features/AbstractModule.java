@@ -5,17 +5,17 @@ import com.floweytf.fma.FMAConfig;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 
 public interface AbstractModule<T> {
-    T readConfigFrom(FMAConfig config);
+   T readConfigFrom(FMAConfig var1);
 
-    default T config() {
-        return readConfigFrom(FMAClient.config());
-    }
+   default T config() {
+      return this.readConfigFrom(FMAClient.config());
+   }
 
-    void init();
+   void init();
 
-    void clientInit();
+   void clientInit();
 
-    void tick();
+   void tick();
 
-    void render(WorldRenderContext context);
+   void render(WorldRenderContext var1);
 }

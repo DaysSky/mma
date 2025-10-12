@@ -3,21 +3,16 @@ plugins {
     id("maven-publish")
 }
 
-version = "1.7-rc.1+mc1.20.4"
+version = "1.8.2-dev+mc1.20.4"
+
 group = "com.floweytf"
 
-base {
-    archivesName = "fma"
-}
+base { archivesName = "fma" }
 
 repositories {
     exclusiveContent {
-        forRepository {
-            maven("https://api.modrinth.com/maven")
-        }
-        filter {
-            includeGroup("maven.modrinth")
-        }
+        forRepository { maven("https://api.modrinth.com/maven") }
+        filter { includeGroup("maven.modrinth") }
     }
     maven("https://maven.parchmentmc.org")
     maven("https://maven.siphalor.de/")
@@ -29,26 +24,24 @@ repositories {
     mavenCentral()
 }
 
-loom {
-    accessWidenerPath = file("src/main/resources/fma.accesswidener")
-}
+loom { accessWidenerPath = file("src/main/resources/fma.accesswidener") }
 
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft(libs.minecraft)
 
     @Suppress("UnstableApiUsage")
-    mappings(loom.layered {
-        officialMojangMappings()
-        parchment(libs.parchment)
-    })
+    mappings(
+            loom.layered {
+                officialMojangMappings()
+                parchment(libs.parchment)
+            }
+    )
 
     modImplementation(libs.fabric.loader)
     modImplementation(libs.fabric.api)
 
-    modImplementation(libs.cloth) {
-        exclude(group = "net.fabricmc.fabric-api")
-    }
+    modImplementation(libs.cloth) { exclude(group = "net.fabricmc.fabric-api") }
 
     // modmenu isn't strictly required
     modImplementation(libs.modmenu)
@@ -70,24 +63,18 @@ tasks {
 
         filesMatching("fabric.mod.json") {
             expand(
-                mapOf(
-                    "version" to version,
-                    "minecraft_version" to libs.versions.minecraft.get(),
-                    "loader_version" to libs.versions.fabric.loader.get()
-                )
+                    mapOf(
+                            "version" to version,
+                            "minecraft_version" to libs.versions.minecraft.get(),
+                            "loader_version" to libs.versions.fabric.loader.get()
+                    )
             )
         }
 
-        filesMatching("en_us.json") {
-            filter { line -> line.replace(Regex("//.+"), "") }
-        }
+        filesMatching("en_us.json") { filter { line -> line.replace(Regex("//.+"), "") } }
     }
 
-    jar {
-        from("LICENSE") {
-            rename { "${it}_${base.archivesName}" }
-        }
-    }
+    jar { from("LICENSE") { rename { "${it}_${base.archivesName}" } } }
 }
 
 val targetJavaVersion = 17
@@ -107,13 +94,7 @@ java {
 }
 
 publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(project.components["java"])
-        }
-    }
+    publications { create<MavenPublication>("mavenJava") { from(project.components["java"]) } }
 
-    repositories {
-        mavenLocal()
-    }
+    repositories { mavenLocal() }
 }

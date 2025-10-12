@@ -5,33 +5,26 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 
 public class HoverControlHandler {
-    private ItemStack stackInstance = null;
-    private boolean wasControlDown = false;
-    private boolean shouldDisplayAdvanced = false;
+   private ItemStack stackInstance = null;
+   private boolean wasControlDown = false;
+   private boolean shouldDisplayAdvanced = false;
 
-    private void update(ItemStack stack) {
-        if (stackInstance != stack) {
-            stackInstance = stack;
-            shouldDisplayAdvanced = false;
-        }
+   private void update(ItemStack stack) {
+      if (this.stackInstance != stack) {
+         this.stackInstance = stack;
+         this.shouldDisplayAdvanced = false;
+      }
 
-        final var isControlDown = InputConstants.isKeyDown(
-            Minecraft.getInstance().getWindow().getWindow(),
-            InputConstants.KEY_LCONTROL
-        );
+      boolean isControlDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 341);
+      if (this.wasControlDown != isControlDown && isControlDown) {
+         this.shouldDisplayAdvanced = !this.shouldDisplayAdvanced;
+      }
 
-        if (wasControlDown != isControlDown && isControlDown) {
-            shouldDisplayAdvanced = !shouldDisplayAdvanced;
-        }
+      this.wasControlDown = isControlDown;
+   }
 
-        wasControlDown = isControlDown;
-    }
-
-    public boolean isEnabled(ItemStack stack) {
-        update(stack);
-        return shouldDisplayAdvanced || InputConstants.isKeyDown(
-            Minecraft.getInstance().getWindow().getWindow(),
-            InputConstants.KEY_LSHIFT
-        );
-    }
+   public boolean isEnabled(ItemStack stack) {
+      this.update(stack);
+      return this.shouldDisplayAdvanced || InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 340);
+   }
 }

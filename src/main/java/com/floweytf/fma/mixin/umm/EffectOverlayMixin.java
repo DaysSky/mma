@@ -5,6 +5,7 @@ import ch.njol.unofficialmonumentamod.features.effects.Effect;
 import ch.njol.unofficialmonumentamod.features.effects.EffectOverlay;
 import com.floweytf.fma.FMAClient;
 import com.floweytf.fma.Graphics;
+import com.floweytf.fma.util.FormatUtil;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
@@ -15,8 +16,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.effect.MobEffects;
 import org.spongepowered.asm.mixin.Final;
@@ -27,170 +31,145 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static com.floweytf.fma.util.FormatUtil.join;
-import static com.floweytf.fma.util.FormatUtil.literal;
-
 @Mixin(
-    value = EffectOverlay.class,
-    remap = false
+   value = {EffectOverlay.class},
+   remap = false
 )
 public abstract class EffectOverlayMixin extends HudElement {
-    @Unique
-    private static final Set<MobEffect> fma$BAD_EFFECTS = Set.of(
-        MobEffects.MOVEMENT_SLOWDOWN,
-        MobEffects.DIG_SLOWDOWN,
-        MobEffects.CONFUSION,
-        MobEffects.BLINDNESS,
-        MobEffects.HUNGER,
-        MobEffects.WEAKNESS,
-        MobEffects.POISON,
-        MobEffects.WITHER,
-        MobEffects.UNLUCK,
-        MobEffects.BAD_OMEN
-    );
+   @Unique
+   private static final Set<MobEffect> fma$BAD_EFFECTS = Set.of(
+      MobEffects.MOVEMENT_SLOWDOWN,
+      MobEffects.DIG_SLOWDOWN,
+      MobEffects.CONFUSION,
+      MobEffects.BLINDNESS,
+      MobEffects.HUNGER,
+      MobEffects.WEAKNESS,
+      MobEffects.POISON,
+      MobEffects.WITHER,
+      MobEffects.UNLUCK,
+      MobEffects.BAD_OMEN
+   );
+   @Unique
+   private List<Component> fma$effectCache = null;
+   @Unique
+   private boolean fma$prevRAlign = false;
+   @Shadow
+   @Final
+   private ArrayList<Effect> effects;
 
-    @Unique
-    private List<Component> fma$effectCache = null;
+   @Unique
+   private void fma$renderLine(Font font, GuiGraphics matrix, Component text, boolean rAlign, int width, LocalIntRef currentY) {
+      Graphics.drawString(matrix, font, text, rAlign ? width - 5 - font.width(text) : 5, currentY.get(), -1);
+      currentY.set(currentY.get() + 11);
+   }
 
-    @Unique
-    private boolean fma$prevRAlign = false;
+   @Unique
+   private List<Component> fma$getTextToRender(boolean rAlign) {
+      if (rAlign != this.fma$prevRAlign) {
+         this.fma$effectCache = null;
+         this.fma$prevRAlign = rAlign;
+      }
 
-    @Shadow
-    @Final
-    private ArrayList<Effect> effects;
+      if (this.fma$effectCache == null) {
+         this.fma$effectCache = new ArrayList<>();
+         LocalPlayer player = Minecraft.getInstance().player;
+         if (player != null) {
+            MutableComponent space = FormatUtil.literal(" ");
 
-    @Unique
-    private void fma$renderLine(Font font, GuiGraphics matrix, Component text, boolean rAlign, int width,
-                                LocalIntRef currentY) {
-        Graphics.drawString(matrix, font, text, rAlign ? (width - 5 - font.width(text)) : 5, currentY.get(), -1);
-        currentY.set(currentY.get() + 11);
-    }
-
-    @Unique
-    private List<Component> fma$getTextToRender(boolean rAlign) {
-        if (rAlign != fma$prevRAlign) {
-            fma$effectCache = null;
-            fma$prevRAlign = rAlign;
-        }
-
-        if (fma$effectCache == null) {
-            fma$effectCache = new ArrayList<>();
-
-            final var player = Minecraft.getInstance().player;
-
-            if (player != null) {
-                final var space = literal(" ");
-
-                for (final var activeEffect : player.getActiveEffects()) {
-                    final var nameText = activeEffect.getEffect().getDisplayName();
-                    final var amp = activeEffect.getAmplifier();
-                    final var levelText = literal(amp == 0 ? "" : (amp + 1) + " ");
-                    final var timeText = MobEffectUtil.formatDuration(activeEffect, 1f, 20);
-                    final var color = fma$BAD_EFFECTS.contains(activeEffect.getEffect()) ? ChatFormatting.RED :
-                        ChatFormatting.GREEN;
-
-                    final var effectText = join(nameText, space, levelText).withStyle(color);
-
-                    final var text = rAlign ? join(effectText, timeText) : join(timeText, space, effectText);
-
-                    fma$effectCache.add(text);
-                }
+            for (MobEffectInstance activeEffect : player.getActiveEffects()) {
+               Component nameText = activeEffect.getEffect().getDisplayName();
+               int amp = activeEffect.getAmplifier();
+               MutableComponent levelText = FormatUtil.literal(amp == 0 ? "" : amp + 1 + " ");
+               Component timeText = MobEffectUtil.formatDuration(activeEffect, 1.0F, 20.0F);
+               ChatFormatting color = fma$BAD_EFFECTS.contains(activeEffect.getEffect()) ? ChatFormatting.RED : ChatFormatting.GREEN;
+               MutableComponent effectText = FormatUtil.join(nameText, space, levelText).withStyle(color);
+               MutableComponent text = rAlign ? FormatUtil.join(effectText, timeText) : FormatUtil.join(timeText, space, effectText);
+               this.fma$effectCache.add(text);
             }
-        }
+         }
+      }
 
-        return fma$effectCache;
-    }
+      return this.fma$effectCache;
+   }
 
-    @Inject(
-        method = "tick",
-        at = @At("HEAD")
-    )
-    private void updateCache(CallbackInfo ci) {
-        fma$effectCache = null;
-    }
+   @Inject(
+      method = {"tick"},
+      at = {@At("HEAD")}
+   )
+   private void updateCache(CallbackInfo ci) {
+      this.fma$effectCache = null;
+   }
 
-    // we need to render vanilla effects as well...
-    @Inject(
-        method = "render",
-        at = @At(
-            value = "INVOKE",
-            target = "Ljava/util/ArrayList;iterator()Ljava/util/Iterator;"
-        )
-    )
-    private void renderVanilla(
-        GuiGraphics graphics, float tickDelta, CallbackInfo ci,
-        @Local(name = "currentY") LocalIntRef currentY,
-        @Local boolean rAlign,
-        @Local Font font,
-        @Local(name = "width") int width
-    ) {
-        if (!FMAClient.features().enableVanillaEffectInUMMHud) {
-            return;
-        }
+   @Inject(
+      method = {"render"},
+      at = {@At(
+         value = "INVOKE",
+         target = "Ljava/util/ArrayList;iterator()Ljava/util/Iterator;"
+      )}
+   )
+   private void renderVanilla(
+      GuiGraphics graphics,
+      float tickDelta,
+      CallbackInfo ci,
+      @Local(name = {"currentY"}) LocalIntRef currentY,
+      @Local boolean rAlign,
+      @Local Font font,
+      @Local(name = {"width"}) int width
+   ) {
+      if (FMAClient.features().enableVanillaEffectInUMMHud) {
+         LocalPlayer player = Minecraft.getInstance().player;
+         if (player != null) {
+            if (!player.getActiveEffects().isEmpty()) {
+               this.fma$renderLine(font, graphics, Component.translatable("hud.fma.ummEffects.vanillaCategory"), rAlign, width, currentY);
+            }
 
-        final var player = Minecraft.getInstance().player;
-        if (player == null) {
-            return;
-        }
+            for (Component text : this.fma$getTextToRender(rAlign)) {
+               this.fma$renderLine(font, graphics, text, rAlign, width, currentY);
+            }
 
-        if (!player.getActiveEffects().isEmpty()) {
-            fma$renderLine(font, graphics, Component.translatable("hud.fma.ummEffects.vanillaCategory"), rAlign, width,
-                currentY);
-        }
+            if (!this.effects.isEmpty()) {
+               this.fma$renderLine(font, graphics, Component.translatable("hud.fma.ummEffects.monumentaCategory"), rAlign, width, currentY);
+            }
+         }
+      }
+   }
 
-        for (final var text : fma$getTextToRender(rAlign)) {
-            fma$renderLine(font, graphics, text, rAlign, width, currentY);
-        }
-
-        if (!effects.isEmpty()) {
-            fma$renderLine(font, graphics, Component.translatable("hud.fma.ummEffects.monumentaCategory"), rAlign,
-                width, currentY);
-        }
-    }
-
-    @ModifyReturnValue(
-        method = "getHeight",
-        at = @At("RETURN")
-    )
-    private int modifyHeight(int original) {
-        if (!FMAClient.features().enableVanillaEffectInUMMHud) {
+   @ModifyReturnValue(
+      method = {"getHeight"},
+      at = {@At("RETURN")}
+   )
+   private int modifyHeight(int original) {
+      if (!FMAClient.features().enableVanillaEffectInUMMHud) {
+         return original;
+      } else {
+         LocalPlayer player = Minecraft.getInstance().player;
+         if (player == null) {
             return original;
-        }
+         } else {
+            original += 11 * player.getActiveEffects().size();
+            if (!this.effects.isEmpty()) {
+               original += 11;
+            }
 
-        final var player = Minecraft.getInstance().player;
+            if (!player.getActiveEffects().isEmpty()) {
+               original += 11;
+            }
 
-        if (player == null) {
             return original;
-        }
+         }
+      }
+   }
 
-        original = original + 11 * player.getActiveEffects().size();
-
-        if (!effects.isEmpty()) {
-            original += 11;
-        }
-
-        if (!player.getActiveEffects().isEmpty()) {
-            original += 11;
-        }
-
-        return original;
-    }
-
-    @ModifyReturnValue(
-        method = "isVisible",
-        at = @At("RETURN")
-    )
-    private boolean setVisibleVanillaEffects(boolean original) {
-        if (!FMAClient.features().enableVanillaEffectInUMMHud) {
-            return original;
-        }
-
-        final var player = Minecraft.getInstance().player;
-
-        if (player == null) {
-            return original;
-        }
-
-        return original || !player.getActiveEffects().isEmpty();
-    }
+   @ModifyReturnValue(
+      method = {"isVisible"},
+      at = {@At("RETURN")}
+   )
+   private boolean setVisibleVanillaEffects(boolean original) {
+      if (!FMAClient.features().enableVanillaEffectInUMMHud) {
+         return original;
+      } else {
+         LocalPlayer player = Minecraft.getInstance().player;
+         return player == null ? original : original || !player.getActiveEffects().isEmpty();
+      }
+   }
 }

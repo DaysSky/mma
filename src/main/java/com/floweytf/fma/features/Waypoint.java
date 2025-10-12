@@ -3,6 +3,7 @@ package com.floweytf.fma.features;
 import com.floweytf.fma.FMAClient;
 import com.floweytf.fma.FMAConfig;
 import com.floweytf.fma.Graphics;
+import com.floweytf.fma.features.Waypoint.Config;
 import com.floweytf.fma.util.ChatUtil;
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonElement;
@@ -20,7 +21,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.autoconfig.annotation.ConfigEntry.ColorPicker;
 import me.shedaniel.math.Color;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -41,13 +42,13 @@ import org.lwjgl.glfw.GLFW;
 
 import static com.floweytf.fma.util.CommandUtil.lit;
 
-public class Waypoint implements AbstractModule<Waypoint.Config> {
+public class Waypoint implements AbstractModule<Config> {
     public static final class Config {
         public boolean enable = false;
         public boolean recordChests = false;
         public boolean disableInPlots = true;
         public boolean skipBrokenChests = false;
-        @ConfigEntry.ColorPicker
+        @ColorPicker
         public int color = 0x00ff00;
         public List<String> disabledWorlds = new ArrayList<>();
     }
@@ -77,6 +78,12 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
     // note: only access from main thread!
     private Map<ResourceLocation, Set<BlockPos>> byWorld = new HashMap<>();
     private CompletableFuture<Void> currCompletionToken = CompletableFuture.completedFuture(null);
+
+    private void synchronize(Runnable runnable) {
+        CompletableFuture<Void> newToken = new CompletableFuture<>();
+        currCompletionToken.thenRunAsync(runnable).thenRunAsync(() -> newToken.complete(null), Minecraft.getInstance());
+        currCompletionToken = newToken;
+    }
 
     private void load() {
         if (!Files.exists(Waypoint.PATH)) {
@@ -110,9 +117,7 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
                 e -> new ArrayList<>(e.getValue())
             ));
 
-        final var newToken = new CompletableFuture<Void>();
-
-        currCompletionToken.thenRunAsync(() -> {
+        synchronize(() -> {
             try {
                 final var json = CODEC.encodeStart(JsonOps.INSTANCE, copy)
                     .result()
@@ -124,9 +129,7 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
             } catch (Exception e) {
                 FMAClient.LOGGER.warn(e);
             }
-        }).thenRunAsync(() -> newToken.complete(null), Minecraft.getInstance());
-
-        currCompletionToken = newToken;
+        });
     }
 
     private void add(Level level, BlockPos pos) {
@@ -195,6 +198,9 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
                 byWorld.remove(c.getSource().getWorld().dimension().location());
                 save();
                 return 0;
+            }), lit("reload", c -> {
+                load();
+                return 0;
             }))));
         });
     }
@@ -215,7 +221,7 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
         if (toggleKey.consumeClick()) {
             config().enable = !config().enable;
             // TODO: i18n
-            ChatUtil.send(Component.literal("chest waypoints: " + (config().recordChests ? "enabled" : "disabled")));
+            ChatUtil.send(Component.literal("chest waypoints: " + (config().enable ? "enabled" : "disabled")));
         }
     }
 
@@ -225,7 +231,7 @@ public class Waypoint implements AbstractModule<Waypoint.Config> {
             return;
         }
 
-        final var consumer = Objects.requireNonNull(context.consumers()).getBuffer(Graphics.LINES);
+        final var consumer = Objects.requireNonNull(context.consumers()).getBuffer(Graphics.OUTLINE_BOX);
         final var entries = byWorld.getOrDefault(FMAClient.level().dimension().location(), Set.of());
 
         for (final var entry : entries) {

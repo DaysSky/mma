@@ -1,0 +1,64 @@
+{
+    Monumenta: {
+        PlayerModified: {
+            DEPTHS_CHARM_WILDCARD_TREE_CAP: 4,
+            DEPTHS_CHARM_ACTIONS5: "Epic",
+            DEPTHS_CHARM_ACTIONS4: "Uncommon",
+            DEPTHS_CHARM_ACTIONS3: "Epic",
+            DEPTHS_CHARM_ACTIONS2: "Rare",
+            DEPTHS_CHARM_ACTIONS1: "Rare",
+            DEPTHS_CHARM_ROLLS10: 0.6027241797380951d,
+            DEPTHS_CHARM_UUID: 8616562705176743905L,
+            DEPTHS_CHARM_ACTIONS9: "Common",
+            DEPTHS_CHARM_ACTIONS8: "Epic",
+            DEPTHS_CHARM_ACTIONS7: "Rare",
+            DEPTHS_CHARM_ACTIONS6: "Rare",
+            DEPTHS_CHARM_EFFECT10: "Snowstorm Damage",
+            DEPTHS_CHARM_EFFECT6: "Enlightenment Experience Multiplier",
+            DEPTHS_CHARM_ROLLS9: 0.11191857154902474d,
+            DEPTHS_CHARM_BUDGET: 99,
+            DEPTHS_CHARM_EFFECT7: "Ward of Light Cone Angle",
+            DEPTHS_CHARM_EFFECT4: "Frigid Combos Radius",
+            DEPTHS_CHARM_ROLLS7: 0.6206026335017418d,
+            DEPTHS_CHARM_TYPE_ROLL: 11,
+            DEPTHS_CHARM_EFFECT5: "Primordial Mastery Damage Multiplier",
+            DEPTHS_CHARM_ROLLS8: 0.2154541324446102d,
+            DEPTHS_CHARM_EFFECT2: "Radiant Blessing Radius",
+            DEPTHS_CHARM_EFFECT3: "Scrapshot Recoil Velocity",
+            DEPTHS_CHARM_EFFECT1: "Frigid Combos Slowness Amplifier",
+            DEPTHS_CHARM_ROLLS1: 0.5536177157069904d,
+            DEPTHS_CHARM_ROLLS2: 0.5303660441686768d,
+            DEPTHS_CHARM_ROLLS5: 0.5516438456224259d,
+            DEPTHS_CHARM_ROLLS6: 0.8894562455762374d,
+            DEPTHS_CHARM_ROLLS3: 0.6652241899422712d,
+            DEPTHS_CHARM_ROLLS4: 0.18161656016218442d,
+            DEPTHS_CHARM_RARITY: 4,
+            DEPTHS_CHARM_TYPE_NAME: "Wildcard",
+            DEPTHS_CHARM_EFFECT8: "Piercing Cold Damage",
+            DEPTHS_CHARM_EFFECT9: "Steel Stallion Horse Speed"
+        },
+        MMCharmText: ["<!italic><#cd5eca>+24% Enlightenment Experience Multiplier", "<!italic><#705eca>+20% Radiant Blessing Radius", "<!italic><#705eca>+20% Ward of Light Cone Angle", "<!italic><#70bc6d>+2.71% Primordial Mastery Damage Multiplier", "<!italic><#9f929c>+11% Snowstorm Damage", "<!italic><#cd5eca>+22% Frigid Combos Radius", "<!italic><#cd5eca>+13% Frigid Combos Slowness Amplifier", "<!italic><#705eca>+17% Piercing Cold Damage", "<!italic><#705eca>+20% Scrapshot Recoil Velocity", "<!italic><#cd5eca>+8% Steel Stallion Horse Speed"],
+        Tier: "zenithcharm",
+        CharmPower: 4,
+        Region: "ring",
+        MMName: "<!italic><!underlined><bold><#cd5eca>Crisp Crown of Frost",
+        Location: "zenith"
+    },
+    HideFlags: 1,
+    plain: {
+        display: {
+            Lore: ["Architect's Ring : Zenith Charm", "Charm Power :  - Epic", "The Celestial Zenith", "", "When in Charm Slot:", "+24% Enlightenment Experience Multiplier", "+20% Radiant Blessing Radius", "+20% Ward of Light Cone Angle", "+2.71% Primordial Mastery Damage Multiplier", "+11% Snowstorm Damage", "+22% Frigid Combos Radius", "+13% Frigid Combos Slowness Amplifier", "+17% Piercing Cold Damage", "+20% Scrapshot Recoil Velocity", "+8% Steel Stallion Horse Speed"],
+            Name: "Crisp Crown of Frost"
+        }
+    },
+    Enchantments: [
+        {
+            lvl: 1s,
+            id: "minecraft:power"
+        }
+    ],
+    display: {
+        Lore: ['{"italic":false,"color":"dark_gray","extra":[{"italic":false,"color":"#FF9CF0","text":"Zenith Charm"}],"text":"Architect\'s Ring : "}', '{"italic":false,"color":"dark_gray","extra":[{"italic":false,"color":"#FFFA75","text":"★★★★"},{"italic":false,"color":"dark_gray","text":" - "},{"italic":false,"obfuscated":false,"color":"#CD5ECA","text":"Epic"}],"text":"Charm Power : "}', '{"italic":false,"color":"#FF9CF0","text":"The Celestial Zenith"}', '""', '{"italic":false,"color":"gray","text":"When in Charm Slot:"}', '{"italic":false,"color":"#CD5ECA","text":"+24% Enlightenment Experience Multiplier"}', '{"italic":false,"color":"#705ECA","text":"+20% Radiant Blessing Radius"}', '{"italic":false,"color":"#705ECA","text":"+20% Ward of Light Cone Angle"}', '{"italic":false,"color":"#70BC6D","text":"+2.71% Primordial Mastery Damage Multiplier"}', '{"italic":false,"color":"#9F929C","text":"+11% Snowstorm Damage"}', '{"italic":false,"color":"#CD5ECA","text":"+22% Frigid Combos Radius"}', '{"italic":false,"color":"#CD5ECA","text":"+13% Frigid Combos Slowness Amplifier"}', '{"italic":false,"color":"#705ECA","text":"+17% Piercing Cold Damage"}', '{"italic":false,"color":"#705ECA","text":"+20% Scrapshot Recoil Velocity"}', '{"italic":false,"color":"#CD5ECA","text":"+8% Steel Stallion Horse Speed"}'],
+        Name: '{"bold":true,"italic":false,"underlined":false,"color":"#CD5ECA","text":"Crisp Crown of Frost"}'
+    }
+}

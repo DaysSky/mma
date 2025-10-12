@@ -1,0 +1,45 @@
+{
+    Monumenta: {
+        PlayerModified: {
+            DEPTHS_CHARM_BUDGET: 28,
+            DEPTHS_CHARM_EFFECT4: "Wind Walk Levitation Duration",
+            DEPTHS_CHARM_TYPE_ROLL: 5,
+            DEPTHS_CHARM_EFFECT2: "Thundercloud Form Damage",
+            DEPTHS_CHARM_EFFECT3: "Aeroblast Size",
+            DEPTHS_CHARM_EFFECT1: "Wind Walk Stun Duration",
+            DEPTHS_CHARM_ROLLS1: 0.028851444417073102d,
+            DEPTHS_CHARM_ROLLS2: 0.4666411378059202d,
+            DEPTHS_CHARM_ACTIONS3: "Uncommon",
+            DEPTHS_CHARM_ACTIONS2: "Uncommon",
+            DEPTHS_CHARM_ACTIONS1: "Uncommon",
+            DEPTHS_CHARM_ROLLS3: 0.9744073719942818d,
+            DEPTHS_CHARM_ROLLS4: 0.5419875236642072d,
+            DEPTHS_CHARM_UUID: 3872407267511389397L,
+            DEPTHS_CHARM_RARITY: 2,
+            DEPTHS_CHARM_TYPE_NAME: "Windwalker"
+        },
+        MMCharmText: ["<!italic><#70bc6d>+20% Aeroblast Size", "<!italic><#70bc6d>+15% Thundercloud Form Damage", "<!italic><#70bc6d>+0.77 Wind Walk Levitation Duration", "<!italic><#70bc6d>+0.26 Wind Walk Stun Duration"],
+        Tier: "zenithcharm",
+        CharmPower: 3,
+        Region: "ring",
+        MMName: "<!italic><!underlined><bold><#70bc6d>Flowing Wings of the Stars",
+        Location: "zenith"
+    },
+    HideFlags: 1,
+    plain: {
+        display: {
+            Lore: ["Architect's Ring : Zenith Charm", "Charm Power :  - Uncommon", "The Celestial Zenith", "", "When in Charm Slot:", "+20% Aeroblast Size", "+15% Thundercloud Form Damage", "+0.77 Wind Walk Levitation Duration", "+0.26 Wind Walk Stun Duration"],
+            Name: "Flowing Wings of the Stars"
+        }
+    },
+    Enchantments: [
+        {
+            lvl: 1s,
+            id: "minecraft:power"
+        }
+    ],
+    display: {
+        Lore: ['{"italic":false,"color":"dark_gray","extra":[{"italic":false,"color":"#FF9CF0","text":"Zenith Charm"}],"text":"Architect\'s Ring : "}', '{"italic":false,"color":"dark_gray","extra":[{"italic":false,"color":"#FFFA75","text":"★★★"},{"italic":false,"color":"dark_gray","text":" - "},{"italic":false,"obfuscated":false,"color":"#70BC6D","text":"Uncommon"}],"text":"Charm Power : "}', '{"italic":false,"color":"#FF9CF0","text":"The Celestial Zenith"}', '""', '{"italic":false,"color":"gray","text":"When in Charm Slot:"}', '{"italic":false,"color":"#70BC6D","text":"+20% Aeroblast Size"}', '{"italic":false,"color":"#70BC6D","text":"+15% Thundercloud Form Damage"}', '{"italic":false,"color":"#70BC6D","text":"+0.77 Wind Walk Levitation Duration"}', '{"italic":false,"color":"#70BC6D","text":"+0.26 Wind Walk Stun Duration"}'],
+        Name: '{"bold":true,"italic":false,"underlined":false,"color":"#70BC6D","text":"Flowing Wings of the Stars"}'
+    }
+}

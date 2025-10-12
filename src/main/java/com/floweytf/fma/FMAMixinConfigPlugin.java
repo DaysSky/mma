@@ -8,43 +8,30 @@ import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 public class FMAMixinConfigPlugin implements IMixinConfigPlugin {
-    private String mixinPackage;
+   private String mixinPackage;
 
-    @Override
-    public void onLoad(String mixinPackage) {
-        this.mixinPackage = mixinPackage;
-    }
+   public void onLoad(String mixinPackage) {
+      this.mixinPackage = mixinPackage;
+   }
 
-    @Override
-    public String getRefMapperConfig() {
-        return null;
-    }
+   public String getRefMapperConfig() {
+      return null;
+   }
 
-    @Override
-    public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        // Mixin compatibility stuff
-        if (mixinClassName.startsWith(mixinPackage + ".umm")) {
-            return FabricLoader.getInstance().isModLoaded("unofficial-monumenta-mod");
-        }
+   public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+      return mixinClassName.startsWith(this.mixinPackage + ".umm") ? FabricLoader.getInstance().isModLoaded("unofficial-monumenta-mod") : true;
+   }
 
-        return true;
-    }
+   public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {
+   }
 
-    @Override
-    public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {
+   public List<String> getMixins() {
+      return null;
+   }
 
-    }
+   public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+   }
 
-    @Override
-    public List<String> getMixins() {
-        return null;
-    }
-
-    @Override
-    public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
-    }
-
-    @Override
-    public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
-    }
+   public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+   }
 }

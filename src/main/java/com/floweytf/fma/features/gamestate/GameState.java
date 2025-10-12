@@ -4,127 +4,109 @@ import com.floweytf.fma.events.ClientReceiveSystemChatEvent;
 import com.floweytf.fma.events.ClientSetTitleEvent;
 import com.floweytf.fma.events.EventResult;
 import com.floweytf.fma.util.ChatUtil;
+import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.Pair;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.EndTick;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents.Disconnect;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents.DebugRender;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 public class GameState {
-    private static final List<Pair<String, Supplier<StateTracker>>> GAME_STATE_BY_DIMENSION = List.of(
-        Pair.of("monumenta:portal", PortalStateTracker::new),
-        Pair.of("monumenta:ruin", RuinStateTracker::new)
-        // Pair.of("monumenta:verdant", VerdantStateTracker::new),
-        // Pair.of("monumenta:sanctum", SanctumStateTracker::new)
-        // Pair.of("monumenta:mist", RuinStateTracker::new)
-        // Pair.of("monumenta:remorse", RuinStateTracker::new)
-    );
+   private static final List<Pair<String, Supplier<StateTracker>>> GAME_STATE_BY_DIMENSION = List.of(
+      Pair.of("monumenta:portal", PortalStateTracker::new),
+      Pair.of("monumenta:ruin", RuinStateTracker::new),
+      Pair.of("monumenta:hexfall", HexfallStateTracker::new)
+   );
+   private String dimensionName = null;
+   @Nullable
+   private StateTracker currentStateTracker = null;
 
-    private String dimensionName = null;
-    @Nullable
-    private StateTracker currentStateTracker = null;
+   public GameState() {
+      ClientTickEvents.END_CLIENT_TICK.register((EndTick)mc -> {
+         this.updateLevel(mc.level);
+         if (this.currentStateTracker != null && Minecraft.getInstance().player != null) {
+            this.currentStateTracker.onTick();
+         }
+      });
+      ClientReceiveSystemChatEvent.EVENT.register((ClientReceiveSystemChatEvent)text -> {
+         if (this.currentStateTracker != null && Minecraft.getInstance().player != null) {
+            this.currentStateTracker.onChatMessage(text);
+         }
 
-    public GameState() {
-        ClientTickEvents.END_CLIENT_TICK.register(mc -> {
-            updateLevel(mc.level);
+         return EventResult.CONTINUE;
+      });
+      ClientSetTitleEvent.TITLE.register((ClientSetTitleEvent)text -> {
+         if (this.currentStateTracker != null && Minecraft.getInstance().player != null) {
+            this.currentStateTracker.onTitle(text);
+         }
 
-            if (currentStateTracker != null && Minecraft.getInstance().player != null) {
-                currentStateTracker.onTick();
-            }
-        });
+         return EventResult.CONTINUE;
+      });
+      ClientSetTitleEvent.SUBTITLE.register((ClientSetTitleEvent)text -> {
+         if (this.currentStateTracker != null && Minecraft.getInstance().player != null) {
+            this.currentStateTracker.onSubtitle(text);
+         }
 
-        ClientReceiveSystemChatEvent.EVENT.register(text -> {
-            if (currentStateTracker != null && Minecraft.getInstance().player != null) {
-                currentStateTracker.onChatMessage(text);
-            }
-            return EventResult.CONTINUE;
-        });
+         return EventResult.CONTINUE;
+      });
+      ClientSetTitleEvent.ACTIONBAR.register((ClientSetTitleEvent)text -> {
+         if (this.currentStateTracker != null && Minecraft.getInstance().player != null) {
+            this.currentStateTracker.onActionBar(text);
+         }
 
-        ClientSetTitleEvent.TITLE.register(text -> {
-            if (currentStateTracker != null && Minecraft.getInstance().player != null) {
-                currentStateTracker.onTitle(text);
-            }
-            return EventResult.CONTINUE;
-        });
-
-        ClientSetTitleEvent.SUBTITLE.register(text -> {
-            if (currentStateTracker != null && Minecraft.getInstance().player != null) {
-                currentStateTracker.onSubtitle(text);
-            }
-            return EventResult.CONTINUE;
-        });
-
-        ClientSetTitleEvent.ACTIONBAR.register(text -> {
-            if (currentStateTracker != null && Minecraft.getInstance().player != null) {
-                currentStateTracker.onActionBar(text);
-            }
-            return EventResult.CONTINUE;
-        });
-
-        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> {
-            if (currentStateTracker == null || Minecraft.getInstance().player == null) {
-                return;
-            }
-
-            final var stack = context.matrixStack();
+         return EventResult.CONTINUE;
+      });
+      WorldRenderEvents.BEFORE_DEBUG_RENDER.register((DebugRender)context -> {
+         if (this.currentStateTracker != null && Minecraft.getInstance().player != null) {
+            PoseStack stack = context.matrixStack();
             stack.pushPose();
-            stack.translate(
-                -context.camera().getPosition().x,
-                -context.camera().getPosition().y,
-                -context.camera().getPosition().z
-            );
-
-            currentStateTracker.onRender(context);
+            stack.translate(-context.camera().getPosition().x, -context.camera().getPosition().y, -context.camera().getPosition().z);
+            this.currentStateTracker.onRender(context);
             stack.popPose();
-        });
+         }
+      });
+      ClientLoginConnectionEvents.DISCONNECT.register((Disconnect)(handler, client) -> {
+         if (this.currentStateTracker != null) {
+            this.currentStateTracker.onLeave();
+         }
 
-        ClientLoginConnectionEvents.DISCONNECT.register((handler, client) -> {
-            if (currentStateTracker != null) {
-                currentStateTracker.onLeave();
+         this.currentStateTracker = null;
+      });
+   }
+
+   public List<Component> getAdditionalSidebarText() {
+      return this.currentStateTracker == null ? List.of() : this.currentStateTracker.getAdditionalSidebarText();
+   }
+
+   private void updateLevel(ClientLevel level) {
+      if (level != null) {
+         String newDimensionName = level.dimension().location().toString();
+         if (!Objects.equals(this.dimensionName, newDimensionName)) {
+            if (this.currentStateTracker != null) {
+               this.currentStateTracker.onLeave();
+               this.currentStateTracker = null;
             }
 
-            currentStateTracker = null;
-        });
-    }
-
-    public List<Component> getAdditionalSidebarText() {
-        return currentStateTracker == null ? List.of() : currentStateTracker.getAdditionalSidebarText();
-    }
-
-    private void updateLevel(ClientLevel level) {
-        if (level == null)
-            return;
-
-        final var newDimensionName = level.dimension().location().toString();
-
-        // Edge-triggered
-        if (Objects.equals(dimensionName, newDimensionName)) {
-            return;
-        }
-
-        // Trigger leave event...
-        if (currentStateTracker != null) {
-            currentStateTracker.onLeave();
-            currentStateTracker = null;
-        }
-
-        dimensionName = newDimensionName;
-
-        final var worldFilterRes = GAME_STATE_BY_DIMENSION.stream()
-            .filter(entry -> dimensionName.startsWith(entry.first()))
-            .findFirst();
-
-        if (worldFilterRes.isEmpty()) {
-            ChatUtil.sendDebug("unknown dimension '" + newDimensionName + "'");
-            return;
-        }
-
-        currentStateTracker = worldFilterRes.get().second().get();
-    }
+            this.dimensionName = newDimensionName;
+            Optional<Pair<String, Supplier<StateTracker>>> worldFilterRes = GAME_STATE_BY_DIMENSION.stream()
+               .filter(entry -> this.dimensionName.startsWith((String)entry.first()))
+               .findFirst();
+            if (worldFilterRes.isEmpty()) {
+               ChatUtil.sendDebug("unknown dimension '" + newDimensionName + "'");
+            } else {
+               this.currentStateTracker = (StateTracker)((Supplier)worldFilterRes.get().second()).get();
+            }
+         }
+      }
+   }
 }

@@ -11,8 +11,8 @@
         "ItemStackMixin",
         "LevelRendererMixin",
         "LocalPlayerMixin",
+        "MinecraftMixin",
         "MultiPlayerGameModeMixin",
-        "SplashManagerMixin",
         "umm.EffectOverlayMixin"
     ],
     "plugin": "com.floweytf.fma.FMAMixinConfigPlugin",

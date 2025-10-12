@@ -6,31 +6,22 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 
 public class HpIndicator {
-    public static int computeEntityHealthColor(LivingEntity entity) {
-        var hp = entity.getHealth();
-        final var config = FMAClient.config().hpIndicator;
+   public static int computeEntityHealthColor(LivingEntity entity) {
+      float hp = entity.getHealth();
+      com.floweytf.fma.FMAConfig.HpIndicator config = FMAClient.config().hpIndicator;
+      if (config.countAbsorptionAsHp) {
+         hp += entity.getAbsorptionAmount();
+      }
 
-        if (config.countAbsorptionAsHp) {
-            hp += entity.getAbsorptionAmount();
-        }
-
-        final int ratio = (int) ((hp / entity.getMaxHealth()) * 100);
-
-        if (config.smoothColor) {
-            return Util.colorRange(Mth.clamp(hp, 0, entity.getMaxHealth()), entity.getMaxHealth());
-        }
-
-        if (ratio > config.goodHpPercent) {
-            return config.goodHpColor;
-        }
-
-        if (ratio > config.mediumHpPercent) {
-            return config.mediumHpColor;
-        }
-
-        if (ratio > config.lowHpPercent) {
-            return config.lowHpColor;
-        }
-        return config.criticalHpColor;
-    }
+      int ratio = (int)(hp / entity.getMaxHealth() * 100.0F);
+      if (config.smoothColor) {
+         return Util.colorRange(Mth.clamp(hp, 0.0F, entity.getMaxHealth()), entity.getMaxHealth());
+      } else if (ratio > config.goodHpPercent) {
+         return config.goodHpColor;
+      } else if (ratio > config.mediumHpPercent) {
+         return config.mediumHpColor;
+      } else {
+         return ratio > config.lowHpPercent ? config.lowHpColor : config.criticalHpColor;
+      }
+   }
 }

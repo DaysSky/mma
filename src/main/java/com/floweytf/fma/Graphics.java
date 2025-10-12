@@ -28,8 +28,8 @@ public class Graphics {
         new ResourceLocation("fma:textures/inventory_overlay/charm_epic.png"),
         new ResourceLocation("fma:textures/inventory_overlay/charm_legendary.png")
     );
-    public static final RenderType LINES = RenderType.create(
-        "lines",
+    public static final RenderType OUTLINE_BOX = RenderType.create(
+        "fma:outline_box",
         DefaultVertexFormat.POSITION_COLOR_NORMAL,
         VertexFormat.Mode.LINES,
         1536,

@@ -2,90 +2,70 @@ package com.floweytf.fma.mixin;
 
 import com.floweytf.fma.FMAClient;
 import com.floweytf.fma.features.HpIndicator;
+import com.floweytf.fma.util.SafeExceptionLogger;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import java.util.Map;
+import java.util.UUID;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(LevelRenderer.class)
+@Mixin({LevelRenderer.class})
 public class LevelRendererMixin {
-    @ModifyExpressionValue(
-        method = "renderLevel",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/Minecraft;shouldEntityAppearGlowing(Lnet/minecraft/world/entity/Entity;)Z"
-        )
-    )
-    private boolean modifyPlayerGlowingStatus(boolean original, @Local Entity entity) {
-        if (!FMAClient.features().enableHpIndicators) {
+   @Unique
+   private static final SafeExceptionLogger fma$EH = new SafeExceptionLogger("PlayerGlowing");
+
+   @ModifyExpressionValue(
+      method = {"renderLevel"},
+      at = {@At(
+         value = "INVOKE",
+         target = "Lnet/minecraft/client/Minecraft;shouldEntityAppearGlowing(Lnet/minecraft/world/entity/Entity;)Z"
+      )}
+   )
+   private boolean modifyPlayerGlowingStatus(boolean original, @Local Entity entity) {
+      return fma$EH.<Boolean>runSafely(() -> {
+         if (!FMAClient.features().enableHpIndicators) {
             return original;
-        }
-
-        if (!FMAClient.config().hpIndicator.enableGlowingPlayer) {
+         } else if (!FMAClient.config().hpIndicator.enableGlowingPlayer) {
             return original;
-        }
+         } else {
+            return !(entity instanceof Player) ? original : !FMAClient.config().hpIndicator.disableSelf || entity != FMAClient.player();
+         }
+      }).orElse(original);
+   }
 
-        if (entity instanceof Player) {
-            return true;
-        }
-
-        return original;
-    }
-
-    @ModifyExpressionValue(
-        method = "renderLevel",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;getTeamColor()I"
-        )
-    )
-    private int modifyPlayerGlowingColor(int original, @Local Entity entity) {
-        if (!FMAClient.features().enableHpIndicators) {
+   @ModifyExpressionValue(
+      method = {"renderLevel"},
+      at = {@At(
+         value = "INVOKE",
+         target = "Lnet/minecraft/world/entity/Entity;getTeamColor()I"
+      )}
+   )
+   private int modifyPlayerGlowingColor(int original, @Local Entity entity) {
+      return fma$EH.<Integer>runSafely(() -> {
+         if (!FMAClient.features().enableHpIndicators) {
             return original;
-        }
-
-        if (!FMAClient.config().hpIndicator.enableGlowingPlayer) {
+         } else if (!FMAClient.config().hpIndicator.enableGlowingPlayer) {
             return original;
-        }
+         } else {
+            if (FMAClient.config().hpIndicator.disableInHycenea) {
+               Map<UUID, LerpingBossEvent> events = Minecraft.getInstance().gui.getBossOverlay().events;
 
-        if (entity instanceof Player player) {
-            return HpIndicator.computeEntityHealthColor(player);
-        }
+               for (LerpingBossEvent value : events.values()) {
+                  if (value.getName().getString().contains("Hycenea")) {
+                     return original;
+                  }
+               }
+            }
 
-        return original;
-    }
-
-    /*
-    @Inject(
-        method = "renderLevel",
-        at = @At(value = "CONSTANT", args = "stringValue=blockentities")
-    )
-    private void renderOutline(
-        PoseStack stack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera,
-        GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo ci,
-        @Local(ordinal = 3) LocalBooleanRef booleanRef
-        ) {
-        stack.pushPose();
-        stack.translate(
-            -camera.getPosition().x,
-            -camera.getPosition().y,
-            -camera.getPosition().z
-        );
-
-        final var outlineSource = Minecraft.getInstance().renderBuffers().outlineBufferSource();
-        outlineSource.setColor(255, 255, 255, 255);
-        final var RT = RenderType.outline(Graphics.CHARM_RARITY_TO_TEXTURE.get(0));
-        final var consumer = outlineSource.getBuffer(RT);
-        int x = 10, y = 10, z = 10;
-
-        consumer.vertex(stack.last().pose(), x, y, z).color(0xffffffff).uv(0, 0).endVertex();
-        consumer.vertex(stack.last().pose(), x, y + 1, z).color(0xffffffff).uv(0, 1).endVertex();
-        consumer.vertex(stack.last().pose(), x + 1, y + 1, z).color(0xffffffff).uv(1, 1).endVertex();
-        consumer.vertex(stack.last().pose(), x + 1, y, z).color(0xffffffff).uv(1, 0).endVertex();
-        booleanRef.set(true);
-        stack.popPose();
-    }*/
+            return entity instanceof Player player ? HpIndicator.computeEntityHealthColor(player) : original;
+         }
+      }).orElse(original);
+   }
 }

@@ -6,14 +6,11 @@ import net.minecraft.client.player.LocalPlayer;
 
 @FunctionalInterface
 public interface EntityShieldDisabledEvent {
-    Event<EntityShieldDisabledEvent> EVENT = EventFactory.createArrayBacked(
-        EntityShieldDisabledEvent.class,
-        (listeners) -> (entity) -> {
-            for (final var listener : listeners) {
-                listener.onShieldDisabled(entity);
-            }
-        }
-    );
+   Event<EntityShieldDisabledEvent> EVENT = EventFactory.createArrayBacked(EntityShieldDisabledEvent.class, listeners -> entity -> {
+      for (EntityShieldDisabledEvent listener : listeners) {
+         listener.onShieldDisabled(entity);
+      }
+   });
 
-    void onShieldDisabled(LocalPlayer entity);
+   void onShieldDisabled(LocalPlayer var1);
 }

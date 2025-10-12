@@ -1,0 +1,51 @@
+{
+    Monumenta: {
+        PlayerModified: {
+            DEPTHS_CHARM_EFFECT6: "Spark of Inspiration Cast Range",
+            DEPTHS_CHARM_BUDGET: 35,
+            DEPTHS_CHARM_EFFECT4: "Spark of Inspiration Cooldown",
+            DEPTHS_CHARM_TYPE_ROLL: 1,
+            DEPTHS_CHARM_EFFECT5: "Spark of Inspiration Buff Duration",
+            DEPTHS_CHARM_EFFECT2: "Spark of Inspiration Strength Amplifier",
+            DEPTHS_CHARM_EFFECT3: "Spark of Inspiration Cooldown Reduction Rate",
+            DEPTHS_CHARM_EFFECT1: "Spark of Inspiration Resistance Duration",
+            DEPTHS_CHARM_ROLLS1: 0.5941420521710162d,
+            DEPTHS_CHARM_ACTIONS5: "Uncommon",
+            DEPTHS_CHARM_ROLLS2: 0.028244099092397446d,
+            DEPTHS_CHARM_ACTIONS4: "Epic",
+            DEPTHS_CHARM_ACTIONS3: "Rare",
+            DEPTHS_CHARM_ACTIONS2: "Negative Uncommon",
+            DEPTHS_CHARM_ROLLS5: 0.8611743749440324d,
+            DEPTHS_CHARM_ACTIONS1: "Uncommon",
+            DEPTHS_CHARM_ROLLS6: 0.5814687261864866d,
+            DEPTHS_CHARM_ROLLS3: 0.3861507634036222d,
+            DEPTHS_CHARM_ROLLS4: 0.07413258364776731d,
+            DEPTHS_CHARM_UUID: 9091698856197965356L,
+            DEPTHS_CHARM_RARITY: 4,
+            DEPTHS_CHARM_TYPE_NAME: "Dawnbringer, Spark of Inspiration"
+        },
+        MMCharmText: ["<!italic><#705eca>-13.41% Spark of Inspiration Cooldown", "<!italic><#70bc6d>+16% Spark of Inspiration Cast Range", "<!italic><red>-8% Spark of Inspiration Cooldown Reduction Rate", "<!italic><#70bc6d>+2.61% Spark of Inspiration Strength Amplifier", "<!italic><#cd5eca>+1.36 Spark of Inspiration Buff Duration", "<!italic><#cd5eca>+0.75 Spark of Inspiration Resistance Duration"],
+        Tier: "zenithcharm",
+        CharmPower: 3,
+        Region: "ring",
+        MMName: "<!italic><!underlined><bold><#cd5eca>Munificent Orb of Composure",
+        Location: "zenith"
+    },
+    HideFlags: 1,
+    plain: {
+        display: {
+            Lore: ["Architect's Ring : Zenith Charm", "Charm Power :  - Epic", "The Celestial Zenith", "", "When in Charm Slot:", "-13.41% Spark of Inspiration Cooldown", "+16% Spark of Inspiration Cast Range", "-8% Spark of Inspiration Cooldown Reduction Rate", "+2.61% Spark of Inspiration Strength Amplifier", "+1.36 Spark of Inspiration Buff Duration", "+0.75 Spark of Inspiration Resistance Duration"],
+            Name: "Munificent Orb of Composure"
+        }
+    },
+    Enchantments: [
+        {
+            lvl: 1s,
+            id: "minecraft:power"
+        }
+    ],
+    display: {
+        Lore: ['{"italic":false,"color":"dark_gray","extra":[{"italic":false,"color":"#FF9CF0","text":"Zenith Charm"}],"text":"Architect\'s Ring : "}', '{"italic":false,"color":"dark_gray","extra":[{"italic":false,"color":"#FFFA75","text":"★★★"},{"italic":false,"color":"dark_gray","text":" - "},{"italic":false,"obfuscated":false,"color":"#CD5ECA","text":"Epic"}],"text":"Charm Power : "}', '{"italic":false,"color":"#FF9CF0","text":"The Celestial Zenith"}', '""', '{"italic":false,"color":"gray","text":"When in Charm Slot:"}', '{"italic":false,"color":"#705ECA","text":"-13.41% Spark of Inspiration Cooldown"}', '{"italic":false,"color":"#70BC6D","text":"+16% Spark of Inspiration Cast Range"}', '{"italic":false,"color":"red","text":"-8% Spark of Inspiration Cooldown Reduction Rate"}', '{"italic":false,"color":"#70BC6D","text":"+2.61% Spark of Inspiration Strength Amplifier"}', '{"italic":false,"color":"#CD5ECA","text":"+1.36 Spark of Inspiration Buff Duration"}', '{"italic":false,"color":"#CD5ECA","text":"+0.75 Spark of Inspiration Resistance Duration"}'],
+        Name: '{"bold":true,"italic":false,"underlined":false,"color":"#CD5ECA","text":"Munificent Orb of Composure"}'
+    }
+}

@@ -1,12 +1,14 @@
-accessWidener v2 named
-accessible field net/minecraft/client/gui/components/PlayerTabOverlay footer Lnet/minecraft/network/chat/Component;
-accessible field net/minecraft/client/gui/components/PlayerTabOverlay header Lnet/minecraft/network/chat/Component;
-accessible field net/minecraft/world/item/ItemCooldowns cooldowns Ljava/util/Map;
-accessible field net/minecraft/world/item/ItemCooldowns$CooldownInstance startTime I
-accessible field net/minecraft/world/item/ItemCooldowns$CooldownInstance endTime I
-accessible field net/minecraft/world/item/ItemCooldowns tickCount I
-accessible method net/minecraft/nbt/CompoundTag entries ()Ljava/util/Map;
-accessible field net/minecraft/client/Minecraft fontManager Lnet/minecraft/client/gui/font/FontManager;
-accessible field net/minecraft/client/Minecraft clientTickCount J
-accessible class net/minecraft/client/renderer/RenderType$CompositeState
-accessible class net/minecraft/client/renderer/RenderStateShard$LineStateShard
+accessWidener	v2	named
+accessible	field	net/minecraft/client/gui/components/PlayerTabOverlay	footer	Lnet/minecraft/network/chat/Component;
+accessible	field	net/minecraft/client/gui/components/PlayerTabOverlay	header	Lnet/minecraft/network/chat/Component;
+accessible	field	net/minecraft/world/item/ItemCooldowns	cooldowns	Ljava/util/Map;
+accessible	field	net/minecraft/world/item/ItemCooldowns$CooldownInstance	startTime	I
+accessible	field	net/minecraft/world/item/ItemCooldowns$CooldownInstance	endTime	I
+accessible	field	net/minecraft/world/item/ItemCooldowns	tickCount	I
+accessible	method	net/minecraft/nbt/CompoundTag	entries	()Ljava/util/Map;
+accessible	field	net/minecraft/client/Minecraft	fontManager	Lnet/minecraft/client/gui/font/FontManager;
+accessible	field	net/minecraft/client/Minecraft	clientTickCount	J
+accessible	class	net/minecraft/client/renderer/RenderType$CompositeState
+accessible	class	net/minecraft/client/renderer/RenderStateShard$LineStateShard
+accessible	field	net/minecraft/client/gui/components/BossHealthOverlay	events	Ljava/util/Map;
+accessible	field	net/minecraft/client/KeyMapping	key	Lcom/mojang/blaze3d/platform/InputConstants$Key;
