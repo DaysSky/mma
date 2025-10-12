@@ -56,6 +56,7 @@ public class Waypoint implements AbstractModule<Config> {
     }
 
     private static final Path PATH = FabricLoader.getInstance().getConfigDir().resolve("mma-waypoint.json");
+    private static final Path OLD_PATH = FabricLoader.getInstance().getConfigDir().resolve("fma-waypoint.json");
     private static final Codec<Map<ResourceLocation, List<BlockPos>>> CODEC = Codec.unboundedMap(
             ResourceLocation.CODEC,
             BlockPos.CODEC.listOf()
@@ -88,6 +89,15 @@ public class Waypoint implements AbstractModule<Config> {
     }
 
     private void load() {
+        if (!Files.exists(Waypoint.PATH) && Files.exists(Waypoint.OLD_PATH)) {
+            try {
+                Files.move(Waypoint.OLD_PATH, Waypoint.PATH);
+                MMAClient.LOGGER.info("Migrated waypoint data from fma-waypoint.json to mma-waypoint.json");
+            } catch (Exception e) {
+                MMAClient.LOGGER.warn("Failed to migrate waypoint data from fma-waypoint.json", e);
+            }
+        }
+
         if (!Files.exists(Waypoint.PATH)) {
             return;
         }
