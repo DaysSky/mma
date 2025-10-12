@@ -247,9 +247,6 @@ public class Waypoint implements AbstractModule<Config> {
         final var entries = byWorld.getOrDefault(MMAClient.level().dimension().location(), Set.of());
 
         for (final var entry : entries) {
-            if (config().skipBrokenChests && context.world().getBlockState(entry).getBlock() != Blocks.CHEST) {
-                continue;
-            }
 
             int x = entry.getX();
             int y = entry.getY();
