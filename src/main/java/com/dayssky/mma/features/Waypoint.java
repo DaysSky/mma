@@ -59,8 +59,7 @@ public class Waypoint implements AbstractModule<Config> {
     private static final Path OLD_PATH = FabricLoader.getInstance().getConfigDir().resolve("fma-waypoint.json");
     private static final Codec<Map<ResourceLocation, List<BlockPos>>> CODEC = Codec.unboundedMap(
             ResourceLocation.CODEC,
-            BlockPos.CODEC.listOf()
-    );
+            BlockPos.CODEC.listOf());
 
     private final Minecraft minecraft = Minecraft.getInstance();
 
@@ -68,18 +67,17 @@ public class Waypoint implements AbstractModule<Config> {
             "key.mma.toggleChestWaypointRecording",
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_K,
-            "category.mma"
-    );
+            "category.mma");
 
     private final KeyMapping toggleKey = new KeyMapping(
             "key.mma.toggleChestWaypoint",
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_N,
-            "category.mma"
-    );
+            "category.mma");
 
     // note: only access from main thread!
     private Map<ResourceLocation, Set<BlockPos>> byWorld = new HashMap<>();
+    private Map<ResourceLocation, Set<BlockPos>> brokenByWorld = new HashMap<>();
     private CompletableFuture<Void> currCompletionToken = CompletableFuture.completedFuture(null);
 
     private void synchronize(Runnable runnable) {
@@ -112,8 +110,12 @@ public class Waypoint implements AbstractModule<Config> {
                     .stream()
                     .collect(Collectors.toMap(
                             Map.Entry::getKey,
-                            e -> new HashSet<>(e.getValue())
-                    ));
+                            e -> new HashSet<>(e.getValue())));
+            brokenByWorld = byWorld.entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            e -> new HashSet<>()));
 
         } catch (Exception e) {
             MMAClient.LOGGER.warn(e);
@@ -126,8 +128,7 @@ public class Waypoint implements AbstractModule<Config> {
                 .stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
-                        e -> new ArrayList<>(e.getValue())
-                ));
+                        e -> new ArrayList<>(e.getValue())));
 
         synchronize(() -> {
             try {
@@ -145,7 +146,7 @@ public class Waypoint implements AbstractModule<Config> {
     }
 
     private void add(Level level, BlockPos pos) {
-        if (!config().enable || !config().recordChests) {
+        if (!config().enable) {
             return;
         }
 
@@ -155,11 +156,21 @@ public class Waypoint implements AbstractModule<Config> {
 
         final var dimId = level.dimension().location();
 
-        if (config().disableInPlots && dimId.getPath().startsWith("plot")) {
+        if (config().disableInPlots && dimId.getPath().contains("plot")) {
             return;
         }
 
         if (config().disabledWorlds.contains(dimId.toString())) {
+            return;
+        }
+        if (config().skipBrokenChests) {
+            final var broken = brokenByWorld.get(level.dimension().location());
+            if (broken != null) {
+                broken.add(pos);
+            }
+        }
+
+        if (!config().recordChests) {
             return;
         }
 
@@ -227,7 +238,8 @@ public class Waypoint implements AbstractModule<Config> {
         if (toggleRecordingKey.consumeClick()) {
             config().recordChests = !config().recordChests;
             // TODO: i18n
-            ChatUtil.send(Component.literal("chest break recording: " + (config().recordChests ? "enabled" : "disabled")));
+            ChatUtil.send(
+                    Component.literal("chest break recording: " + (config().recordChests ? "enabled" : "disabled")));
         }
 
         if (toggleKey.consumeClick()) {
@@ -245,8 +257,12 @@ public class Waypoint implements AbstractModule<Config> {
 
         final var consumer = Objects.requireNonNull(context.consumers()).getBuffer(Graphics.OUTLINE_BOX);
         final var entries = byWorld.getOrDefault(MMAClient.level().dimension().location(), Set.of());
+        final var broken = brokenByWorld.getOrDefault(MMAClient.level().dimension().location(), Set.of());
 
         for (final var entry : entries) {
+            if (config().skipBrokenChests && broken.contains(entry)) {
+                continue;
+            }
 
             int x = entry.getX();
             int y = entry.getY();
@@ -260,8 +276,7 @@ public class Waypoint implements AbstractModule<Config> {
                     color.getRed() / 255f,
                     color.getGreen() / 255f,
                     color.getBlue() / 255f,
-                    1
-            );
+                    1);
         }
 
         context.consumers();
