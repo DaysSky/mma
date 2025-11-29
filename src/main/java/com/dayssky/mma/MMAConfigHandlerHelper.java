@@ -65,16 +65,16 @@ public class MMAConfigHandlerHelper {
     private static class CharmEffectTypeSer implements JsonSerializer<Set<CharmEffectType>>, JsonDeserializer<Set<CharmEffectType>> {
         @Override
         public JsonElement serialize(Set<CharmEffectType> src, Type typeOfSrc, JsonSerializationContext context) {
-            return context.serialize(src.stream().map(x -> x.modifier).collect(Collectors.toSet()));
+            return context.serialize(src.stream().map(x -> x.name).collect(Collectors.toSet()));
         }
 
         @Override
         public Set<CharmEffectType> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            Set<String> modifiers = context.deserialize(json, new TypeToken<Set<String>>() {
+            Set<String> names = context.deserialize(json, new TypeToken<Set<String>>() {
             }.getType());
-            return modifiers.stream()
-                    .map(modifier -> CharmDataRegistries.getMain().charmEffectType.getMap().values().stream()
-                            .filter(type -> type.modifier.equals(modifier))
+            return names.stream()
+                    .map(name -> CharmDataRegistries.getMain().charmEffectType.getMap().values().stream()
+                            .filter(type -> type.name.equals(name))
                             .findFirst())
                     .filter(Optional::isPresent)
                     .map(Optional::get)
