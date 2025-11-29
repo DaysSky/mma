@@ -58,7 +58,11 @@ public class ZenithModule {
     private static boolean lastCopyStatsState = false;
 
     private static boolean isCopyStateDown() {
-        return InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), copyStatsBinding.key.getValue());
+        int keyValue = copyStatsBinding.key.getValue();
+        if (keyValue == InputConstants.UNKNOWN.getValue()) {
+            return false;
+        }
+        return InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), keyValue);
     }
 
     private static void onItemTooltip(ItemStack stack, TooltipFlag context, List<Component> lines) {

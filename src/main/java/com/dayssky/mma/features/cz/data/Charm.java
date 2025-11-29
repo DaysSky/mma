@@ -281,7 +281,7 @@ public final class Charm {
         }
 
         if (this.hasWarning) {
-            target.add(FormatUtil.literal("* WARNING - possible bug, report to Dayssky *", ChatFormatting.RED));
+            target.add(FormatUtil.literal("* WARNING - possible bug, please report *", ChatFormatting.RED));
             target.add(FormatUtil.literal("* Charm display data may be wrong *", ChatFormatting.RED));
         }
     }

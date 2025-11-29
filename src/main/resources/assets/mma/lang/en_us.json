@@ -9,7 +9,7 @@
   "key.mma.toggleChestWaypointRecording": "Toggle chest waypoint recording",
   // Command feedback
   "commands.mma.leaderboard": "%s: #%s %s - %s",
-  "text.autoconfig.mma.title": "Dayssky's Monumenta Addons Config",
+  "text.autoconfig.mma.title": "Monumenta Addons Config",
   // Categories
   "text.autoconfig.mma.category.features": "Features",
   "text.autoconfig.mma.category.appearance": "Appearance",
@@ -211,8 +211,8 @@
   "text.mma.toast.add_charm_data_fail.title": "Skipped storing charm data",
   "text.mma.toast.add_charm_data_fail.message": "Charm with same UID already stored (duplicate charm!)",
   "text.mma.cz.copied_charm_data": "Copied charm data to clipboard!",
-  "text.mma.toast.uncaught_exception.title": "Uncaught exception in DaysskyMod thrown!",
+  "text.mma.toast.uncaught_exception.title": "Uncaught exception in Mod thrown!",
   "text.mma.toast.uncaught_exception.message": "Please report this to the devs, with logs!",
-  "text.mma.toast.uncaught_exception.message_copy_data": "Uncaught exception in dayssky mod, click here to copy data. Please send this to the devs!",
+  "text.mma.toast.uncaught_exception.message_copy_data": "Uncaught exception in mod, click here to copy data. Please send this to the devs!",
   "stat.mma.hexfall.fail": "Hexfall failed..."
 }
