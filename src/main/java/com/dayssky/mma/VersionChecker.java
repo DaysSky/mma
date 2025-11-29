@@ -22,11 +22,11 @@ import net.fabricmc.loader.api.VersionParsingException;
 import net.minecraft.network.chat.Component;
 
 public class VersionChecker {
-    private static final String VERSION_URL = "https://api.github.com/repos/DaysSky/monumenta-addons/releases";
+    private static final String VERSION_URL = "https://api.github.com/repos/DaysSky/mma/releases";
     private static final Gson GSON = new Gson();
     private static final HttpClient CLIENT = HttpClient.newBuilder().connectTimeout(Duration.of(10L, ChronoUnit.SECONDS)).build();
     private static final HttpRequest REQUEST = HttpRequest.newBuilder()
-            .uri(URI.create("https://api.github.com/repos/DaysSk/monumenta-addons/releases"))
+            .uri(URI.create("https://api.github.com/repos/DaysSky/mma/releases"))
             .GET()
             .build();
     private final CompletableFuture<Optional<Version>> latestVersion;
