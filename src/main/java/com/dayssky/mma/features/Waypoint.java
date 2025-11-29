@@ -42,6 +42,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import org.lwjgl.glfw.GLFW;
 
+
 import static com.dayssky.mma.util.CommandUtil.lit;
 
 public class Waypoint implements AbstractModule<Config> {
@@ -52,6 +53,7 @@ public class Waypoint implements AbstractModule<Config> {
         public boolean skipBrokenChests = false;
         @ColorPicker
         public int color = 0x00ff00;
+        public int radius = 128;
         public List<String> disabledWorlds = new ArrayList<>();
     }
 
@@ -259,6 +261,15 @@ public class Waypoint implements AbstractModule<Config> {
         final var entries = byWorld.getOrDefault(MMAClient.level().dimension().location(), Set.of());
         final var broken = brokenByWorld.getOrDefault(MMAClient.level().dimension().location(), Set.of());
 
+        final var player = minecraft.player;
+        if (player == null) {
+            return;
+        }
+
+        final var playerPos = player.position();
+        final long radiusSquared = config().radius * config().radius;
+
+
         for (final var entry : entries) {
             if (config().skipBrokenChests && broken.contains(entry)) {
                 continue;
@@ -267,6 +278,15 @@ public class Waypoint implements AbstractModule<Config> {
             int x = entry.getX();
             int y = entry.getY();
             int z = entry.getZ();
+
+            double dx = x - playerPos.x;
+            double dy = y - playerPos.y;
+            double dz = z - playerPos.z;
+            double distanceSquared = dx * dx + dy * dy + dz * dz;
+
+            if (distanceSquared > radiusSquared && config().radius != 0) {
+                continue;
+            }
 
             final var color = Color.ofOpaque(config().color);
             LevelRenderer.renderLineBox(
