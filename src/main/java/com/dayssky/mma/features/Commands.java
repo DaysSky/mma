@@ -8,11 +8,7 @@ import com.dayssky.mma.util.CommandUtil;
 import com.dayssky.mma.util.FormatUtil;
 import com.dayssky.mma.util.Util;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-
-import java.util.List;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -97,33 +93,6 @@ public class Commands {
                                                 ChatUtil.send(MMAClient.MOD.getMetadata().getVersion().getFriendlyString());
                                                 return 0;
                                             }),
-                                            CommandUtil.lit(
-                                                    "lb",
-                                                    CommandUtil.arg(
-                                                            "lb_name",
-                                                            StringArgumentType.word(),
-                                                            context -> {
-                                                                String lbName = StringArgumentType.getString(context, "lb_name");
-                                                                MMAClient.LEADERBOARD
-                                                                        .beginListen(
-                                                                                lbName,
-                                                                                (position, count) -> ChatUtil.send(
-                                                                                        Component.translatable(
-                                                                                                "commands.mma.leaderboard",
-                                                                                                new Object[]{
-                                                                                                        FormatUtil.altText(lbName),
-                                                                                                        FormatUtil.numeric(position),
-                                                                                                        FormatUtil.playerNameText(MMAClient.playerName()),
-                                                                                                        FormatUtil.numeric(count)
-                                                                                                }
-                                                                                        )
-                                                                                )
-                                                                        );
-                                                                return 0;
-                                                            },
-                                                            (context, builder) -> SharedSuggestionProvider.suggest(List.of("Portal"), builder)
-                                                    )
-                                            ),
                                             CommandUtil.lit("config", context -> {
                                                 MMAClient.SCHEDULER
                                                         .schedule(0, minecraft -> minecraft.setScreen((Screen) AutoConfig.getConfigScreen(MMAConfig.class, minecraft.screen).get()));
@@ -164,7 +133,28 @@ public class Commands {
 
                                 return 0;
                             }));
-                            dispatcher.register((LiteralArgumentBuilder<FabricClientCommandSource>) CommandUtil.lit("lb").redirect((CommandNode) mma.getChild("lb")));
+                            dispatcher.register(CommandUtil.lit("lb",
+                                    CommandUtil.arg(
+                                            "lb_name",
+                                            StringArgumentType.word(),
+                                            context -> {
+                                                String lbName = LeaderboardUtils.resolve(StringArgumentType.getString(context, "lb_name"));
+                                                ChatUtil.sendCommand(String.format("leaderboard @s %s true 1", lbName));
+                                                return 0;
+                                            },
+                                            (context, builder) -> SharedSuggestionProvider.suggest(LeaderboardUtils.getKeys(), builder),
+                                            CommandUtil.arg(
+                                                    "arg",
+                                                    StringArgumentType.word(),
+                                                    context -> {
+                                                        String lbName = LeaderboardUtils.resolve(StringArgumentType.getString(context, "lb_name"));
+                                                        String arg = StringArgumentType.getString(context, "arg");
+                                                        ChatUtil.sendCommand(String.format("leaderboard @s %s true %s", lbName, arg));
+                                                        return 0;
+                                                    }
+                                            )
+                                    )
+                            ));
                         }
                 );
     }

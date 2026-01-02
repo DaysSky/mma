@@ -1,109 +1,62 @@
 package com.dayssky.mma.features;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import com.dayssky.mma.MMAClient;
-import com.dayssky.mma.events.ClientReceiveSystemChatEvent;
-import com.dayssky.mma.events.EventResult;
-import com.dayssky.mma.util.ChatUtil;
-
-import java.util.function.BiConsumer;
-
-import org.jetbrains.annotations.Nullable;
+import com.google.gson.reflect.TypeToken;
+import net.fabricmc.loader.api.FabricLoader;
 
 public class LeaderboardUtils {
-    @Nullable
-    private String currLeaderboard = null;
-    private BiConsumer<Integer, Integer> leaderboardConsumer = null;
-    private LeaderboardUtils.State state = null;
+    private static final Path OVERRIDE_PATH = FabricLoader.getInstance().getConfigDir().resolve("mma-leaderboard.json");
+    private static Map<String, String> conversionMap = Collections.emptyMap();
 
-    public LeaderboardUtils() {
-        ClientReceiveSystemChatEvent.EVENT.register((ClientReceiveSystemChatEvent) text -> {
-            if (this.currLeaderboard == null) {
-                return EventResult.CONTINUE;
-            } else {
-                String raw = text.getString();
+    public static void init() {
+        final Map<String, String> merged = new HashMap<>();
 
-                try {
-                    if (this.state == LeaderboardUtils.State.WAIT_REAL_END) {
-                        System.out.println("THIS STATE");
-                        if (!raw.trim().isEmpty()) {
-                            this.reset();
-                            return EventResult.CONTINUE;
-                        }
-                    } else if (raw.startsWith(" Leaderboard - ")) {
-                        if (this.state != LeaderboardUtils.State.WAIT_START) {
-                            ChatUtil.sendDebug("illegal state (" + this.state + ", START_TOKEN)");
-                            this.state = LeaderboardUtils.State.WAIT_END;
-                        } else {
-                            this.state = LeaderboardUtils.State.WAIT_PLAYER;
-                        }
-                    } else if (raw.startsWith("--==--") && raw.endsWith("--==--")) {
-                        switch (this.state) {
-                            case WAIT_START:
-                                ChatUtil.sendDebug("illegal state (WAIT_START, END_TOKEN)");
-                                this.reset();
-                                break;
-                            case WAIT_PLAYER:
-                                ChatUtil.sendWarn("unknown/empty leaderboard " + this.currLeaderboard);
-                                this.state = LeaderboardUtils.State.WAIT_REAL_END;
-                                break;
-                            case WAIT_END:
-                                this.state = LeaderboardUtils.State.WAIT_REAL_END;
-                        }
-                    } else if (this.state == LeaderboardUtils.State.WAIT_PLAYER) {
-                        String[] parts = raw.split("\\s*-\\s*");
-                        if (parts.length == 3) {
-                            if (parts[1].equals(MMAClient.playerName())) {
-                                this.leaderboardConsumer.accept(Integer.parseInt(parts[0]), Integer.parseInt(parts[2]));
-                                this.state = LeaderboardUtils.State.WAIT_END;
-                            }
-                        } else if (parts.length > 3) {
-                            ChatUtil.sendDebug("too many parts?");
-                        }
-                    }
-
-                    return EventResult.CANCEL_CONTINUE;
-                } catch (Exception var4) {
-                    this.reset();
-                    ChatUtil.sendDebug("parsing failed, check logs");
-                    MMAClient.LOGGER.error("parse fail '{}': {}", raw, var4);
-                    return EventResult.CONTINUE;
+        try (InputStream stream = LeaderboardUtils.class.getResourceAsStream("/assets/mma/mma-leaderboard.json")) {
+            if (stream != null) {
+                final Map<String, String> defaults = MMAClient.GSON.fromJson(
+                        new InputStreamReader(stream),
+                        new TypeToken<Map<String, String>>() {}.getType()
+                );
+                if (defaults != null) {
+                    merged.putAll(defaults);
                 }
             }
-        });
-    }
-
-    private void reset() {
-        this.currLeaderboard = null;
-        this.leaderboardConsumer = null;
-        this.state = null;
-    }
-
-    public void beginListen(String leaderboard, BiConsumer<Integer, Integer> handler) {
-        if (this.currLeaderboard != null) {
-            ChatUtil.sendWarn("leaderboard read is current ongoing, (executed commands too fast)");
+        } catch (IOException e) {
+            MMAClient.LOGGER.warn("Failed to load bundled leaderboard aliases", e);
         }
 
-        this.currLeaderboard = leaderboard;
-        this.leaderboardConsumer = handler;
-        this.state = LeaderboardUtils.State.WAIT_START;
-        ChatUtil.sendCommand(String.format("leaderboard %s %s true 1", MMAClient.playerName(), leaderboard));
-        MMAClient.SCHEDULER.schedule(20, minecraft -> {
-            if (this.currLeaderboard != null) {
-                if (this.state == LeaderboardUtils.State.WAIT_REAL_END) {
-                    this.reset();
-                } else {
-                    ChatUtil.sendWarn("server is lagging, leaderboard command did not respond (bug? " + this.state + ")");
-                    this.currLeaderboard = null;
-                    this.leaderboardConsumer = null;
+        if (Files.exists(OVERRIDE_PATH)) {
+            try (var reader = Files.newBufferedReader(OVERRIDE_PATH)) {
+                final Map<String, String> overrides = MMAClient.GSON.fromJson(
+                        reader,
+                        new TypeToken<Map<String, String>>() {}.getType()
+                );
+                if (overrides != null) {
+                    merged.putAll(overrides);
                 }
+            } catch (IOException e) {
+                MMAClient.LOGGER.warn("Failed to load leaderboard alias overrides from", OVERRIDE_PATH, e);
             }
-        });
+        }
+
+        conversionMap = Collections.unmodifiableMap(merged);
     }
 
-    private static enum State {
-        WAIT_START,
-        WAIT_PLAYER,
-        WAIT_END,
-        WAIT_REAL_END;
+    public static String resolve(String alias) {
+        return conversionMap.getOrDefault(alias, alias);
+    }
+
+    public static Set<String> getKeys() {
+        return conversionMap.keySet();
     }
 }

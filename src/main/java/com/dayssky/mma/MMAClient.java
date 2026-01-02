@@ -44,7 +44,6 @@ public class MMAClient implements ClientModInitializer {
     public static final Gson GSON = new Gson();
     public static final Logger LOGGER = LogManager.getLogger();
     public static final TickScheduler SCHEDULER = new TickScheduler();
-    public static final LeaderboardUtils LEADERBOARD = new LeaderboardUtils();
     public static final GameState GAME_STATE = new GameState();
     public static final ModContainer MOD = (ModContainer) FabricLoader.getInstance().getModContainer("mma").orElseThrow();
     public static final Waypoint WAYPOINT = new Waypoint();
@@ -89,7 +88,6 @@ public class MMAClient implements ClientModInitializer {
             Util.sneakyThrow(var2);
         }
 
-        
         Path configPath = FabricLoader.getInstance().getConfigDir().resolve("mma.json");
         Path oldConfigPath = FabricLoader.getInstance().getConfigDir().resolve("fma.json");
         if (!Files.exists(configPath) && Files.exists(oldConfigPath)) {
@@ -109,11 +107,11 @@ public class MMAClient implements ClientModInitializer {
             Keybinds.tick();
             WAYPOINT.tick();
             ContractCheck.tick();
-            
         }));
         Debug.init();
         Commands.init();
         ZenithModule.init();
+        LeaderboardUtils.init();
         WAYPOINT.init();
         EntityShieldDisabledEvent.EVENT.register((EntityShieldDisabledEvent) entity -> GLOBAL_SAFE_EH.runSafely(() -> {
             if (SIDEBAR != null) {
@@ -136,5 +134,5 @@ public class MMAClient implements ClientModInitializer {
         reload();
     }
 
-    
+
 }
