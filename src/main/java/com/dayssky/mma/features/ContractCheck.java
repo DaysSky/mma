@@ -1,7 +1,6 @@
 package com.dayssky.mma.features;
 
 import com.dayssky.mma.MMAClient;
-import com.dayssky.mma.MMAConfig;
 import com.dayssky.mma.util.ChatUtil;
 
 import net.minecraft.client.Minecraft;
@@ -26,7 +25,7 @@ public class ContractCheck {
                 timeMillis - lastWarned > THRESHOLD_MILLIS) {
                 lastWarned = timeMillis;
                 mc.level.playSound(mc.player, mc.player, SoundEvents.PLAYER_LEVELUP, SoundSource.MASTER, 2.0f, 0.1f);
-                ChatUtil.sendWarn(Component.literal(new MMAConfig().features.contractCheckText));
+                ChatUtil.sendWarn(Component.literal(MMAClient.config().features.contractCheckText));
         }
     }
 
@@ -35,7 +34,7 @@ public class ContractCheck {
         updateXYZ(mc.player);
         if (!isInZenithArea && inZenithArea()) {
                 mc.level.playSound(mc.player, mc.player, SoundEvents.PLAYER_LEVELUP, SoundSource.MASTER, 2.0f, 0.1f);
-                ChatUtil.sendWarn(Component.literal(new MMAConfig().features.contractCheckText));
+                ChatUtil.sendWarn(Component.literal(MMAClient.config().features.contractCheckText));
         }
         isInZenithArea = inZenithArea();
     }

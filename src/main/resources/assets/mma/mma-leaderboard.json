@@ -24,10 +24,10 @@
     "twisted": "TwistedXWins",
     "intruder": "TwistedXWins",
     "vr": "Verdant",
-    "fs": "ForswornSanctum",
+    "fs": "Sanctum",
     "mist": "MistClears",
     "bm": "MistClears",
-    "sr": "SealedRemose",
+    "sr": "SealedRemorse",
     "mr": "MasqueradersRuin",
     "ruin": "MasqueradersRuin",
     "portal": "Portal",
@@ -70,6 +70,6 @@
     "shsolo": "GallerySanguineHallsHighSolo",
     "shgroup": "GallerySanguineHallsHighGroup",
     "mnee": "GalleryMarinaNoirEasterEgg",
-    "mnsolo": "GalleryMarinaNoirHighGroup",
-    "mngroup": "GalleryMarinaNoirHighSolo"
+    "mnsolo": "GalleryMarinaNoirHighSolo",
+    "mngroup": "GalleryMarinaNoirHighGroup"
 }

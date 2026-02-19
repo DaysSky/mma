@@ -133,7 +133,7 @@ public class SideBarManager {
         float playerHpPerc = player.getHealth() / player.getMaxHealth();
         if (reflexesLevel > 0) {
             if (this.countEnemyInRadius(player, 8.0F) >= 4) {
-                this.situationalText.add(Component.translatable("hud.mma.sidebar.reflexes_active", new Object[]{FormatUtil.numeric(20 * etherealLevel)}));
+                this.situationalText.add(Component.translatable("hud.mma.sidebar.reflexes_active", new Object[]{FormatUtil.numeric(20 * reflexesLevel)}));
             } else {
                 this.situationalText
                         .add(Component.translatable("hud.mma.sidebar.reflexes_inactive", new Object[]{FormatUtil.withColor("Inactive", this.errorColor)}));
@@ -194,7 +194,7 @@ public class SideBarManager {
 
         if (cloakedLevel > 0) {
             if (this.countEnemyInRadius(player, 5.0F) <= 2) {
-                this.situationalText.add(Component.translatable("hud.mma.sidebar.cloaked_active", new Object[]{FormatUtil.numeric(20 * etherealLevel)}));
+                this.situationalText.add(Component.translatable("hud.mma.sidebar.cloaked_active", new Object[]{FormatUtil.numeric(20 * cloakedLevel)}));
             } else {
                 this.situationalText
                         .add(Component.translatable("hud.mma.sidebar.cloaked_inactive", new Object[]{FormatUtil.withColor("Inactive", this.errorColor)}));
