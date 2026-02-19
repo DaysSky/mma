@@ -106,7 +106,7 @@ public class ViewModel {
         public int offRotZ = 0;
         public float offScale = 1.0F;
         public boolean cancelReEquip = false;
-        public boolean rotationlessDrink = true;
+        public boolean rotationlessDrink = false;
         public boolean hideEmptyHand = false;
         public boolean removeSwing = false;
         public float swingSpeed = 1.0F;
