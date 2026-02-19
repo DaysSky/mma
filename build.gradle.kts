@@ -3,7 +3,7 @@ plugins {
     id("maven-publish")
 }
 
-version = "1.9.0+mc1.20.4"
+version = "1.9.1+mc1.20.4"
 
 group = "com.dayssky"
 
