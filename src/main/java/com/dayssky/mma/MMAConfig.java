@@ -1,6 +1,7 @@
 package com.dayssky.mma;
 
 import com.dayssky.mma.features.Waypoint;
+import com.dayssky.mma.features.ViewModel;
 import com.dayssky.mma.features.cz.data.CharmEffectType;
 import com.dayssky.mma.features.cz.data.CharmType;
 
@@ -108,6 +109,8 @@ public class MMAConfig implements ConfigData {
         public boolean enableVanillaEffectInUMMHud = false;
         public boolean enableVanityDurability = true;
         public boolean enableCustomSplash = true;
+        @CollapsibleObject
+        public ViewModel.Config viewModel = new ViewModel.Config();
         @CollapsibleObject
         public MMAConfig.InventoryOverlayToggles inventoryOverlay = new MMAConfig.InventoryOverlayToggles();
         @CollapsibleObject
