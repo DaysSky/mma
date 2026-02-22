@@ -15,10 +15,12 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import net.fabricmc.loader.api.SemanticVersion;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.VersionParsingException;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
 public class VersionChecker {
@@ -26,7 +28,10 @@ public class VersionChecker {
     private static final Gson GSON = new Gson();
     private static final HttpClient CLIENT = HttpClient.newBuilder().connectTimeout(Duration.of(10L, ChronoUnit.SECONDS)).build();
     private static final HttpRequest REQUEST = HttpRequest.newBuilder()
-            .uri(URI.create("https://api.github.com/repos/DaysSky/mma/releases"))
+            .uri(URI.create(VERSION_URL))
+            .header("Accept", "application/vnd.github+json")
+            .header("User-Agent", "mma-version-checker")
+            .timeout(Duration.of(10, ChronoUnit.SECONDS))
             .GET()
             .build();
     private final CompletableFuture<Optional<Version>> latestVersion;
@@ -61,23 +66,27 @@ public class VersionChecker {
         ClientJoinServerEvent.EVENT
                 .register(
                         (ClientJoinServerEvent) () -> {
-                            VersionChecker.Info info = this.getVersionInfo();
-                            switch (info.state) {
-                                case NOT_READY:
-                                    ChatUtil.sendWarn(Component.translatable("text.mma.version.common.update_check_timeout"));
-                                    break;
-                                case NOT_AVAILABLE:
-                                    ChatUtil.sendWarn(Component.translatable("text.mma.version.common.update_check_fail"));
-                                case DISABLED:
-                                default:
-                                    break;
-                                case OUTDATED:
-                                    ChatUtil.send(
-                                            Component.translatable("text.mma.version.common.new_version", new Object[]{FormatUtil.altText(info.unwrap().getFriendlyString())})
-                                    );
-                            }
+                            CompletableFuture.runAsync(
+                                    () -> Minecraft.getInstance().execute(() -> this.sendResult(this.getVersionInfo())),
+                                    CompletableFuture.delayedExecutor(2L, TimeUnit.SECONDS)
+                            );
                         }
                 );
+    }
+
+    private void sendResult(VersionChecker.Info info) {
+        switch (info.state) {
+            case NOT_READY:
+                ChatUtil.sendWarn(Component.translatable("text.mma.version.common.update_check_timeout"));
+                break;
+            case NOT_AVAILABLE:
+                ChatUtil.sendWarn(Component.translatable("text.mma.version.common.update_check_fail"));
+            case DISABLED:
+            default:
+                break;
+            case OUTDATED:
+                ChatUtil.send(Component.translatable("text.mma.version.common.new_version", new Object[]{FormatUtil.altText(info.unwrap().getFriendlyString())}));
+        }
     }
 
     public VersionChecker.Info getVersionInfo() {
