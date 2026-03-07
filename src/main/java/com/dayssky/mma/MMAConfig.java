@@ -1,6 +1,5 @@
 package com.dayssky.mma;
 
-import com.dayssky.mma.features.Waypoint;
 import com.dayssky.mma.features.ViewModel;
 import com.dayssky.mma.features.cz.data.CharmEffectType;
 import com.dayssky.mma.features.cz.data.CharmType;
@@ -123,8 +122,6 @@ public class MMAConfig implements ConfigData {
         public String contractCheckText = "Switch your contract";
         public int contractThreshold = 40;
         public int czContractThreshold = 50;
-        @CollapsibleObject
-        public Waypoint.Config waypoint = new Waypoint.Config();
     }
 
     public @interface Hidden {

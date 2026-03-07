@@ -3,10 +3,7 @@
   "category.mma": "Monumenta Addons",
   "key.mma.playerstats": "Playerstats keybind",
   "key.mma.meow": "Meow :3",
-  "key.mma.toggleChestWP": "Toggle chest waypoint recording",
   "key.mma.togglePlayerHpIndicator": "Toggle player HP indicator",
-  "key.mma.toggleChestWaypoint": "Toggle chest waypoints",
-  "key.mma.toggleChestWaypointRecording": "Toggle chest waypoint recording",
   // Command feedback
   "commands.mma.leaderboard": "%s: #%s %s - %s",
   "text.autoconfig.mma.title": "Monumenta Addons Config",
@@ -67,15 +64,6 @@
   "text.autoconfig.mma.option.features.viewModel.hideEmptyHand": "Hide empty hand",
   "text.autoconfig.mma.option.features.viewModel.removeSwing": "Remove Swing",
   "text.autoconfig.mma.option.features.viewModel.swingSpeed": "Swing speed",
-  // Waypoint
-  "text.autoconfig.mma.option.features.waypoint": "Chest waypoint settings",
-  "text.autoconfig.mma.option.features.waypoint.enable": "Enable",
-  "text.autoconfig.mma.option.features.waypoint.recordChests": "Record chest breaks",
-  "text.autoconfig.mma.option.features.waypoint.disableInPlots": "Disable recording in plots",
-  "text.autoconfig.mma.option.features.waypoint.disabledWorlds": "Disabled worlds",
-  "text.autoconfig.mma.option.features.waypoint.color": "Chest highlight color",
-  "text.autoconfig.mma.option.features.waypoint.skipBrokenChests": "Skip highlights on broken chests",
-  "text.autoconfig.mma.option.features.waypoint.radius": "Radius to render waypoints. set to 0 to set to infinite",
   // Chat appearance
   "text.autoconfig.mma.option.appearance.bracketColor": "Tag bracket color",
   "text.autoconfig.mma.option.appearance.tagColor": "Tag text color",
