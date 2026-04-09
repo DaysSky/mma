@@ -80,7 +80,7 @@ public class MMAConfig implements ConfigData {
         public int bracketColor = 12041720;
         @ColorPicker
         public int tagColor = 13017334;
-        public String tagText = "MAID";
+        public String tagText = "MMA";
         @ColorPicker
         public int textColor = 16047062;
         @ColorPicker
