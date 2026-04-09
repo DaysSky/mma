@@ -224,6 +224,7 @@ public class MMAConfig implements ConfigData {
     }
 
     public static class Reminders {
+        @PrefixText
         public boolean contractCheck = true;
         public String contractCheckText = "Switch your contract";
         public int contractThreshold = 40;
