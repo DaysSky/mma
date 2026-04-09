@@ -3,9 +3,10 @@ package com.dayssky.mma;
 import com.dayssky.mma.MMAConfig.Appearance;
 import com.dayssky.mma.MMAConfig.FeatureToggles;
 import com.dayssky.mma.debug.Debug;
+import com.dayssky.mma.events.ClientRespawnEvent;
 import com.dayssky.mma.events.EntityShieldDisabledEvent;
 import com.dayssky.mma.features.Commands;
-import com.dayssky.mma.features.ContractCheck;
+import com.dayssky.mma.features.Reminders;
 import com.dayssky.mma.features.Keybinds;
 import com.dayssky.mma.features.LeaderboardUtils;
 import com.dayssky.mma.features.SideBarManager;
@@ -100,8 +101,9 @@ public class MMAClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register((EndTick) mc -> GLOBAL_SAFE_EH.runSafely(() -> {
             SIDEBAR.onTick(mc);
             Keybinds.tick();
-            ContractCheck.tick();
+            Reminders.tick();
         }));
+        ClientRespawnEvent.EVENT.register(() -> GLOBAL_SAFE_EH.runSafely(Reminders::onChangeGameMode));
         Debug.init();
         Commands.init();
         ZenithModule.init();
@@ -118,6 +120,4 @@ public class MMAClient implements ClientModInitializer {
     private void initializeAfterMC() {
         reload();
     }
-
-
 }
