@@ -66,7 +66,8 @@ public class LevelRendererMixin {
                     }
                 }
 
-                return entity instanceof Player player ? HpIndicator.computeEntityHealthColor(player) : original;
+                return entity instanceof Player player && !player.getScoreboardName().startsWith("|npc_") // fake players
+                        ? HpIndicator.computeEntityHealthColor(player) : original;
             }
         }).orElse(original);
     }
