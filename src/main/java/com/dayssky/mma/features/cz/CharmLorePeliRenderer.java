@@ -47,7 +47,7 @@ public class CharmLorePeliRenderer implements CharmLoreRenderer {
                                             }
                                     )
                                     .build();
-                            if (this.config.ignoredAbilities.contains(effect.effect)) {
+                            if (this.config.enableIgnoredAbilities && this.config.ignoredAbilities.contains(effect.effect)) {
                                 component.withStyle(ChatFormatting.STRIKETHROUGH);
                             }
 

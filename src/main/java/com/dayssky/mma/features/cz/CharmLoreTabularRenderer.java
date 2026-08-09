@@ -104,7 +104,7 @@ public class CharmLoreTabularRenderer implements CharmLoreRenderer {
         }
 
         for (int i = 0; i < effects.size(); i++) {
-            if (this.config.ignoredAbilities.contains(effects.get(i).effect)) {
+            if (this.config.enableIgnoredAbilities && this.config.ignoredAbilities.contains(effects.get(i).effect)) {
                 result.get(i + 1).withStyle(ChatFormatting.STRIKETHROUGH);
             }
         }

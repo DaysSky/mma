@@ -222,6 +222,8 @@ public class MMAConfig implements ConfigData {
         public boolean displayEffectRarity = false;
         @Tooltip
         public boolean displayUUID = false;
+        @Tooltip
+        public boolean enableIgnoredAbilities = true;
         @ZenithAbilitySelection
         public Set<CharmEffectType> ignoredAbilities = new HashSet<>();
     }

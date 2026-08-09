@@ -181,6 +181,8 @@
   "text.autoconfig.mma.option.zenith.displayUUID": "Display charm UUID",
   "text.autoconfig.mma.option.zenith.displayUUID.@Tooltip": "The UUID is not a uuid... it's just a long that seeds the RNG",
   "text.autoconfig.mma.option.zenith.nbtOrder": "Sort charm effects by NBT order",
+  "text.autoconfig.mma.option.zenith.enableIgnoredAbilities.@Tooltip": "Main toggle for adding strikethrough to abilities in the list below.\nDisabling this is nice for auction screenshots.",
+  "text.autoconfig.mma.option.zenith.enableIgnoredAbilities": "Enable hiding abilities",
   "text.autoconfig.mma.option.zenith.ignoredAbilities.@Tooltip": "Useful for stats you don't really care about",
   "text.autoconfig.mma.option.zenith.ignoredAbilities": "Configure abilities to 'hide' (strikethrough) in charm description",
   // Error message
