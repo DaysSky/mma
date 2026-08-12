@@ -14,6 +14,7 @@
   "text.autoconfig.mma.category.chat": "Chat",
   "text.autoconfig.mma.category.strikes": "Strikes/Raids",
   "text.autoconfig.mma.category.zenith": "Zenith",
+  "text.autoconfig.mma.category.reminders": "Reminders",
   // Feature toggles
   "text.autoconfig.mma.option.features.enableHpIndicators": "HP indicator",
   "text.autoconfig.mma.option.features.enableTimerAndStats": "Timers & statistics",
@@ -39,10 +40,6 @@
   "text.autoconfig.mma.option.features.suppressDebugWarning": "Silence debugging warnings",
   "text.autoconfig.mma.option.features.versionCheck": "Version checks",
   "text.autoconfig.mma.option.features.versionCheckIncludeBeta": "Include betas in version checks",
-  "text.autoconfig.mma.option.features.contractCheck": "Warn you to switch contracts",
-  "text.autoconfig.mma.option.features.contractCheckText": "Contract warning text",
-  "text.autoconfig.mma.option.features.contractThreshold": "Levels at which to warn you to switch contracts",
-  "text.autoconfig.mma.option.features.czContractThreshold": "Levels at which to warn you to switch contracts when entering Zenith",
   // View Model
   "text.autoconfig.mma.option.features.viewModel": "View model",
   "text.autoconfig.mma.option.features.viewModel.posX": "Mainhand X offset",
@@ -185,6 +182,15 @@
   "text.autoconfig.mma.option.zenith.enableIgnoredAbilities": "Enable hiding abilities",
   "text.autoconfig.mma.option.zenith.ignoredAbilities.@Tooltip": "Useful for stats you don't really care about",
   "text.autoconfig.mma.option.zenith.ignoredAbilities": "Configure abilities to 'hide' (strikethrough) in charm description",
+  // Reminders
+  "text.autoconfig.mma.option.reminders.contractCheck.@PrefixText": "Reminders trigger on dimension and gamemode changes",
+  "text.autoconfig.mma.option.reminders.contractCheck": "Warn you to switch contracts",
+  "text.autoconfig.mma.option.reminders.contractCheckText": "Contract warning text",
+  "text.autoconfig.mma.option.reminders.contractThreshold": "Levels at which to warn you to switch contracts",
+  "text.autoconfig.mma.option.reminders.czContractThreshold": "Levels at which to warn you to switch contracts when entering Zenith",
+  "text.autoconfig.mma.option.reminders.reminderSound": "Sound ID, volume and pitch for the reminders",
+  "text.autoconfig.mma.option.reminders.enableCustomReminders": "Whether custom reminder messages should be triggered",
+  "text.autoconfig.mma.option.reminders.customReminderMessages": "Custom Reminder Messages",
   // Error message
   "error.mma.no_empty_string": "Empty string not allowed here",
   "error.mma.duplicate_shorthand": "Duplicate channel shorthand",

@@ -1,7 +1,6 @@
 package com.dayssky.mma.mixin;
 
-import com.dayssky.mma.MMAClient;
-import com.dayssky.mma.features.ContractCheck;
+import com.dayssky.mma.features.Reminders;
 
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.world.level.GameType;
@@ -15,8 +14,6 @@ public class MultiPlayerGameModeMixin {
 
     @Inject(method = "setLocalMode(Lnet/minecraft/world/level/GameType;)V", at = @At("HEAD"))
     private void onChangeGameMode(GameType type, CallbackInfo ci) {
-        if (MMAClient.config().features.contractCheck && type == GameType.SURVIVAL) {
-            ContractCheck.onChangeGameMode();
-        }
+        Reminders.onChangeGameMode();
     }
 }

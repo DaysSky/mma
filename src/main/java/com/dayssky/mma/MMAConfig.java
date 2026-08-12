@@ -8,7 +8,9 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import me.shedaniel.autoconfig.AutoConfig;
@@ -26,31 +28,39 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.minecraft.SharedConstants;
 import net.minecraft.world.InteractionResult;
 
-@Config(
-        name = "mma"
-)
+@Config(name = "mma")
 public class MMAConfig implements ConfigData {
     @Category("features")
     @TransitiveObject
     public MMAConfig.FeatureToggles features = new MMAConfig.FeatureToggles();
+
     @Category("appearance")
     @TransitiveObject
     public MMAConfig.Appearance appearance = new MMAConfig.Appearance();
+
     @Category("hpIndicator")
     @TransitiveObject
     public MMAConfig.HpIndicator hpIndicator = new MMAConfig.HpIndicator();
+
     @Category("chat")
     @TransitiveObject
     public MMAConfig.Chat chat = new MMAConfig.Chat();
+
     @Category("strikes")
     @CollapsibleObject
     public MMAConfig.Portal portal = new MMAConfig.Portal();
+
     @Category("strikes")
     @CollapsibleObject
     public MMAConfig.Ruin ruin = new MMAConfig.Ruin();
+
     @Category("zenith")
     @TransitiveObject
     public MMAConfig.Zenith zenith = new MMAConfig.Zenith();
+
+    @Category("reminders")
+    @TransitiveObject
+    public MMAConfig.Reminders reminders = new MMAConfig.Reminders();
 
     public static ConfigHolder<MMAConfig> register() {
         ConfigHolder<MMAConfig> holder = AutoConfig.register(
@@ -118,10 +128,6 @@ public class MMAConfig implements ConfigData {
         public boolean suppressDebugWarning = !SharedConstants.IS_RUNNING_IN_IDE;
         public boolean versionCheck = false;
         public boolean versionCheckIncludeBeta = false;
-        public boolean contractCheck = true;
-        public String contractCheckText = "Switch your contract";
-        public int contractThreshold = 40;
-        public int czContractThreshold = 50;
     }
 
     public @interface Hidden {
@@ -134,17 +140,11 @@ public class MMAConfig implements ConfigData {
         public boolean disableSelf = true;
         public boolean disableInHycenea = true;
         public boolean smoothColor = false;
-        @BoundedDiscrete(
-                max = 100L
-        )
+        @BoundedDiscrete(max = 100L)
         public int goodHpPercent = 70;
-        @BoundedDiscrete(
-                max = 100L
-        )
+        @BoundedDiscrete(max = 100L)
         public int mediumHpPercent = 50;
-        @BoundedDiscrete(
-                max = 100L
-        )
+        @BoundedDiscrete(max = 100L)
         public int lowHpPercent = 25;
         @ColorPicker
         public int goodHpColor = 3403567;
@@ -164,10 +164,7 @@ public class MMAConfig implements ConfigData {
         public boolean enableCZCharmPower = false;
         public boolean enablePICount = true;
         public boolean enableLoomFirmCount = false;
-        @BoundedDiscrete(
-                min = 0L,
-                max = 20L
-        )
+        @BoundedDiscrete(min = 0L, max = 20L)
         public int updateDelayTicks = 5;
     }
 
@@ -226,6 +223,17 @@ public class MMAConfig implements ConfigData {
         public boolean enableIgnoredAbilities = true;
         @ZenithAbilitySelection
         public Set<CharmEffectType> ignoredAbilities = new HashSet<>();
+    }
+
+    public static class Reminders {
+        @PrefixText
+        public boolean contractCheck = true;
+        public String contractCheckText = "Switch your contract";
+        public int contractThreshold = 40;
+        public int czContractThreshold = 50;
+        public String reminderSound = "minecraft:entity.player.levelup 1 0";
+        public boolean enableCustomReminders = false;
+        public List<String> customReminderMessages = new ArrayList<>();
     }
 
     @Retention(RetentionPolicy.RUNTIME)
