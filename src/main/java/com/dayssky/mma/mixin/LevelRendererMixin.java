@@ -36,8 +36,10 @@ public class LevelRendererMixin {
                 return original;
             } else if (!MMAClient.config().hpIndicator.enableGlowingPlayer) {
                 return original;
+            } else if (!(entity instanceof Player player) || player.getScoreboardName().startsWith("|npc_")) { // fake players
+                return original;
             } else {
-                return !(entity instanceof Player) ? original : !MMAClient.config().hpIndicator.disableSelf || entity != MMAClient.player();
+                return !MMAClient.config().hpIndicator.disableSelf || player != MMAClient.player();
             }
         }).orElse(original);
     }
