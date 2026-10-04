@@ -133,6 +133,24 @@ public class Commands {
 
                                 return 0;
                             }));
+                            dispatcher.register(CommandUtil.lit("pd",
+                                    CommandUtil.arg("player", StringArgumentType.word(),
+                                            ctx -> {
+                                                ChatUtil.sendCommand(String.format("player details %s", StringArgumentType.getString(ctx, "player")));
+                                                return 0;
+                                            },
+                                            (ctx, builder) -> {
+                                                int selfID = MMAClient.player().getId();
+                                                // Only works for players in render distance since it's from client level
+                                                MMAClient.level().players().stream()
+                                                        .filter(player -> player.getId() != selfID)
+                                                        .map(player -> player.getGameProfile().getName())
+                                                        .filter(name -> name.toLowerCase().contains(builder.getRemainingLowerCase()))
+                                                        .forEach(builder::suggest);
+                                                return builder.buildFuture();
+                                            }
+                                    )
+                            ));
                             dispatcher.register(CommandUtil.lit("lb",
                                     CommandUtil.arg(
                                             "lb_name",
