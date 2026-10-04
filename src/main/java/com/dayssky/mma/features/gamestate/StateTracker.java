@@ -24,6 +24,9 @@ public interface StateTracker {
     default void onTick() {
     }
 
+    default void onWorldTick() {
+    }
+
     default void onRender(WorldRenderContext context) {
     }
 

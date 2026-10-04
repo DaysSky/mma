@@ -40,6 +40,11 @@ public class GameState {
                 this.currentStateTracker.onTick();
             }
         });
+        ClientTickEvents.END_WORLD_TICK.register((ClientTickEvents.EndWorldTick) mc -> {
+            if (this.currentStateTracker != null && Minecraft.getInstance().player != null) {
+                this.currentStateTracker.onWorldTick();
+            }
+        });
         ClientReceiveSystemChatEvent.EVENT.register((ClientReceiveSystemChatEvent) text -> {
             if (this.currentStateTracker != null && Minecraft.getInstance().player != null) {
                 this.currentStateTracker.onChatMessage(text);
