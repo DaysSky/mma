@@ -122,33 +122,29 @@ public class PortalStateTracker implements StateTracker {
     public void onTick() {
         if (this.enteredBoss) {
             this.isCubeAlive = false;
-            MMAClient.level()
-                    .entitiesForRendering()
-                    .forEach(
-                            entity -> {
-                                if (MMAClient.config().portal.enableIotaFix
-                                        && entity.getName().getString().contains("Iota")
-                                        && !entity.isInvisible()
-                                        && entity.getPosition(0.0F).y < 88.0) {
-                                    entity.moveTo(entity.getX(), 89.0, entity.getZ());
-                                }
+            MMAClient.level().entitiesForRendering().forEach(entity -> {
+                if (MMAClient.config().portal.enableIotaFix
+                        && entity.getName().getString().contains("Iota")
+                        && !entity.isInvisible()
+                        && entity.getPosition(0.0F).y < 88.0) {
+                    entity.moveTo(entity.getX(), 89.0, entity.getZ());
+                }
 
-                                if (entity instanceof ArmorStand armorStand) {
-                                    ItemStack slot = armorStand.getItemBySlot(EquipmentSlot.HEAD);
-                                    if (slot.isEmpty()) {
-                                        return;
-                                    }
+                if (entity instanceof ArmorStand armorStand) {
+                    ItemStack slot = armorStand.getItemBySlot(EquipmentSlot.HEAD);
+                    if (slot.isEmpty()) {
+                        return;
+                    }
 
-                                    if (slot.getItem() != Items.PLAYER_HEAD) {
-                                        return;
-                                    }
+                    if (slot.getItem() != Items.PLAYER_HEAD) {
+                        return;
+                    }
 
-                                    if (slot.getOrCreateTag().toString().contains("eyJ0ZXh0dXJlcyI")) {
-                                        this.isCubeAlive = true;
-                                    }
-                                }
-                            }
-                    );
+                    if (slot.getOrCreateTag().toString().contains("eyJ0ZXh0dXJlcyI")) {
+                        this.isCubeAlive = true;
+                    }
+                }
+            });
         }
     }
 
