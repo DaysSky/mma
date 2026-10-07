@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameType;
 
 public class ContractCheck {
     private static double lastWarned = -1;
@@ -18,23 +19,28 @@ public class ContractCheck {
     private static final Minecraft mc = Minecraft.getInstance();
     private static boolean isInZenithArea = false;
 
-    public static void onChangeGameMode() {
+    public static void onChangeGameMode(GameType type) {
+        if (!(MMAClient.config().features.contractCheck && type == GameType.SURVIVAL)) return;
+
         final long timeMillis = System.currentTimeMillis();
 
         if (mc.player != null && mc.player.experienceLevel >= MMAClient.config().features.contractThreshold &&
                 timeMillis - lastWarned > THRESHOLD_MILLIS) {
-                lastWarned = timeMillis;
-                mc.level.playSound(mc.player, mc.player, SoundEvents.PLAYER_LEVELUP, SoundSource.MASTER, 2.0f, 0.1f);
-                ChatUtil.sendWarn(Component.literal(MMAClient.config().features.contractCheckText));
+            lastWarned = timeMillis;
+            mc.level.playSound(mc.player, mc.player, SoundEvents.PLAYER_LEVELUP, SoundSource.MASTER, 2.0f, 0.1f);
+            ChatUtil.sendWarn(Component.literal(MMAClient.config().features.contractCheckText));
         }
     }
 
     public static void tick() {
-        if (!(mc.player != null && mc.player.experienceLevel <= MMAClient.config().features.czContractThreshold)) return;
+        if (!MMAClient.config().features.contractCheckCz) return;
+
+        if (!((mc.player != null) && (mc.player.experienceLevel <= MMAClient.config().features.czContractThreshold)))
+            return;
         updateXYZ(mc.player);
         if (!isInZenithArea && inZenithArea()) {
-                mc.level.playSound(mc.player, mc.player, SoundEvents.PLAYER_LEVELUP, SoundSource.MASTER, 2.0f, 0.1f);
-                ChatUtil.sendWarn(Component.literal(MMAClient.config().features.contractCheckText));
+            mc.level.playSound(mc.player, mc.player, SoundEvents.PLAYER_LEVELUP, SoundSource.MASTER, 2.0f, 0.1f);
+            ChatUtil.sendWarn(Component.literal(MMAClient.config().features.contractCheckText));
         }
         isInZenithArea = inZenithArea();
     }

@@ -45,6 +45,7 @@
   "text.autoconfig.mma.option.features.inventoryOverlay.updateDelayTicks": "Update delay ticks",
   "text.autoconfig.mma.option.features.inventoryOverlay.updateDelayTicks.@Tooltip": "Higher value performs better (Updates less often). Visual impact is largely negligible.",
   "text.autoconfig.mma.option.features.contractCheck": "Warn you to switch contracts",
+  "text.autoconfig.mma.option.features.contractCheckCz": "Warn you to switch contracts in CZ lobby",
   "text.autoconfig.mma.option.features.contractCheckText": "Contract warning text",
   "text.autoconfig.mma.option.features.contractThreshold": "Levels at which to warn you to switch contracts",
   "text.autoconfig.mma.option.features.czContractThreshold": "Levels at which to warn you to switch contracts when entering Zenith",

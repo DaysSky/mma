@@ -117,6 +117,7 @@ public class MMAConfig implements ConfigData {
         @CollapsibleObject
         public MMAConfig.SidebarToggles sidebarToggles = new MMAConfig.SidebarToggles();
         public boolean contractCheck = true;
+        public boolean contractCheckCz = true;
         public String contractCheckText = "Switch your contract";
         public int contractThreshold = 40;
         public int czContractThreshold = 50;

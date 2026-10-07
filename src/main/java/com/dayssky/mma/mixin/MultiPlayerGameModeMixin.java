@@ -15,8 +15,6 @@ public class MultiPlayerGameModeMixin {
 
     @Inject(method = "setLocalMode(Lnet/minecraft/world/level/GameType;)V", at = @At("HEAD"))
     private void onChangeGameMode(GameType type, CallbackInfo ci) {
-        if (MMAClient.config().features.contractCheck && type == GameType.SURVIVAL) {
-            ContractCheck.onChangeGameMode();
-        }
+        ContractCheck.onChangeGameMode(type);
     }
 }
