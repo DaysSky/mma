@@ -25,7 +25,7 @@ public class SanctumStateTracker implements StateTracker {
 
     @Override
     public void onLeave() {
-        if (MMAClient.features().enableTimerAndStats) {
+        if (MMAClient.config().features.enableTimerAndStats) {
             if (!this.hasWon) {
                 ChatUtil.send(Component.translatable("stat.mma.ruin.fail"));
                 this.data.send();
@@ -35,7 +35,7 @@ public class SanctumStateTracker implements StateTracker {
 
     @Override
     public void onChatMessage(Component message) {
-        if (MMAClient.features().enableTimerAndStats) {
+        if (MMAClient.config().features.enableTimerAndStats) {
             MMAConfig.Ruin ruinCfg = MMAClient.config().ruin;
             String raw = message.getString();
             if (raw.length() >= 12) {
@@ -63,7 +63,7 @@ public class SanctumStateTracker implements StateTracker {
 
     @Override
     public void onActionBar(Component message) {
-        if (MMAClient.features().enableTimerAndStats) {
+        if (MMAClient.config().features.enableTimerAndStats) {
             String raw = message.getString();
             if (raw.contains("Masked Killed")) {
                 String[] parts = raw.split(" : ");

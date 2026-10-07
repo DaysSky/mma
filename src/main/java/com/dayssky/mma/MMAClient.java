@@ -72,10 +72,6 @@ public class MMAClient implements ClientModInitializer {
         return ((MMAConfig) CONFIG.get()).appearance;
     }
 
-    public static FeatureToggles features() {
-        return ((MMAConfig) CONFIG.get()).features;
-    }
-
     public void onInitializeClient() {
         try {
             CharmDataRegistries.init();

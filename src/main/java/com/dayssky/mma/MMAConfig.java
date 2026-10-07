@@ -51,6 +51,9 @@ public class MMAConfig implements ConfigData {
     @Category("zenith")
     @TransitiveObject
     public MMAConfig.Zenith zenith = new MMAConfig.Zenith();
+    @Category("mod")
+    @TransitiveObject
+    public MMAConfig.Mod mod = new MMAConfig.Mod();
 
     public static ConfigHolder<MMAConfig> register() {
         ConfigHolder<MMAConfig> holder = AutoConfig.register(
@@ -107,17 +110,12 @@ public class MMAConfig implements ConfigData {
         public boolean enableTimerAndStats = true;
         public boolean enableVanillaEffectInUMMHud = false;
         public boolean enableVanityDurability = true;
-        public boolean enableCustomSplash = true;
         @CollapsibleObject
         public ViewModel.Config viewModel = new ViewModel.Config();
         @CollapsibleObject
         public MMAConfig.InventoryOverlayToggles inventoryOverlay = new MMAConfig.InventoryOverlayToggles();
         @CollapsibleObject
         public MMAConfig.SidebarToggles sidebarToggles = new MMAConfig.SidebarToggles();
-        public boolean enableDebug = SharedConstants.IS_RUNNING_IN_IDE;
-        public boolean suppressDebugWarning = !SharedConstants.IS_RUNNING_IN_IDE;
-        public boolean versionCheck = false;
-        public boolean versionCheckIncludeBeta = false;
         public boolean contractCheck = true;
         public String contractCheckText = "Switch your contract";
         public int contractThreshold = 40;
@@ -168,6 +166,7 @@ public class MMAConfig implements ConfigData {
                 min = 0L,
                 max = 20L
         )
+        @Tooltip(count = 1)
         public int updateDelayTicks = 5;
     }
 
@@ -192,9 +191,9 @@ public class MMAConfig implements ConfigData {
     }
 
     public static class SidebarToggles {
-        public boolean enable = true;
-        public boolean enableProxy = true;
-        public boolean enableShard = true;
+        public boolean enable = false;
+        public boolean enableProxy = false;
+        public boolean enableShard = false;
         public boolean enableIp = true;
         public boolean enableIpElision = true;
         public boolean situationals = true;
@@ -207,7 +206,7 @@ public class MMAConfig implements ConfigData {
         @Tooltip
         public boolean disableMonumentaLore = true;
         @Tooltip
-        public boolean peliCompatibilityMode = false;
+        public boolean peliCompatibilityMode = true;
         @Tooltip
         public boolean compactLore = false;
         @Tooltip
@@ -226,6 +225,15 @@ public class MMAConfig implements ConfigData {
         public boolean enableIgnoredAbilities = true;
         @ZenithAbilitySelection
         public Set<CharmEffectType> ignoredAbilities = new HashSet<>();
+    }
+
+    public static class Mod {
+        public boolean enableDebug = SharedConstants.IS_RUNNING_IN_IDE;
+        public boolean suppressDebugWarning = !SharedConstants.IS_RUNNING_IN_IDE;
+        @Tooltip(count = 1)
+        public boolean versionCheck = false;
+        @Tooltip(count = 1)
+        public boolean versionCheckIncludeBeta = false;
     }
 
     @Retention(RetentionPolicy.RUNTIME)

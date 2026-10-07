@@ -212,7 +212,7 @@ public class SideBarManager {
 
     public void onTick(Minecraft mc) {
         EXCEPTION_LOGGER.runSafely(() -> {
-            FeatureToggles config = MMAClient.features();
+            FeatureToggles config = MMAClient.config().features;
             if (mc.player != null) {
                 this.updateHitTimer(mc.player);
                 this.situationalText.clear();

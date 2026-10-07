@@ -205,7 +205,7 @@ public class ZenithModule {
         getCharm(NBTUtil.access(stack), CharmDataRegistries.getMain())
                 .ifPresent(
                         charm -> {
-                            if (MMAClient.config().zenith.disableMonumentaLore && !MMAClient.features().enableDebug) {
+                            if (MMAClient.config().zenith.disableMonumentaLore && !MMAClient.config().mod.enableDebug) {
                                 lines.subList(1, lines.size()).clear();
                             } else {
                                 lines.add(Component.empty());

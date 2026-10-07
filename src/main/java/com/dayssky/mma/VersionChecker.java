@@ -37,7 +37,7 @@ public class VersionChecker {
     private final CompletableFuture<Optional<Version>> latestVersion;
 
     public VersionChecker(MMAConfig config) {
-        if (config.features.versionCheck) {
+        if (config.mod.versionCheck) {
             this.latestVersion = CLIENT.sendAsync(REQUEST, BodyHandlers.ofString()).thenApply(s -> {
                 ArrayList<Version> list = new ArrayList<>();
 
@@ -45,7 +45,7 @@ public class VersionChecker {
                     for (JsonElement version : ((JsonElement) GSON.fromJson(s.body(), JsonElement.class)).getAsJsonArray()) {
                         String file = version.getAsJsonObject().get("tag_name").getAsString();
                         boolean preRelease = version.getAsJsonObject().get("prerelease").getAsBoolean();
-                        if (!preRelease || MMAClient.features().versionCheckIncludeBeta) {
+                        if (!preRelease || config.mod.versionCheckIncludeBeta) {
                             SemanticVersion semVer = SemanticVersion.parse(file.substring(1));
                             list.add(semVer);
                         }

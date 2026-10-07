@@ -29,7 +29,7 @@ public class EntityRenderDispatcherMixin {
     )
     private static void modifyHitboxColor(Args args, @Local(argsOnly = true) Entity entity) {
         mma$EH.runSafely(() -> {
-            if (MMAClient.features().enableHpIndicators) {
+            if (MMAClient.config().features.enableHpIndicators) {
                 if (MMAClient.config().hpIndicator.enableHitboxColoring) {
                     if (entity instanceof LivingEntity livingEntity) {
                         int color = HpIndicator.computeEntityHealthColor(livingEntity);

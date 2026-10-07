@@ -21,7 +21,7 @@ public abstract class MinecraftMixin extends ReentrantBlockableEventLoop<Runnabl
     }
 
     public void doRunTask(Runnable task) {
-        if (MMAClient.config().features.enableDebug) {
+        if (MMAClient.config().mod.enableDebug) {
             long start = Util.now();
             super.doRunTask(task);
             long end = Util.now();

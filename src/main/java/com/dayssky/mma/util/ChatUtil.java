@@ -36,7 +36,7 @@ public class ChatUtil {
     }
 
     public static void sendDebug(String message) {
-        if (!MMAClient.features().suppressDebugWarning) {
+        if (!MMAClient.config().mod.suppressDebugWarning) {
             sendWarn("(debug/possible bug) " + message);
         } else {
             MMAClient.LOGGER.warn(message);

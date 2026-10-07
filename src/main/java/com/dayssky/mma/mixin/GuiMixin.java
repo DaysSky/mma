@@ -26,7 +26,7 @@ public class GuiMixin {
             cancellable = true
     )
     private void renderCustomSidebar(GuiGraphics poseStack, Objective objective, CallbackInfo ci) {
-        if (MMAClient.features().sidebarToggles.enable) {
+        if (MMAClient.config().features.sidebarToggles.enable) {
             ci.cancel();
         }
     }
@@ -47,7 +47,7 @@ public class GuiMixin {
             )}
     )
     private void renderCustomSidebar(GuiGraphics poseStack, float partialTick, CallbackInfo ci) {
-        if (MMAClient.features().sidebarToggles.enable) {
+        if (MMAClient.config().features.sidebarToggles.enable) {
             MMAClient.SIDEBAR.render(this.field_2035, poseStack);
         }
     }
@@ -60,6 +60,6 @@ public class GuiMixin {
             )}
     )
     private boolean wrapEffectHudPredicate(Gui instance, GuiGraphics guiGraphics) {
-        return !MMAClient.features().enableVanillaEffectInUMMHud;
+        return !MMAClient.config().features.enableVanillaEffectInUMMHud;
     }
 }

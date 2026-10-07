@@ -44,7 +44,7 @@ public class PortalStateTracker implements StateTracker {
 
     @Override
     public void onLeave() {
-        if (MMAClient.features().enableTimerAndStats) {
+        if (MMAClient.config().features.enableTimerAndStats) {
             if (!this.hasWon) {
                 ChatUtil.send(Component.translatable("stat.mma.portal.fail"));
                 this.data.send();
@@ -54,7 +54,7 @@ public class PortalStateTracker implements StateTracker {
 
     @Override
     public void onChatMessage(Component message) {
-        if (MMAClient.features().enableTimerAndStats) {
+        if (MMAClient.config().features.enableTimerAndStats) {
             MMAConfig.Portal portalCfg = MMAClient.config().portal;
             String raw = message.getString();
             if (raw.length() >= 12) {
@@ -93,7 +93,7 @@ public class PortalStateTracker implements StateTracker {
 
     @Override
     public void onActionBar(Component message) {
-        if (MMAClient.features().enableTimerAndStats) {
+        if (MMAClient.config().features.enableTimerAndStats) {
             String raw = message.getString();
             if (raw.contains("S.O.U.L. Collected")) {
                 String[] parts = raw.split(" : ");

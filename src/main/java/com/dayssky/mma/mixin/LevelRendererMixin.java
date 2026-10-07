@@ -32,7 +32,7 @@ public class LevelRendererMixin {
     )
     private boolean modifyPlayerGlowingStatus(boolean original, @Local Entity entity) {
         return mma$EH.<Boolean>runSafely(() -> {
-            if (!MMAClient.features().enableHpIndicators) {
+            if (!MMAClient.config().features.enableHpIndicators) {
                 return original;
             } else if (!MMAClient.config().hpIndicator.enableGlowingPlayer) {
                 return original;
@@ -53,7 +53,7 @@ public class LevelRendererMixin {
     )
     private int modifyPlayerGlowingColor(int original, @Local Entity entity) {
         return mma$EH.<Integer>runSafely(() -> {
-            if (!MMAClient.features().enableHpIndicators) {
+            if (!MMAClient.config().features.enableHpIndicators) {
                 return original;
             } else if (!MMAClient.config().hpIndicator.enableGlowingPlayer) {
                 return original;

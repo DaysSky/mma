@@ -118,7 +118,7 @@ public abstract class EffectOverlayMixin extends HudElement {
             @Local Font font,
             @Local(name = {"width"}) int width
     ) {
-        if (MMAClient.features().enableVanillaEffectInUMMHud) {
+        if (MMAClient.config().features.enableVanillaEffectInUMMHud) {
             LocalPlayer player = Minecraft.getInstance().player;
             if (player != null) {
                 if (!player.getActiveEffects().isEmpty()) {
@@ -141,7 +141,7 @@ public abstract class EffectOverlayMixin extends HudElement {
             at = {@At("RETURN")}
     )
     private int modifyHeight(int original) {
-        if (!MMAClient.features().enableVanillaEffectInUMMHud) {
+        if (!MMAClient.config().features.enableVanillaEffectInUMMHud) {
             return original;
         } else {
             LocalPlayer player = Minecraft.getInstance().player;
@@ -167,7 +167,7 @@ public abstract class EffectOverlayMixin extends HudElement {
             at = {@At("RETURN")}
     )
     private boolean setVisibleVanillaEffects(boolean original) {
-        if (!MMAClient.features().enableVanillaEffectInUMMHud) {
+        if (!MMAClient.config().features.enableVanillaEffectInUMMHud) {
             return original;
         } else {
             LocalPlayer player = Minecraft.getInstance().player;

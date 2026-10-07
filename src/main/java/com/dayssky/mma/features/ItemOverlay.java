@@ -173,7 +173,7 @@ public class ItemOverlay {
     }
 
     private static List<RenderOp> buildRenderOps(ItemStack stack) {
-        InventoryOverlayToggles config = MMAClient.features().inventoryOverlay;
+        InventoryOverlayToggles config = MMAClient.config().features.inventoryOverlay;
         Access dataAccess = NBTUtil.access(stack);
         Optional<CompoundTag> czCharmData = dataAccess.getPlayerModified();
         Optional<Integer> charmPower = dataAccess.getCharmPower();
@@ -203,7 +203,7 @@ public class ItemOverlay {
             list.add(renderPlacerCount(dataAccess));
         }
 
-        if (MMAClient.features().enableVanityDurability) {
+        if (MMAClient.config().features.enableVanityDurability) {
             renderVanityDurability(stack).ifPresent(list::add);
         }
 
@@ -212,7 +212,7 @@ public class ItemOverlay {
 
     public static void renderItemOverlay(GuiGraphics graphics, Font font, ItemStack stack, int x, int y) {
         EXCEPTION_LOGGER.runSafely(() -> {
-            InventoryOverlayToggles config = MMAClient.features().inventoryOverlay;
+            InventoryOverlayToggles config = MMAClient.config().features.inventoryOverlay;
             if (config.enable) {
                 if (config.enableCooldown && NBTUtil.access(stack).getCharmPower().isEmpty()) {
                     renderCooldowns(stack, graphics, font, x, y);

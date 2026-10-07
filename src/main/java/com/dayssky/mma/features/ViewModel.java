@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 public class ViewModel {
 
     public static void applyItemTransform(PoseStack poseStack, InteractionHand interactionHand) {
-        Config config = MMAClient.features().viewModel;
+        Config config = MMAClient.config().features.viewModel;
         if (interactionHand == InteractionHand.MAIN_HAND) {
             applyTransform(poseStack, config.posX, config.posY, config.posZ, config.rotX, config.rotY, config.rotZ, config.scale);
         } else if (interactionHand == InteractionHand.OFF_HAND) {
@@ -21,11 +21,11 @@ public class ViewModel {
     }
 
     public static float overrideAttackStrengthScale(float original) {
-        return MMAClient.features().viewModel.cancelReEquip ? 1.0F : original;
+        return MMAClient.config().features.viewModel.cancelReEquip ? 1.0F : original;
     }
 
     public static boolean applyEquipOffset(PoseStack poseStack, HumanoidArm humanoidArm) {
-        if (!MMAClient.features().viewModel.cancelReEquip) {
+        if (!MMAClient.config().features.viewModel.cancelReEquip) {
             return false;
         }
 
@@ -35,29 +35,29 @@ public class ViewModel {
     }
 
     public static boolean shouldCancelEatTransform() {
-        return MMAClient.features().viewModel.rotationlessDrink;
+        return MMAClient.config().features.viewModel.rotationlessDrink;
     }
 
     public static boolean shouldHideEmptyHand(ItemStack itemStack) {
-        return MMAClient.features().viewModel.hideEmptyHand && itemStack.isEmpty();
+        return MMAClient.config().features.viewModel.hideEmptyHand && itemStack.isEmpty();
     }
 
     public static boolean shouldRemoveSwing() {
-        return MMAClient.features().viewModel.removeSwing;
+        return MMAClient.config().features.viewModel.removeSwing;
     }
 
     public static float getSwingAnchorX(InteractionHand interactionHand) {
-        Config config = MMAClient.features().viewModel;
+        Config config = MMAClient.config().features.viewModel;
         return (interactionHand == InteractionHand.OFF_HAND ? config.offPosX : config.posX) / 100.0F;
     }
 
     public static float getSwingAnchorY(InteractionHand interactionHand) {
-        Config config = MMAClient.features().viewModel;
+        Config config = MMAClient.config().features.viewModel;
         return (interactionHand == InteractionHand.OFF_HAND ? config.offPosY : config.posY) / 100.0F;
     }
 
     public static float getSwingAnchorZ(InteractionHand interactionHand) {
-        Config config = MMAClient.features().viewModel;
+        Config config = MMAClient.config().features.viewModel;
         return (interactionHand == InteractionHand.OFF_HAND ? config.offPosZ : config.posZ) / 100.0F;
     }
 
@@ -66,7 +66,7 @@ public class ViewModel {
             return originalDuration;
         }
 
-        float swingSpeed = Mth.clamp(MMAClient.features().viewModel.swingSpeed, 0.01F, 5F);
+        float swingSpeed = Mth.clamp(MMAClient.config().features.viewModel.swingSpeed, 0.01F, 5F);
         return Math.max(1, Math.round(originalDuration / swingSpeed));
     }
 

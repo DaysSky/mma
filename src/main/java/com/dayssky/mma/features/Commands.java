@@ -33,7 +33,7 @@ public class Commands {
                                             "mma",
                                             CommandUtil.<FabricClientCommandSource>litPred(
                                                     "debug",
-                                                    ignored -> MMAClient.config().features.enableDebug,
+                                                    ignored -> MMAClient.config().mod.enableDebug,
                                                     CommandUtil.lit("test", ignored -> {
                                                         ChatUtil.send(":3");
                                                         return 0;
