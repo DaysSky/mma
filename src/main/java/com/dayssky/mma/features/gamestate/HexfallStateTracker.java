@@ -3,12 +3,12 @@ package com.dayssky.mma.features.gamestate;
 import com.dayssky.mma.MMAClient;
 import com.dayssky.mma.util.StatsUtil;
 import com.dayssky.mma.util.Util;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,7 +23,8 @@ public class HexfallStateTracker implements StateTracker {
     private boolean hasBeatRuten = false;
     private boolean hasBeatHycenea = false;
     private List<String> inFightPlayerUUIDS = Collections.emptyList();
-    private int reincarnationsUsed;
+    private List<String> aliveInFightPlayerUUIDS = Collections.emptyList();
+    private int reincarnationsLeft = 0;
     public boolean selfInFight = false;
 
     public HexfallStateTracker() {
@@ -91,14 +92,23 @@ public class HexfallStateTracker implements StateTracker {
         // Hycenea start
         if (raw.contains("[Hycenea] Now I... will break thee. Link by pitiful link.")) {
             MMAClient.LOGGER.info("Hycenea started");
-            inFightPlayerUUIDS = MMAClient.level().getEntitiesOfClass(Player.class, arenaBox).stream().map(Entity::getStringUUID).toList();
-            MMAClient.LOGGER.info("Players: {}", inFightPlayerUUIDS);
+
+            if (hyceneaFirstStartTime == 0) this.hyceneaFirstStartTime = Util.now();
+
+            this.hyceneaStartTime = Util.now();
+            this.inFightPlayerUUIDS = MMAClient.level().getEntitiesOfClass(Player.class, arenaBox).stream().map(Entity::getStringUUID).toList();
+            this.aliveInFightPlayerUUIDS = new ArrayList<>(this.inFightPlayerUUIDS);
+            this.reincarnationsLeft = inFightPlayerUUIDS.size();
+
+            MMAClient.LOGGER.info("Players: {}", this.inFightPlayerUUIDS);
+
             // Return if self is not in fight
-            boolean isSelfInFight = inFightPlayerUUIDS.contains(MMAClient.player().getStringUUID());
+            boolean isSelfInFight = this.inFightPlayerUUIDS.contains(MMAClient.player().getStringUUID());
             this.selfInFight = isSelfInFight;
             if (!isSelfInFight) return;
             MMAClient.LOGGER.info("Self is in fight");
         }
+
         // Ruten Start
 
         // Reincarnation
@@ -111,8 +121,9 @@ public class HexfallStateTracker implements StateTracker {
                     deadPlayer = p;
                 }
             }
-
             MMAClient.LOGGER.info("Reincarnated: {}", deadPlayer.getStringUUID());
+            this.reincarnationsLeft -= 1;
+            MMAClient.LOGGER.info("Reincarnations left: {}", this.reincarnationsLeft);
         }
     }
 
@@ -120,10 +131,26 @@ public class HexfallStateTracker implements StateTracker {
     public void onPlayerDeath(int playerId, Component deathMessage) {
         MMAClient.LOGGER.info("Player ID Died: {}", playerId);
         MMAClient.LOGGER.info("Death message: {}", deathMessage);
+
         Player playerEntity = (Player) MMAClient.level().getEntity(playerId);
+        if (playerEntity == null) return;
         MMAClient.LOGGER.info("Player: {}", playerEntity.getStringUUID());
-        boolean playerWasInFight = inFightPlayerUUIDS.contains(playerEntity.getStringUUID());
+
+        boolean playerWasInFight = this.inFightPlayerUUIDS.contains(playerEntity.getStringUUID());
         MMAClient.LOGGER.info("Player was in fight: {}", playerWasInFight);
+        if (!playerWasInFight) return;
+
+        this.aliveInFightPlayerUUIDS.remove(playerEntity.getStringUUID());
+        MMAClient.LOGGER.info("Alive in fight: {}", this.aliveInFightPlayerUUIDS);
+
+        if (this.aliveInFightPlayerUUIDS.isEmpty()) {
+            MMAClient.LOGGER.info("No players left in fight, resetting data");
+            this.inFightPlayerUUIDS = Collections.emptyList();
+            this.aliveInFightPlayerUUIDS = Collections.emptyList();
+            this.reincarnationsLeft = 0;
+            this.hyceneaStartTime = 0;
+            this.selfInFight = false;
+        }
     }
 
     @Override
