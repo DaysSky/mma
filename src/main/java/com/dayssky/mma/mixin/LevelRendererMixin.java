@@ -2,12 +2,14 @@ package com.dayssky.mma.mixin;
 
 import com.dayssky.mma.MMAClient;
 import com.dayssky.mma.features.HpIndicator;
+import com.dayssky.mma.features.gamestate.HexfallStateTracker;
 import com.dayssky.mma.util.SafeExceptionLogger;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.Objects;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.LerpingBossEvent;
@@ -44,33 +46,44 @@ public class LevelRendererMixin {
         }).orElse(original);
     }
 
-    @ModifyExpressionValue(
+    @WrapOperation(
             method = {"renderLevel"},
             at = {@At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/entity/Entity;getTeamColor()I"
             )}
     )
-    private int modifyPlayerGlowingColor(int original, @Local Entity entity) {
-        return mma$EH.<Integer>runSafely(() -> {
-            if (!MMAClient.config().features.enableHpIndicators) {
-                return original;
-            } else if (!MMAClient.config().hpIndicator.enableGlowingPlayer) {
-                return original;
-            } else {
-                if (MMAClient.config().hpIndicator.disableInHycenea) {
-                    Map<UUID, LerpingBossEvent> events = Minecraft.getInstance().gui.getBossOverlay().events;
+    private int modifyPlayerGlowingColor(Entity entity, Operation<Integer> original) {
+        int fallback = original.call(entity);
 
-                    for (LerpingBossEvent value : events.values()) {
-                        if (value.getName().getString().contains("Hycenea")) {
-                            return original;
-                        }
+        return mma$EH.<Integer>runSafely(() -> {
+
+            // HF totem glow — self only, bypasses HP-indicator toggles.
+            if (entity == Minecraft.getInstance().player) {
+                HexfallStateTracker hexfall = MMAClient.GAME_STATE.hexfall();
+                if (hexfall != null && hexfall.totemElement != null) {
+                    return Objects.equals(hexfall.totemElement, "Death") ? 9915173 : 5569364;
+                }
+            }
+
+            if (!MMAClient.config().features.enableHpIndicators
+                    || !MMAClient.config().hpIndicator.enableGlowingPlayer) {
+                return fallback;
+            }
+
+            if (MMAClient.config().hpIndicator.disableInHycenea) {
+                for (LerpingBossEvent boss : Minecraft.getInstance().gui.getBossOverlay().events.values()) {
+                    if (boss.getName().getString().contains("Hycenea")) {
+                        return fallback;
                     }
                 }
-
-                return entity instanceof Player player && !player.getScoreboardName().startsWith("|npc_") // fake players
-                        ? HpIndicator.computeEntityHealthColor(player) : original;
             }
-        }).orElse(original);
+
+            if (entity instanceof Player player && !player.getScoreboardName().startsWith("|npc_")) {
+                return HpIndicator.computeEntityHealthColor(player);
+            }
+
+            return fallback;
+        }).orElse(fallback);
     }
 }

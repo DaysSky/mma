@@ -4,12 +4,13 @@ import java.util.List;
 
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 
 public interface StateTracker {
     default void onLeave() {
     }
 
-    default void onPlayerDeath(int playerId, Component deathMessage) {
+    default void onPlayerDeath(Player player) {
     }
 
     default void onChatMessage(Component message) {

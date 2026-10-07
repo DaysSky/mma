@@ -1,8 +1,11 @@
 package com.dayssky.mma.features.gamestate;
 
 import com.dayssky.mma.MMAClient;
+import com.dayssky.mma.util.ChatUtil;
+import com.dayssky.mma.util.FormatUtil;
 import com.dayssky.mma.util.StatsUtil;
 import com.dayssky.mma.util.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -11,6 +14,7 @@ import net.minecraft.world.phys.AABB;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class HexfallStateTracker implements StateTracker {
     private final AABB arenaBox = new AABB(281, 146, 159, 356, 170, 85);
@@ -24,8 +28,10 @@ public class HexfallStateTracker implements StateTracker {
     private boolean hasBeatHycenea = false;
     private List<String> inFightPlayerUUIDS = Collections.emptyList();
     private List<String> aliveInFightPlayerUUIDS = Collections.emptyList();
-    private int reincarnationsLeft = 0;
+
+    public int reincarnationsLeft = 0;
     public boolean selfInFight = false;
+    public String totemElement = null;
 
     public HexfallStateTracker() {
         this.data = new Data();
@@ -112,7 +118,7 @@ public class HexfallStateTracker implements StateTracker {
         // Ruten Start
 
         // Reincarnation
-        if (raw.contains("has Reincarnated!")) {
+        if (raw.contains("has Reincarnated!") && this.selfInFight) {
             String deadPlayerName = raw.split(" has Reincarnated!")[0];
             Player deadPlayer = null;
 
@@ -124,23 +130,41 @@ public class HexfallStateTracker implements StateTracker {
             MMAClient.LOGGER.info("Reincarnated: {}", deadPlayer.getStringUUID());
             this.reincarnationsLeft -= 1;
             MMAClient.LOGGER.info("Reincarnations left: {}", this.reincarnationsLeft);
+
+            // TODO: Make a config option for custom msg
+            Component reincarnationMsg = Component.translatable("stat.mma.hexfall.reincarnations_left", FormatUtil.numeric(this.reincarnationsLeft));
+
+            // TODO: Make a config option for both of these
+            ChatUtil.send(reincarnationMsg);
+            Minecraft.getInstance().gui
+                    .setOverlayMessage(FormatUtil.join(FormatUtil.colored(MMAClient.config().appearance.textColor).append(FormatUtil.join(reincarnationMsg))), false);
+        }
+
+        // Totemic destruction
+        if (raw.contains("energy pierces your very being, making you more vulnerable to a similar attack.")) {
+            String totem = raw.split(" energy pierces your very being")[0];
+            MMAClient.LOGGER.info("Totem element: {}", totem);
+            this.totemElement = totem;
+        }
+        if (raw.contains("Your vulnerability to")) {
+            String element = raw.split("Your vulnerability to ")[1].split(" fades...")[0];
+            MMAClient.LOGGER.info("Element {} Fades", element);
+            if (Objects.equals(this.totemElement, element)) totemElement = null;
         }
     }
 
     @Override
-    public void onPlayerDeath(int playerId, Component deathMessage) {
-        MMAClient.LOGGER.info("Player ID Died: {}", playerId);
-        MMAClient.LOGGER.info("Death message: {}", deathMessage);
+    public void onPlayerDeath(Player player) {
+        if (!this.selfInFight) return;
 
-        Player playerEntity = (Player) MMAClient.level().getEntity(playerId);
-        if (playerEntity == null) return;
-        MMAClient.LOGGER.info("Player: {}", playerEntity.getStringUUID());
+        if (player == null) return;
+        MMAClient.LOGGER.info("Player: {}", player.getStringUUID());
 
-        boolean playerWasInFight = this.inFightPlayerUUIDS.contains(playerEntity.getStringUUID());
+        boolean playerWasInFight = this.inFightPlayerUUIDS.contains(player.getStringUUID());
         MMAClient.LOGGER.info("Player was in fight: {}", playerWasInFight);
         if (!playerWasInFight) return;
 
-        this.aliveInFightPlayerUUIDS.remove(playerEntity.getStringUUID());
+        this.aliveInFightPlayerUUIDS.remove(player.getStringUUID());
         MMAClient.LOGGER.info("Alive in fight: {}", this.aliveInFightPlayerUUIDS);
 
         if (this.aliveInFightPlayerUUIDS.isEmpty()) {
@@ -149,13 +173,14 @@ public class HexfallStateTracker implements StateTracker {
             this.aliveInFightPlayerUUIDS = Collections.emptyList();
             this.reincarnationsLeft = 0;
             this.hyceneaStartTime = 0;
+            this.totemElement = null;
             this.selfInFight = false;
         }
     }
 
     @Override
     public void onActionBar(Component message) {
-        if (MMAClient.features().enableTimerAndStats) {
+        if (MMAClient.config().features.enableTimerAndStats) {
             String raw = message.getString();
             if (raw.contains("total chests")) {
                 this.data.chestCount = Integer.parseInt(raw.split(" ")[0]);

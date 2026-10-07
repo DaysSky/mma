@@ -35,6 +35,11 @@ public class GameState {
     @Nullable
     private StateTracker currentStateTracker = null;
 
+    @Nullable
+    public HexfallStateTracker hexfall() {
+        return this.currentStateTracker instanceof HexfallStateTracker h ? h : null;
+    }
+
     public GameState() {
         ClientTickEvents.END_CLIENT_TICK.register((EndTick) mc -> {
             this.updateLevel(mc.level);
@@ -91,9 +96,9 @@ public class GameState {
 
             this.currentStateTracker = null;
         });
-        ClientPlayerDeathEvent.EVENT.register((playerId, deathMessage) -> {
+        ClientPlayerDeathEvent.EVENT.register((player) -> {
             if (this.currentStateTracker != null && Minecraft.getInstance().player != null) {
-                this.currentStateTracker.onPlayerDeath(playerId, deathMessage);
+                this.currentStateTracker.onPlayerDeath(player);
             }
         });
     }

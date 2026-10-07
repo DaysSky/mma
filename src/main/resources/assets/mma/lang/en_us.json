@@ -232,5 +232,6 @@
   "text.mma.toast.uncaught_exception.title": "Uncaught exception in Mod thrown!",
   "text.mma.toast.uncaught_exception.message": "Please report this to the devs, with logs!",
   "text.mma.toast.uncaught_exception.message_copy_data": "Uncaught exception in mod, click here to copy data. Please send this to the devs!",
-  "stat.mma.hexfall.fail": "Hexfall failed..."
+  "stat.mma.hexfall.fail": "Hexfall failed...",
+  "stat.mma.hexfall.reincarnations_left": "%s Reincarnations Left"
 }

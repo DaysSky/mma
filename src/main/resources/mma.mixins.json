@@ -20,5 +20,7 @@
   "plugin": "com.dayssky.mma.MMAMixinConfigPlugin",
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+  ]
 }

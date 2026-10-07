@@ -1,9 +1,12 @@
 package com.dayssky.mma.mixin;
 
+import com.dayssky.mma.MMAClient;
 import com.dayssky.mma.events.*;
 import com.dayssky.mma.util.SafeExceptionLogger;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,15 +28,19 @@ public class ClientPacketListenerMixin {
     }
 
     @Inject(
-            method = {"handlePlayerCombatKill"},
+            method = {"handleEntityEvent"},
             at = {@At("TAIL")}
     )
-    private void onPlayerDeath(ClientboundPlayerCombatKillPacket packet, CallbackInfo ci) {
-        mma$EH.runSafely(
-                () -> ((ClientPlayerDeathEvent) ClientPlayerDeathEvent.EVENT.invoker())
-                        .onDeath(packet.getPlayerId(), packet.getMessage()),
-                () -> "packet=" + packet.toString()
-        );
+    private void onEntityEvent(ClientboundEntityEventPacket packet, CallbackInfo ci) {
+        if (packet.getEventId() != 3) return;
+
+        mma$EH.runSafely(() -> {
+            Entity entity = packet.getEntity(MMAClient.level());
+            if (entity instanceof Player player) {
+                ((ClientPlayerDeathEvent) ClientPlayerDeathEvent.EVENT.invoker())
+                        .onDeath(player);
+            }
+        }, () -> "packet=" + packet.toString());
     }
 
     @Inject(
