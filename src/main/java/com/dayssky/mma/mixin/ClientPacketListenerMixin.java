@@ -1,20 +1,9 @@
 package com.dayssky.mma.mixin;
 
-import com.dayssky.mma.events.ClientJoinServerEvent;
-import com.dayssky.mma.events.ClientReceiveSystemChatEvent;
-import com.dayssky.mma.events.ClientReceiveTabListCustomizationEvent;
-import com.dayssky.mma.events.ClientRespawnEvent;
-import com.dayssky.mma.events.ClientSetTitleEvent;
-import com.dayssky.mma.events.EventResult;
+import com.dayssky.mma.events.*;
 import com.dayssky.mma.util.SafeExceptionLogger;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.network.protocol.game.ClientboundLoginPacket;
-import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
-import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
-import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
-import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
-import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
-import net.minecraft.network.protocol.game.ClientboundTabListPacket;
+import net.minecraft.network.protocol.game.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,6 +22,18 @@ public class ClientPacketListenerMixin {
     )
     private void onRecvRespawn(ClientboundRespawnPacket packet, CallbackInfo ci) {
         mma$EH.runSafely(() -> ((ClientRespawnEvent) ClientRespawnEvent.EVENT.invoker()).onRespawn(), () -> "packet=" + packet.toString());
+    }
+
+    @Inject(
+            method = {"handlePlayerCombatKill"},
+            at = {@At("TAIL")}
+    )
+    private void onPlayerDeath(ClientboundPlayerCombatKillPacket packet, CallbackInfo ci) {
+        mma$EH.runSafely(
+                () -> ((ClientPlayerDeathEvent) ClientPlayerDeathEvent.EVENT.invoker())
+                        .onDeath(packet.getPlayerId(), packet.getMessage()),
+                () -> "packet=" + packet.toString()
+        );
     }
 
     @Inject(

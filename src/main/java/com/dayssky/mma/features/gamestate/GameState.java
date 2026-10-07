@@ -1,5 +1,6 @@
 package com.dayssky.mma.features.gamestate;
 
+import com.dayssky.mma.events.ClientPlayerDeathEvent;
 import com.dayssky.mma.events.ClientReceiveSystemChatEvent;
 import com.dayssky.mma.events.ClientSetTitleEvent;
 import com.dayssky.mma.events.EventResult;
@@ -14,6 +15,7 @@ import java.util.function.Supplier;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.EndTick;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.EndWorldTick;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents.Disconnect;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -40,7 +42,7 @@ public class GameState {
                 this.currentStateTracker.onTick();
             }
         });
-        ClientTickEvents.END_WORLD_TICK.register((ClientTickEvents.EndWorldTick) mc -> {
+        ClientTickEvents.END_WORLD_TICK.register((EndWorldTick) mc -> {
             if (this.currentStateTracker != null && Minecraft.getInstance().player != null) {
                 this.currentStateTracker.onWorldTick();
             }
@@ -88,6 +90,11 @@ public class GameState {
             }
 
             this.currentStateTracker = null;
+        });
+        ClientPlayerDeathEvent.EVENT.register((playerId, deathMessage) -> {
+            if (this.currentStateTracker != null && Minecraft.getInstance().player != null) {
+                this.currentStateTracker.onPlayerDeath(playerId, deathMessage);
+            }
         });
     }
 

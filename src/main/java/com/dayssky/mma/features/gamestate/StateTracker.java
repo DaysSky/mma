@@ -9,6 +9,9 @@ public interface StateTracker {
     default void onLeave() {
     }
 
+    default void onPlayerDeath(int playerId, Component deathMessage) {
+    }
+
     default void onChatMessage(Component message) {
     }
 
